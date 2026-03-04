@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legacy Stewards | Guiding the Next Generation of Legacy Leaders</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#c9a96e',
+                        'gold-light': '#e8d5b5',
+                        'gold-dark': '#a8864f',
+                        rose: '#b76e79',
+                        cream: '#F0EBE3',
+                        sand: '#E6DED3',
+                        charcoal: '#2C2C35',
+                        muted: '#6B6B7B',
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { background: #F0EBE3; color: #2C2C35; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+        /* Particle canvas — contained inside hero */
+        #three-canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        @media (max-width: 768px) {
+            #three-canvas { width: 100%; opacity: 0.3; }
+        }
+
+        .card {
+            background: #FDFAF6;
+            border: 1px solid #E0D8CC;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+
+        .card-hover { transition: all 0.4s ease; }
+        .card-hover:hover {
+            box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+            transform: translateY(-4px);
+            border-color: rgba(201, 169, 110, 0.4);
+        }
+
+        .gold-gradient {
+            background: linear-gradient(135deg, #c9a96e, #a8864f, #c9a96e);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #c9a96e, #a8864f);
+            color: #fff; font-weight: 600; border-radius: 50px;
+            padding: 14px 36px; transition: all 0.4s ease;
+            box-shadow: 0 4px 20px rgba(201, 169, 110, 0.25);
+            cursor: pointer; border: none;
+        }
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201, 169, 110, 0.4); }
+
+        .btn-outline {
+            border: 1.5px solid #c9a96e; color: #c9a96e;
+            border-radius: 50px; padding: 14px 36px; transition: all 0.4s ease;
+            background: transparent; cursor: pointer;
+        }
+        .btn-outline:hover { background: rgba(201, 169, 110, 0.08); }
+
+        .section-reveal { opacity: 0; transform: translateY(30px); transition: none; }
+
+        .nav-scrolled {
+            background: rgba(240, 235, 227, 0.95) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border-bottom: 1px solid rgba(201, 169, 110, 0.12) !important;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.04) !important;
+        }
+
+        .tab-active { color: #c9a96e !important; border-bottom: 2px solid #c9a96e; }
+
+        /* Questionnaire modal — stays dark for contrast */
+        .questionnaire-option {
+            cursor: pointer; transition: all 0.3s ease;
+            border: 1px solid rgba(201, 169, 110, 0.15);
+        }
+        .questionnaire-option:hover { border-color: rgba(201, 169, 110, 0.5); background: rgba(201, 169, 110, 0.08); }
+        .questionnaire-option.selected { border-color: #c9a96e; background: rgba(201, 169, 110, 0.15); }
+
+        .progress-fill { transition: width 0.5s ease; }
+
+        ::selection { background: rgba(201, 169, 110, 0.25); color: #2C2C35; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #F0EBE3; }
+        ::-webkit-scrollbar-thumb { background: rgba(201, 169, 110, 0.35); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(201, 169, 110, 0.55); }
+
+        .advisory-table th { background: #E6DED3; color: #a8864f; font-weight: 600; }
+        .advisory-table td, .advisory-table th { border: 1px solid #E8E0D5; padding: 12px 16px; text-align: left; }
+        .advisory-table tr:hover td { background: #F0EBE3; }
+        .advisory-table td { color: #6B6B7B; }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        .float-anim { animation: float 6s ease-in-out infinite; }
+
+        .mobile-menu { transform: translateX(100%); transition: transform 0.3s ease; }
+        .mobile-menu.open { transform: translateX(0); }
+
+        /* Hero text backdrop — subtle overlay behind text area for readability */
+        .hero-canvas-mask {
+            position: absolute; top: 0; left: 0; width: 55%; height: 100%;
+            background: linear-gradient(to right, rgba(240, 235, 227, 0.7) 50%, transparent 100%);
+            z-index: 1;
+        }
+        @media (max-width: 768px) {
+            .hero-canvas-mask {
+                width: 100%; height: 100%;
+                background: rgba(240, 235, 227, 0.55);
+            }
+        }
+
+        /* Alternating section backgrounds */
+        .bg-sand { background: #F0E8DD; }
+
+        .glass-modal {
+            background: rgba(15, 15, 25, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(201, 169, 110, 0.15);
+            border-radius: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== NAVIGATION ==================== -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500" style="background: transparent;">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="#hero" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full border-2 border-gold flex items-center justify-center bg-[#F7F3ED]/80">
+                    <span class="font-serif text-gold font-bold text-sm">LS</span>
+                </div>
+                <span class="font-serif text-lg text-charcoal tracking-wide hidden sm:block">Legacy Stewards</span>
+            </a>
+            <div class="hidden lg:flex items-center gap-8">
+                <a href="#about" class="text-sm text-muted hover:text-gold transition-colors">About</a>
+                <a href="#services" class="text-sm text-muted hover:text-gold transition-colors">Services</a>
+                <a href="#assessment" class="text-sm text-muted hover:text-gold transition-colors">Assessment</a>
+                <a href="#advisory" class="text-sm text-muted hover:text-gold transition-colors">Advisory</a>
+                <a href="#team" class="text-sm text-muted hover:text-gold transition-colors">Team</a>
+                <a href="#insights" class="text-sm text-muted hover:text-gold transition-colors">Insights</a>
+                <button onclick="openQuestionnaire()" class="btn-gold text-sm px-6 py-2.5">Start Assessment</button>
+            </div>
+            <button id="menu-btn" class="lg:hidden text-charcoal" onclick="toggleMobile()">
+                <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h20M4 14h20M4 21h20"/></svg>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu fixed top-0 right-0 h-full w-72 bg-cream z-50 p-8 lg:hidden shadow-2xl">
+            <button onclick="toggleMobile()" class="absolute top-6 right-6 text-charcoal">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+            <div class="flex flex-col gap-6 mt-16">
+                <a href="#about" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">About</a>
+                <a href="#services" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Services</a>
+                <a href="#assessment" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Assessment</a>
+                <a href="#advisory" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Advisory</a>
+                <a href="#team" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Team</a>
+                <a href="#insights" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Insights</a>
+                <button onclick="openQuestionnaire(); toggleMobile();" class="btn-gold text-sm mt-4">Start Assessment</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="relative z-10">
+
+        <!-- ===== HERO ===== -->
+        <section id="hero" class="min-h-screen flex items-center px-6 relative overflow-hidden bg-cream">
+            <!-- Particle canvas inside hero -->
+            <canvas id="three-canvas"></canvas>
+            <!-- Subtle mask so text stays readable -->
+            <div class="hero-canvas-mask"></div>
+            <!-- Hero Content -->
+            <div class="max-w-7xl mx-auto w-full relative z-10">
+                <div class="max-w-xl lg:max-w-2xl">
+                    <p class="text-gold text-sm tracking-[0.3em] uppercase mb-6 font-sans font-medium hero-reveal">Independent Stewardship Partners</p>
+                    <h1 class="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-8 text-charcoal hero-reveal">
+                        Guiding the Next Generation of <span class="gold-gradient">Legacy Leaders</span>
+                    </h1>
+                    <p class="text-muted text-lg md:text-xl max-w-lg mb-10 leading-relaxed hero-reveal">
+                        A dedicated stewardship partner for next-generation women leading their family's wealth into the future across Southeast Asia.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 hero-reveal">
+                        <button onclick="openQuestionnaire()" class="btn-gold text-base">Discover Your Readiness</button>
+                        <a href="#about" class="btn-outline text-base text-center">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 float-anim z-10">
+                <svg width="24" height="24" fill="none" stroke="#c9a96e" stroke-width="1.5" class="opacity-60"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            </div>
+        </section>
+
+        <!-- ===== ABOUT ===== -->
+        <section id="about" class="py-24 md:py-32 px-6 bg-[#F7F3ED]">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-16 section-reveal">
+                    <p class="text-gold text-sm tracking-[0.3em] uppercase mb-4">Who We Are</p>
+                    <h2 class="font-serif text-3xl md:text-5xl font-bold text-charcoal">Purpose-Driven Wealth Stewardship</h2>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="card p-8 md:p-10 section-reveal">
+                        <div class="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center mb-6">
+                            <svg width="24" height="24" fill="none" stroke="#c9a96e" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+                        </div>
+                        <h3 class="font-serif text-2xl text-charcoal mb-4">Our Vision</h3>
+                        <p class="text-muted leading-relaxed">
+                            To enable every next-generation woman of wealth in Southeast Asia to lead her family legacy with confidence, clarity, and purpose &mdash; transforming inherited capital into lasting impact across generations.
+                        </p>
+                    </div>
+                    <div class="card p-8 md:p-10 section-reveal">
+                        <div class="w-12 h-12 rounded-full bg-rose/10 flex items-center justify-center mb-6">
+                            <svg width="24" height="24" fill="none" stroke="#b76e79" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                        </div>
+                        <h3 class="font-serif text-2xl text-charcoal mb-4">Our Mission</h3>
+                        <p class="text-muted leading-relaxed">
+                            To be the independent stewardship partner for HNW female heirs as they transition from "designated successor" to true legacy leader. We combine rigorous heir-readiness assessment, conflict-free strategic advice, and curated peer communities to bridge the trust gap with parents, align wealth with personal values, and support dignified generational wealth transfer.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SERVICES ===== -->
+        <section id="services" class="py-24 md:py-32 px-6 bg-cream">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-16 section-reveal">
+                    <p class="text-gold text-sm tracking-[0.3em] uppercase mb-4">What We Offer</p>
+                    <h2 class="font-serif text-3xl md:text-5xl font-bold text-charcoal">Our Services</h2>
+                </div>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="card card-hover p-8 section-reveal">
+                        <div class="text-3xl mb-5 text-gold">&#9830;</div>
+                        <h3 class="font-serif text-xl text-charcoal mb-3">Stewardship Coaching</h3>
+                        <p class="text-muted text-sm leading-relaxed">One-to-one stewardship coaching focused on leadership, communication with parents, and decision-making to build your confidence as a legacy leader.</p>
+                    </div>
+                    <div class="card card-hover p-8 section-reveal">
+                        <div class="text-3xl mb-5 text-gold">&#9670;</div>
+                        <h3 class="font-serif text-xl text-charcoal mb-3">Heir Readiness Assessment</h3>
+                        <p class="text-muted text-sm leading-relaxed">Our proprietary Heir Readiness Scorecard evaluates your preparedness across key dimensions, creating a personalized roadmap for your stewardship journey.</p>
+                    </div>
+                    <div class="card card-hover p-8 section-reveal">
+                        <div class="text-3xl mb-5 text-gold">&#9674;</div>
+                        <h3 class="font-serif text-xl text-charcoal mb-3">Legal &amp; Tax Advisory</h3>
+                        <p class="text-muted text-sm leading-relaxed">Country-specific guidance on inheritance laws, estate tax, property transfer, and asset structuring across Southeast Asia's diverse legal systems.</p>
+                    </div>
+                    <div class="card card-hover p-8 section-reveal">
+                        <div class="text-3xl mb-5 text-gold">&#10022;</div>
+                        <h3 class="font-serif text-xl text-charcoal mb-3">Family Navigation</h3>
+                        <p class="text-muted text-sm leading-relaxed">Strategic facilitation for productive, non-emotional conversations with your parents about succession, bridging generational perspectives with grace.</p>
+                    </div>
+                    <div class="card card-hover p-8 section-reveal">
+                        <div class="text-3xl mb-5 text-gold">&#10023;</div>
+                        <h3 class="font-serif text-xl text-charcoal mb-3">Peer Community</h3>
+                        <p class="text-muted text-sm leading-relaxed">Curated communities of other next-generation heirs who understand the unique responsibilities and challenges of managing significant family wealth.</p>
+                    </div>
+                    <div class="card card-hover p-8 section-reveal">
+                        <div class="text-3xl mb-5 text-gold">&#10038;</div>
+                        <h3 class="font-serif text-xl text-charcoal mb-3">Impact Investing</h3>
+                        <p class="text-muted text-sm leading-relaxed">Align your inherited wealth with your personal values through ESG and impact investment strategies that create meaningful, measurable change.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== ASSESSMENT CTA ===== -->
+        <section id="assessment" class="py-24 md:py-32 px-6 bg-[#F7F3ED]">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="card p-10 md:p-16 section-reveal" style="background: linear-gradient(135deg, #E6DED3 0%, #F0EBE3 100%);">
+                    <p class="text-gold text-sm tracking-[0.3em] uppercase mb-4">Heir Readiness Scorecard</p>
+                    <h2 class="font-serif text-3xl md:text-4xl font-bold mb-6 text-charcoal">How Ready Are You to Lead Your Family Legacy?</h2>
+                    <p class="text-muted max-w-2xl mx-auto mb-8 leading-relaxed">
+                        Take our confidential 10-question assessment to understand where you stand on your journey from designated successor to legacy leader. Get personalized insights and a clear path forward.
+                    </p>
+                    <button onclick="openQuestionnaire()" class="btn-gold text-base">Begin Your Assessment</button>
+                    <p class="text-muted/60 text-xs mt-4">Takes approximately 3 minutes &bull; Completely confidential</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== REGIONAL ADVISORY ===== -->
+        <section id="advisory" class="py-24 md:py-32 px-6 bg-cream">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-12 section-reveal">
+                    <p class="text-gold text-sm tracking-[0.3em] uppercase mb-4">Regional Expertise</p>
+                    <h2 class="font-serif text-3xl md:text-5xl font-bold text-charcoal">Legal &amp; Tax Advisory</h2>
+                    <p class="text-muted mt-4 max-w-2xl mx-auto">Country-specific guidance tailored to the unique legal, tax, and investment landscape of each Southeast Asian market.</p>
+                </div>
+
+                <!-- Tab Buttons -->
+                <div class="flex flex-wrap justify-center gap-2 mb-10 section-reveal">
+                    <button class="adv-tab tab-active px-4 py-2 text-sm rounded-full border border-gold/30 text-muted hover:text-gold transition-all" data-tab="general">Overview</button>
+                    <button class="adv-tab px-4 py-2 text-sm rounded-full border border-gold/30 text-muted hover:text-gold transition-all" data-tab="indonesia">Indonesia</button>
+                    <button class="adv-tab px-4 py-2 text-sm rounded-full border border-gold/30 text-muted hover:text-gold transition-all" data-tab="singapore">Singapore</button>
+                    <button class="adv-tab px-4 py-2 text-sm rounded-full border border-gold/30 text-muted hover:text-gold transition-all" data-tab="philippines">Philippines</button>
+                    <button class="adv-tab px-4 py-2 text-sm rounded-full border border-gold/30 text-muted hover:text-gold transition-all" data-tab="malaysia">Malaysia</button>
+                    <button class="adv-tab px-4 py-2 text-sm rounded-full border border-gold/30 text-muted hover:text-gold transition-all" data-tab="thailand">Thailand</button>
+                    <button class="adv-tab px-4 py-2 text-sm rounded-full border border-gold/30 text-muted hover:text-gold transition-all" data-tab="vietnam">Vietnam</button>
+                </div>
+
+                <!-- Tab Content Container -->
+                <div id="advisory-content" class="card p-8 md:p-12 section-reveal">
+
+                    <!-- GENERAL / OVERVIEW -->
+                    <div class="adv-panel" data-panel="general">
+                        <h3 class="font-serif text-2xl md:text-3xl text-charcoal mb-4">Navigating Your Inheritance with Confidence and Clarity</h3>
+                        <p class="text-muted leading-relaxed mb-6">Receiving an inheritance is often a deeply emotional experience, tied to the loss of a loved one. Amidst the grief, you may be faced with the sudden responsibility of managing a significant amount of wealth. We specialize in providing financial advice for women who have received an inheritance &mdash; empowering you to make informed decisions that honor your loved one's legacy.</p>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm mb-10">Book a Complimentary Discovery Call</button>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">Inheritance Laws Across Southeast Asia</h4>
+                        <p class="text-muted leading-relaxed mb-6">The legal landscape of inheritance in Southeast Asia is a complex tapestry of civil law, common law, and religious or customary laws. Understanding these laws is the first step to protecting your inheritance.</p>
+                        <div class="overflow-x-auto mb-8">
+                            <table class="advisory-table w-full text-sm rounded-lg overflow-hidden">
+                                <thead>
+                                    <tr><th>Country</th><th>Inheritance / Estate Tax</th><th>Key Considerations</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td class="font-medium text-charcoal">Singapore</td><td>None (abolished 2008)</td><td>Focus on proper asset transfer and trust structuring</td></tr>
+                                    <tr><td class="font-medium text-charcoal">Philippines</td><td>Has an estate tax</td><td>"Compulsory heirs" have a right to a portion of the estate</td></tr>
+                                    <tr><td class="font-medium text-charcoal">Vietnam</td><td>10% over threshold</td><td>Exemptions apply for close relatives</td></tr>
+                                    <tr><td class="font-medium text-charcoal">Thailand</td><td>Yes (introduced 2015)</td><td>Different rates for parents and children</td></tr>
+                                    <tr><td class="font-medium text-charcoal">Indonesia</td><td>No inheritance tax</td><td>Forced heirship and multiple legal systems</td></tr>
+                                    <tr><td class="font-medium text-charcoal">Malaysia</td><td>None (abolished 1991)</td><td>Dual civil and Sharia law systems</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">General Tax Implications</h4>
+                        <p class="text-muted leading-relaxed mb-4">Even in countries without a direct inheritance tax, other taxes may apply:</p>
+                        <ul class="text-muted space-y-2 mb-8 ml-4">
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Capital Gains Tax:</strong> If you sell an inherited asset, you may be liable for tax on any increase in its value.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Real Estate Transfer Tax:</strong> The transfer of property ownership may be subject to a specific transfer tax.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Stamp Duty:</strong> May be levied on certain documents related to the transfer of assets.</span></li>
+                        </ul>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">Investing Your Inheritance</h4>
+                        <ul class="text-muted space-y-3 mb-6 ml-4">
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Take Your Time:</strong> Avoid making major financial decisions in the immediate aftermath of a loved one's passing.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Create a Financial Roadmap:</strong> A comprehensive plan based on your personal goals, risk tolerance, and values.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Explore Your Options:</strong> From stocks and bonds to real estate and gender-lens investing.</span></li>
+                        </ul>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm">Talk to an Advisor to Start Your Journey</button>
+                    </div>
+
+                    <!-- INDONESIA -->
+                    <div class="adv-panel hidden" data-panel="indonesia">
+                        <h3 class="font-serif text-2xl md:text-3xl text-charcoal mb-4">Understanding Your Inheritance in Indonesia</h3>
+                        <p class="text-muted leading-relaxed mb-6">Inheriting assets in Indonesia presents a unique set of challenges due to its pluralistic legal system. As a woman, it is vital to understand your rights to ensure you are empowered to manage your legacy effectively.</p>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm mb-10">Book a Consultation with an Indonesia Specialist</button>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">Legal Considerations</h4>
+                        <p class="text-muted leading-relaxed mb-3">Indonesia's legal framework for inheritance is a complex mix of three systems:</p>
+                        <ul class="text-muted space-y-3 mb-4 ml-4">
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Civil Code (KUHPerdata):</strong> Applies to non-Muslims. Includes "forced heirship" guaranteeing a portion to spouse and children. Men and women have equal inheritance rights.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Islamic Law:</strong> For Muslims, distribution follows specific shares from the Quran, where male heirs often receive double the share of female heirs of the same rank.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Customary Law (Adat):</strong> Varying between ethnic groups, these laws can significantly impact inheritance.</span></li>
+                        </ul>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm mb-10">Schedule a Private Consultation</button>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">Tax Implications</h4>
+                        <ul class="text-muted space-y-3 mb-4 ml-4">
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Property Transfer Tax (BPHTB):</strong> When you inherit real estate, you are liable for this tax.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Unpaid Taxes:</strong> As an heir, you become responsible for any of the deceased's unpaid taxes.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Foreign Ownership:</strong> Foreigners cannot own freehold land. If you inherit such property, you have one year to sell or transfer it.</span></li>
+                        </ul>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm mb-10">Talk to an Advisor About Your Indonesian Tax Obligations</button>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">Investment &amp; Planning</h4>
+                        <ul class="text-muted space-y-3 mb-6 ml-4">
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Draft a Will:</strong> With a complex legal system, creating a will with a local notary is highly recommended.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Consider Trusts:</strong> Increasingly common for managing complex assets, especially for foreigners.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Get Legal Advice:</strong> Expert advice on structuring your holdings is critical if you are a foreigner.</span></li>
+                        </ul>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm">Book a Meeting with Our Indonesian Specialists</button>
+                    </div>
+
+                    <!-- SINGAPORE -->
+                    <div class="adv-panel hidden" data-panel="singapore">
+                        <h3 class="font-serif text-2xl md:text-3xl text-charcoal mb-4">Maximizing Your Inheritance in Singapore</h3>
+                        <p class="text-muted leading-relaxed mb-6">Inheriting assets in Singapore provides a unique advantage due to its clear legal framework and tax-friendly policies. Our goal is to help you leverage this environment to protect and grow your wealth.</p>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm mb-10">Book a Complimentary Consultation with Our Singapore Experts</button>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">Legal Considerations</h4>
+                        <ul class="text-muted space-y-3 mb-4 ml-4">
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Clear Laws:</strong> The Intestate Succession Act (non-Muslims) and AMLA (Muslims) provide clear hierarchy for estate distribution.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Power of a Will:</strong> Ensures your assets are distributed precisely as you wish, appoint guardians, and name an executor.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">The Women's Charter:</strong> Guarantees women the right to own and manage property independently.</span></li>
+                        </ul>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm mb-10">Contact Us to Create Your Estate Plan</button>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">Tax Implications</h4>
+                        <ul class="text-muted space-y-3 mb-4 ml-4">
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">No Inheritance Tax:</strong> Singapore abolished estate duty in 2008. No capital gains tax or gift tax either.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Income Tax on Estate:</strong> While the inheritance itself isn't taxed, any income generated by the estate after death is subject to income tax (e.g., rental income).</span></li>
+                        </ul>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm mb-10">Speak with a Tax Advisor Today</button>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">Investment &amp; Planning</h4>
+                        <ul class="text-muted space-y-3 mb-6 ml-4">
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Priority Banking:</strong> Place funds in a priority banking account for a dedicated relationship manager.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Stocks &amp; ETFs:</strong> Traditional options for long-term growth and diversification.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Supplementary Retirement Scheme (SRS):</strong> Tax relief while investing for retirement.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Trusts:</strong> Advanced asset protection and controlled inheritance distribution.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Digital Assets:</strong> Include instructions in your will for cryptocurrency and online accounts.</span></li>
+                        </ul>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm">Get a Personalized Investment Plan Today</button>
+                    </div>
+
+                    <!-- PHILIPPINES -->
+                    <div class="adv-panel hidden" data-panel="philippines">
+                        <h3 class="font-serif text-2xl md:text-3xl text-charcoal mb-4">Managing Your Inheritance in the Philippines</h3>
+                        <p class="text-muted leading-relaxed mb-6">Receiving an inheritance in the Philippines involves navigating specific legal and tax obligations defined by the Civil Code. We are here to help you manage your new assets confidently and plan for a secure future.</p>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm mb-10">Book a Consultation with a Philippines Specialist</button>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">Legal Considerations</h4>
+                        <ul class="text-muted space-y-3 mb-4 ml-4">
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Compulsory Heirs (Forced Heirship):</strong> The law protects certain heirs by reserving a portion called the "legitime." This cannot be taken away, even by a will.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Wills:</strong> A will allows distribution of the "free portion" according to your wishes.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Equal Rights:</strong> The Constitution and Civil Code grant men and women equal inheritance rights.</span></li>
+                        </ul>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm mb-10">Schedule a Private Legal Strategy Session</button>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">Tax Implications</h4>
+                        <ul class="text-muted space-y-3 mb-4 ml-4">
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Estate Tax:</strong> A flat 6% on the value of the net estate (total assets minus allowable deductions).</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Deductions:</strong> Funeral expenses, claims against the estate, and a standard deduction for the family home.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Filing Deadline:</strong> The estate tax return must be filed within one year from the date of death.</span></li>
+                        </ul>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm mb-10">Talk to an Advisor About Your Philippine Tax Obligations</button>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">Investment &amp; Planning</h4>
+                        <ul class="text-muted space-y-3 mb-6 ml-4">
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Financial Goal Setting:</strong> Define what you want to achieve: retirement, education, business, or legacy.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">PSE &amp; Funds:</strong> The Philippine Stock Exchange, mutual funds, and UITFs offer diversified options.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Real Estate:</strong> A robust market with strong investment potential.</span></li>
+                        </ul>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm">Book a Meeting with Our Philippine Investment Specialists</button>
+                    </div>
+
+                    <!-- MALAYSIA -->
+                    <div class="adv-panel hidden" data-panel="malaysia">
+                        <h3 class="font-serif text-2xl md:text-3xl text-charcoal mb-4">A Clear Path for Your Inheritance in Malaysia</h3>
+                        <p class="text-muted leading-relaxed mb-6">Malaysia's dual legal system and favorable tax environment offer a unique landscape for managing inherited wealth. Whether governed by civil or Sharia law, our advisors provide clarity and direction.</p>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm mb-10">Book a Complimentary Consultation with Our Malaysia Experts</button>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">Legal Considerations</h4>
+                        <ul class="text-muted space-y-3 mb-4 ml-4">
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Non-Muslims:</strong> The Distribution Act 1958 sets clear succession order (spouse gets 1/3, children share 2/3). A will provides freedom to distribute as you wish.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Muslims:</strong> Faraid (Islamic Law) specifies fixed shares. A will can only bequeath up to 1/3 to non-heirs.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Women's Rights:</strong> Under civil law, women have equal inheritance rights. Under Islamic law, shares are pre-determined by religious texts.</span></li>
+                        </ul>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm mb-10">Schedule a Private Consultation</button>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">Tax Implications</h4>
+                        <ul class="text-muted space-y-3 mb-4 ml-4">
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">No Inheritance Tax:</strong> Abolished in 1991. You will not be taxed on the value of assets received.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Real Property Gains Tax (RPGT):</strong> You may be liable if you sell inherited property, though exemptions exist including a one-time private residence exemption.</span></li>
+                        </ul>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm mb-10">Talk to an Advisor About RPGT</button>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">Investment &amp; Planning</h4>
+                        <ul class="text-muted space-y-3 mb-6 ml-4">
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">ASNB Unit Trusts:</strong> Popular unit trust funds that are a cornerstone of many Malaysians' portfolios.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Bursa Malaysia:</strong> Diversified stock portfolio for long-term growth.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Trusts &amp; Foundations:</strong> Sophisticated wealth management to ensure your legacy is managed to your long-term vision.</span></li>
+                        </ul>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm">Get a Personalized Malaysian Investment Plan</button>
+                    </div>
+
+                    <!-- THAILAND -->
+                    <div class="adv-panel hidden" data-panel="thailand">
+                        <h3 class="font-serif text-2xl md:text-3xl text-charcoal mb-4">Secure Your Legacy in Thailand</h3>
+                        <p class="text-muted leading-relaxed mb-6">Managing an inheritance in Thailand requires understanding the Civil and Commercial Code and newer inheritance tax laws. Our advisors help you secure assets, minimize your tax burden, and invest wisely.</p>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm mb-10">Book a Consultation with a Thailand Specialist</button>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">Legal Considerations</h4>
+                        <ul class="text-muted space-y-3 mb-4 ml-4">
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Statutory Heirs:</strong> Six classes of statutory heirs inherit in strict order of priority. Spouse and children are highest priority.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Power of a Will:</strong> Highly recommended to ensure assets are distributed to your exact wishes.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Equal Rights:</strong> Men and women have equal rights to inherit property under Thai law.</span></li>
+                        </ul>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm mb-10">Schedule a Private Legal Strategy Session</button>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">Tax Implications</h4>
+                        <ul class="text-muted space-y-3 mb-4 ml-4">
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Inheritance Tax:</strong> Applies to inheritances over 100 million THB. 5% for descendants/ascendants, 10% for others.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Property Transfer Fees:</strong> Registration and transfer fees at the Land Department, significantly lower for inheritance than direct sale.</span></li>
+                        </ul>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm mb-10">Talk to an Advisor About Your Thai Tax Obligations</button>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">Investment &amp; Planning</h4>
+                        <ul class="text-muted space-y-3 mb-6 ml-4">
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Financial Planning:</strong> Create a clear plan based on your life goals and risk tolerance.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Thai Markets:</strong> The Stock Exchange of Thailand (SET), bonds, and a vibrant property market.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Foreign Ownership:</strong> Foreigners generally cannot own land, but can own buildings or condo units.</span></li>
+                        </ul>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm">Get a Personalized Thai Investment Plan</button>
+                    </div>
+
+                    <!-- VIETNAM -->
+                    <div class="adv-panel hidden" data-panel="vietnam">
+                        <h3 class="font-serif text-2xl md:text-3xl text-charcoal mb-4">Navigating Your Inheritance in Vietnam</h3>
+                        <p class="text-muted leading-relaxed mb-6">Inheriting assets in Vietnam means engaging with its civil law system and specific tax regulations. As a woman in one of Asia's fastest-growing economies, understanding your rights and opportunities is paramount.</p>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm mb-10">Book a Consultation with a Vietnam Specialist</button>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">Legal Considerations</h4>
+                        <ul class="text-muted space-y-3 mb-4 ml-4">
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Heirs-at-Law:</strong> First line includes spouse, parents, and children, who all inherit equal shares.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Wills &amp; Forced Heirs:</strong> A will gives control over distribution, but a portion is reserved for minor children, parents, and spouse.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Equal Rights:</strong> Vietnamese law guarantees equal inheritance rights for men and women.</span></li>
+                        </ul>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm mb-10">Schedule a Private Legal Consultation</button>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">Tax Implications</h4>
+                        <ul class="text-muted space-y-3 mb-4 ml-4">
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Inheritance Tax:</strong> 10% on the value of inherited assets exceeding 10 million VND.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Family Exemption:</strong> Inheritance between close family members (husband/wife, parents/children, siblings) is exempt.</span></li>
+                        </ul>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm mb-10">Talk to an Advisor About Your Vietnamese Tax Situation</button>
+
+                        <h4 class="font-serif text-xl text-charcoal mb-4">Investment &amp; Planning</h4>
+                        <ul class="text-muted space-y-3 mb-6 ml-4">
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Growing Market:</strong> Exciting opportunities in manufacturing, technology, and consumer goods with high growth potential.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Real Estate:</strong> Popular investment, but foreigners should seek immediate legal advice on land ownership restrictions.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gold mt-1">&#8226;</span><span><strong class="text-charcoal">Diversified Portfolio:</strong> We help align investments with Vietnam's growth story and your personal financial goals.</span></li>
+                        </ul>
+                        <button onclick="scrollToContact()" class="btn-outline text-sm">Get a Personalized Vietnamese Investment Plan</button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TEAM ===== -->
+        <section id="team" class="py-24 md:py-32 px-6 bg-[#F7F3ED]">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-16 section-reveal">
+                    <p class="text-gold text-sm tracking-[0.3em] uppercase mb-4">Our Team</p>
+                    <h2 class="font-serif text-3xl md:text-5xl font-bold text-charcoal">Your Stewardship Partners</h2>
+                </div>
+                <div class="card p-8 md:p-12 section-reveal">
+                    <p class="text-muted leading-relaxed mb-6">
+                        We are a multidisciplinary team of stewardship strategists, private-banking veterans, legal and tax collaborators, and impact-investment specialists dedicated to serving HNW women in Southeast Asia.
+                    </p>
+                    <p class="text-muted leading-relaxed mb-8">
+                        Our backgrounds span regional banking operations, client experience design, family-governance and inheritance planning, and ESG/impact syndicates. At the core of our team is a shared belief: <span class="text-gold-dark italic font-medium">you should never have to choose between family expectations, cultural nuance, and your own values.</span>
+                    </p>
+                    <div class="grid sm:grid-cols-3 gap-6 mt-8">
+                        <div class="text-center p-6 rounded-xl bg-cream border border-gold/10">
+                            <div class="text-3xl mb-3 text-gold">&#9830;</div>
+                            <h4 class="font-serif text-lg text-charcoal mb-2">One-to-One Coaching</h4>
+                            <p class="text-muted text-sm">Leadership, family communication, and decision-making</p>
+                        </div>
+                        <div class="text-center p-6 rounded-xl bg-cream border border-gold/10">
+                            <div class="text-3xl mb-3 text-gold">&#9670;</div>
+                            <h4 class="font-serif text-lg text-charcoal mb-2">Scorecard Development</h4>
+                            <p class="text-muted text-sm">Shaping the Heir Readiness curriculum</p>
+                        </div>
+                        <div class="text-center p-6 rounded-xl bg-cream border border-gold/10">
+                            <div class="text-3xl mb-3 text-gold">&#9674;</div>
+                            <h4 class="font-serif text-lg text-charcoal mb-2">Trusted Network</h4>
+                            <p class="text-muted text-sm">Legal, tax, and impact partners on demand</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== INSIGHTS ===== -->
+        <section id="insights" class="py-24 md:py-32 px-6 bg-cream">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-16 section-reveal">
+                    <p class="text-gold text-sm tracking-[0.3em] uppercase mb-4">Insights</p>
+                    <h2 class="font-serif text-3xl md:text-5xl font-bold text-charcoal">From Our Team</h2>
+                    <p class="text-muted mt-4">Perspectives on the challenges and opportunities facing next-generation women of wealth.</p>
+                </div>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="card card-hover p-6 section-reveal cursor-pointer">
+                        <p class="text-gold text-xs tracking-widest uppercase mb-3">Stewardship</p>
+                        <h3 class="font-serif text-lg text-charcoal mb-3">The Confidence Gap: Why Capable Heirs Still Doubt Themselves</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Exploring the psychological barriers that even highly educated and competent female heirs face when stepping into leadership roles.</p>
+                        <span class="text-gold text-sm font-medium">Coming Soon &rarr;</span>
+                    </div>
+                    <div class="card card-hover p-6 section-reveal cursor-pointer">
+                        <p class="text-rose text-xs tracking-widest uppercase mb-3">Family Dynamics</p>
+                        <h3 class="font-serif text-lg text-charcoal mb-3">Bridging the Generational Trust Gap in Asian Families</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">How to navigate conversations about succession when cultural expectations and personal ambitions diverge.</p>
+                        <span class="text-gold text-sm font-medium">Coming Soon &rarr;</span>
+                    </div>
+                    <div class="card card-hover p-6 section-reveal cursor-pointer">
+                        <p class="text-gold text-xs tracking-widest uppercase mb-3">Impact</p>
+                        <h3 class="font-serif text-lg text-charcoal mb-3">Values-Aligned Investing: Beyond Traditional Wealth Management</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">How next-generation leaders are redefining what it means to manage family wealth with purpose and impact.</p>
+                        <span class="text-gold text-sm font-medium">Coming Soon &rarr;</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== CONTACT / CTA ===== -->
+        <section id="contact" class="py-24 md:py-32 px-6 bg-[#F7F3ED]">
+            <div class="max-w-4xl mx-auto section-reveal">
+                <div class="text-center mb-12">
+                    <p class="text-gold text-sm tracking-[0.3em] uppercase mb-4">Begin Your Journey</p>
+                    <h2 class="font-serif text-3xl md:text-5xl font-bold mb-6 text-charcoal">Ready to Lead Your Legacy?</h2>
+                    <p class="text-muted text-lg leading-relaxed max-w-2xl mx-auto">
+                        Whether you're just beginning to think about your inheritance or actively stepping into a leadership role, we're here to guide you with clarity and confidence.
+                    </p>
+                </div>
+                <!-- Contact Form -->
+                <div class="card p-8 md:p-10 max-w-2xl mx-auto">
+                    <form onsubmit="event.preventDefault(); alert('Thank you! We will be in touch shortly.'); this.reset();" class="space-y-5">
+                        <div class="grid sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-sm text-charcoal font-medium mb-1.5">First Name</label>
+                                <input type="text" required class="w-full px-4 py-3 rounded-lg border border-[#E8E0D5] bg-cream/50 text-charcoal text-sm focus:outline-none focus:border-gold transition-colors" placeholder="Your first name">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-charcoal font-medium mb-1.5">Last Name</label>
+                                <input type="text" required class="w-full px-4 py-3 rounded-lg border border-[#E8E0D5] bg-cream/50 text-charcoal text-sm focus:outline-none focus:border-gold transition-colors" placeholder="Your last name">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-charcoal font-medium mb-1.5">Email</label>
+                            <input type="email" required class="w-full px-4 py-3 rounded-lg border border-[#E8E0D5] bg-cream/50 text-charcoal text-sm focus:outline-none focus:border-gold transition-colors" placeholder="your.email@example.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-charcoal font-medium mb-1.5">How can we help?</label>
+                            <select class="w-full px-4 py-3 rounded-lg border border-[#E8E0D5] bg-cream/50 text-muted text-sm focus:outline-none focus:border-gold transition-colors">
+                                <option>I'd like to book a discovery call</option>
+                                <option>I'm interested in the Heir Readiness Assessment</option>
+                                <option>I need legal &amp; tax advisory</option>
+                                <option>I want to learn about stewardship coaching</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-charcoal font-medium mb-1.5">Message (optional)</label>
+                            <textarea rows="3" class="w-full px-4 py-3 rounded-lg border border-[#E8E0D5] bg-cream/50 text-charcoal text-sm focus:outline-none focus:border-gold transition-colors resize-none" placeholder="Tell us a little about your situation..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-gold text-base w-full">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="relative z-10 bg-sand border-t border-gold/10 py-12 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full border border-gold flex items-center justify-center">
+                            <span class="font-serif text-gold text-xs font-bold">LS</span>
+                        </div>
+                        <span class="font-serif text-charcoal">Legacy Stewards</span>
+                    </div>
+                    <p class="text-muted text-sm leading-relaxed">Independent stewardship partners for next-generation women of wealth in Southeast Asia.</p>
+                </div>
+                <div>
+                    <h4 class="text-charcoal font-medium text-sm mb-4">Services</h4>
+                    <ul class="space-y-2 text-muted text-sm">
+                        <li><a href="#services" class="hover:text-gold transition-colors">Stewardship Coaching</a></li>
+                        <li><a href="#assessment" class="hover:text-gold transition-colors">Heir Readiness Assessment</a></li>
+                        <li><a href="#advisory" class="hover:text-gold transition-colors">Legal &amp; Tax Advisory</a></li>
+                        <li><a href="#services" class="hover:text-gold transition-colors">Impact Investing</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-charcoal font-medium text-sm mb-4">Regions</h4>
+                    <ul class="space-y-2 text-muted text-sm">
+                        <li><a href="#advisory" class="hover:text-gold transition-colors">Indonesia</a></li>
+                        <li><a href="#advisory" class="hover:text-gold transition-colors">Singapore</a></li>
+                        <li><a href="#advisory" class="hover:text-gold transition-colors">Philippines</a></li>
+                        <li><a href="#advisory" class="hover:text-gold transition-colors">Malaysia, Thailand, Vietnam</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-charcoal font-medium text-sm mb-4">Connect</h4>
+                    <ul class="space-y-2 text-muted text-sm">
+                        <li><a href="#contact" class="hover:text-gold transition-colors">Book a Discovery Call</a></li>
+                        <li><a href="#insights" class="hover:text-gold transition-colors">Insights &amp; Blog</a></li>
+                        <li><a href="#team" class="hover:text-gold transition-colors">Our Team</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gold/10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <p class="text-muted text-xs">&copy; 2026 Legacy Stewards. All rights reserved.</p>
+                <div class="flex gap-6 text-muted text-xs">
+                    <a href="#" class="hover:text-gold transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-gold transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== QUESTIONNAIRE MODAL (stays dark for contrast) ==================== -->
+    <div id="questionnaire-modal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-[#0a0a18]/95 backdrop-blur-xl"></div>
+        <div class="relative z-10 h-full flex flex-col items-center justify-center px-6 overflow-y-auto py-10">
+            <button onclick="closeQuestionnaire()" class="absolute top-6 right-6 text-[#8a8a9a] hover:text-white transition-colors">
+                <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 8l16 16M24 8L8 24"/></svg>
+            </button>
+            <div class="w-full max-w-2xl">
+                <!-- Progress -->
+                <div class="mb-8">
+                    <div class="flex justify-between text-sm text-[#8a8a9a] mb-2">
+                        <span id="q-progress-text">Question 1 of 10</span>
+                        <span id="q-progress-pct">10%</span>
+                    </div>
+                    <div class="w-full h-1 bg-[#F7F3ED]/10 rounded-full overflow-hidden">
+                        <div id="q-progress-bar" class="h-full bg-gradient-to-r from-gold to-gold-light rounded-full progress-fill" style="width: 10%"></div>
+                    </div>
+                </div>
+                <!-- Question Area -->
+                <div id="q-question-area">
+                    <h3 id="q-title" class="font-serif text-2xl md:text-3xl text-white mb-8 leading-snug"></h3>
+                    <div id="q-options" class="space-y-3"></div>
+                </div>
+                <!-- Results Area -->
+                <div id="q-results" class="hidden text-center">
+                    <div id="q-result-icon" class="text-6xl mb-6 text-gold"></div>
+                    <h3 id="q-result-tier" class="font-serif text-3xl md:text-4xl text-gold-light mb-4"></h3>
+                    <p id="q-result-score" class="text-[#8a8a9a] mb-4"></p>
+                    <p id="q-result-desc" class="text-[#8a8a9a] leading-relaxed max-w-lg mx-auto mb-6"></p>
+                    <div id="q-result-priorities" class="mb-8"></div>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button onclick="closeQuestionnaire(); setTimeout(scrollToContact, 300);" class="btn-gold">Book a Discovery Call</button>
+                        <button onclick="closeQuestionnaire()" class="btn-outline" style="color: #c9a96e;">Close</button>
+                    </div>
+                </div>
+                <!-- Navigation -->
+                <div id="q-nav" class="flex justify-between mt-8">
+                    <button id="q-prev" onclick="prevQuestion()" class="text-[#8a8a9a] hover:text-gold transition-colors text-sm hidden">&larr; Previous</button>
+                    <div></div>
+                    <button id="q-next" onclick="nextQuestion()" class="btn-gold text-sm px-8 opacity-50 pointer-events-none">Next &rarr;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SCRIPTS ==================== -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <script>
+    /* ===========================
+       CURSOR-TRACKING PARTICLE SYSTEM — Antigravity inspired
+       =========================== */
+    (function() {
+        const canvas = document.getElementById('three-canvas');
+        const heroSection = document.getElementById('hero');
+        const ctx = canvas.getContext('2d');
+        const dpr = Math.min(window.devicePixelRatio, 2);
+
+        // Mouse tracking
+        let mouseX = -9999, mouseY = -9999;
+        let heroRect = heroSection.getBoundingClientRect();
+
+        function resizeCanvas() {
+            heroRect = heroSection.getBoundingClientRect();
+            canvas.width = heroRect.width * dpr;
+            canvas.height = heroRect.height * dpr;
+            canvas.style.width = heroRect.width + 'px';
+            canvas.style.height = heroRect.height + 'px';
+            ctx.scale(dpr, dpr);
+        }
+        resizeCanvas();
+
+        // Warm, premium color palette (golds, roses, warm tones)
+        const colors = [
+            '#c9a96e', // gold
+            '#e8d5b5', // gold-light
+            '#a8864f', // gold-dark
+            '#b76e79', // rose
+            '#d4a574', // warm copper
+            '#c4956a', // amber
+            '#d9c4a5', // champagne
+            '#9b7653', // bronze
+            '#e6cdb5', // blush gold
+            '#c4a882', // soft brass
+        ];
+
+        // Shape types: dot, dash, ring, diamond, triangle
+        const shapeTypes = ['dot', 'dash', 'ring', 'diamond', 'dot', 'dash', 'dot', 'triangle'];
+
+        // Particle class
+        class Particle {
+            constructor() {
+                this.reset(true);
+            }
+
+            reset(initial) {
+                const w = heroRect.width;
+                const h = heroRect.height;
+                this.x = Math.random() * w;
+                this.y = Math.random() * h;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.size = 3 + Math.random() * 10;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.shape = shapeTypes[Math.floor(Math.random() * shapeTypes.length)];
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotSpeed = (Math.random() - 0.5) * 0.02;
+                this.opacity = 0.15 + Math.random() * 0.55;
+                this.driftX = (Math.random() - 0.5) * 0.3;
+                this.driftY = (Math.random() - 0.5) * 0.3;
+                this.floatPhase = Math.random() * Math.PI * 2;
+                this.floatSpeed = 0.3 + Math.random() * 0.7;
+                this.floatAmp = 0.3 + Math.random() * 0.8;
+                // For cursor interaction
+                this.vx = 0;
+                this.vy = 0;
+                this.friction = 0.92 + Math.random() * 0.05;
+                this.returnSpeed = 0.008 + Math.random() * 0.012;
+            }
+
+            update(time) {
+                // Cursor repulsion/attraction
+                const dx = this.x - mouseX;
+                const dy = this.y - mouseY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const cursorRadius = 150;
+
+                if (dist < cursorRadius && dist > 0) {
+                    const force = (cursorRadius - dist) / cursorRadius;
+                    const angle = Math.atan2(dy, dx);
+                    this.vx += Math.cos(angle) * force * 2.5;
+                    this.vy += Math.sin(angle) * force * 2.5;
+                }
+
+                // Apply velocity with friction
+                this.vx *= this.friction;
+                this.vy *= this.friction;
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Gently return to base position with floating
+                const floatOffsetX = Math.sin(time * this.floatSpeed + this.floatPhase) * this.floatAmp;
+                const floatOffsetY = Math.cos(time * this.floatSpeed * 0.7 + this.floatPhase) * this.floatAmp;
+                const targetX = this.baseX + this.driftX * time * 3 + floatOffsetX;
+                const targetY = this.baseY + this.driftY * time * 3 + floatOffsetY;
+
+                this.x += (targetX - this.x) * this.returnSpeed;
+                this.y += (targetY - this.y) * this.returnSpeed;
+
+                // Slow rotation
+                this.rotation += this.rotSpeed;
+
+                // Wrap drift base positions
+                const w = heroRect.width;
+                const h = heroRect.height;
+                if (this.baseX + this.driftX * time * 3 > w + 30) this.baseX -= w + 60;
+                if (this.baseX + this.driftX * time * 3 < -30) this.baseX += w + 60;
+                if (this.baseY + this.driftY * time * 3 > h + 30) this.baseY -= h + 60;
+                if (this.baseY + this.driftY * time * 3 < -30) this.baseY += h + 60;
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.strokeStyle = this.color;
+
+                switch (this.shape) {
+                    case 'dot':
+                        ctx.beginPath();
+                        ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+                        ctx.fill();
+                        break;
+                    case 'dash':
+                        ctx.lineWidth = Math.max(1.5, this.size / 4);
+                        ctx.lineCap = 'round';
+                        ctx.beginPath();
+                        ctx.moveTo(-this.size, 0);
+                        ctx.lineTo(this.size, 0);
+                        ctx.stroke();
+                        break;
+                    case 'ring':
+                        ctx.lineWidth = Math.max(1, this.size / 5);
+                        ctx.beginPath();
+                        ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+                        ctx.stroke();
+                        break;
+                    case 'diamond':
+                        const s = this.size / 2;
+                        ctx.beginPath();
+                        ctx.moveTo(0, -s);
+                        ctx.lineTo(s * 0.6, 0);
+                        ctx.lineTo(0, s);
+                        ctx.lineTo(-s * 0.6, 0);
+                        ctx.closePath();
+                        ctx.fill();
+                        break;
+                    case 'triangle':
+                        const r = this.size / 2;
+                        ctx.beginPath();
+                        ctx.moveTo(0, -r);
+                        ctx.lineTo(r * 0.87, r * 0.5);
+                        ctx.lineTo(-r * 0.87, r * 0.5);
+                        ctx.closePath();
+                        ctx.fill();
+                        break;
+                }
+
+                ctx.restore();
+            }
+        }
+
+        // Create particles — more on larger screens
+        const count = Math.min(120, Math.floor((heroRect.width * heroRect.height) / 6000));
+        const particles = [];
+        for (let i = 0; i < count; i++) {
+            particles.push(new Particle());
+        }
+
+        // Track mouse relative to hero section
+        document.addEventListener('mousemove', (e) => {
+            heroRect = heroSection.getBoundingClientRect();
+            mouseX = e.clientX - heroRect.left;
+            mouseY = e.clientY - heroRect.top;
+        });
+        document.addEventListener('mouseleave', () => {
+            mouseX = -9999;
+            mouseY = -9999;
+        });
+
+        // Touch support
+        document.addEventListener('touchmove', (e) => {
+            heroRect = heroSection.getBoundingClientRect();
+            mouseX = e.touches[0].clientX - heroRect.left;
+            mouseY = e.touches[0].clientY - heroRect.top;
+        }, { passive: true });
+        document.addEventListener('touchend', () => {
+            mouseX = -9999;
+            mouseY = -9999;
+        });
+
+        // Animation loop
+        let startTime = performance.now();
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = (performance.now() - startTime) / 1000;
+            const w = heroRect.width;
+            const h = heroRect.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            for (const p of particles) {
+                p.update(time);
+                p.draw(ctx);
+            }
+        }
+        animate();
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            // Redistribute particles on resize
+            particles.forEach(p => {
+                p.baseX = Math.random() * heroRect.width;
+                p.baseY = Math.random() * heroRect.height;
+                p.x = p.baseX;
+                p.y = p.baseY;
+            });
+        });
+    })();
+
+    /* ===========================
+       GSAP SCROLL ANIMATIONS
+       =========================== */
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Hero text reveal
+    gsap.fromTo('.hero-reveal',
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: 'power3.out', delay: 0.3 }
+    );
+
+    // Section reveals — animate TO visible
+    gsap.utils.toArray('.section-reveal').forEach(el => {
+        gsap.to(el, {
+            scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' },
+            y: 0, opacity: 1, duration: 0.7, ease: 'power3.out'
+        });
+    });
+
+    /* ===========================
+       NAVIGATION
+       =========================== */
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 60) { navbar.classList.add('nav-scrolled'); }
+        else { navbar.classList.remove('nav-scrolled'); }
+    });
+
+    function toggleMobile() {
+        document.getElementById('mobile-menu').classList.toggle('open');
+    }
+
+    /* ===========================
+       SCROLL TO CONTACT — universal CTA handler
+       =========================== */
+    function scrollToContact() {
+        document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    /* ===========================
+       ADVISORY TABS
+       =========================== */
+    document.querySelectorAll('.adv-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.adv-tab').forEach(t => t.classList.remove('tab-active'));
+            tab.classList.add('tab-active');
+            const target = tab.dataset.tab;
+            document.querySelectorAll('.adv-panel').forEach(p => p.classList.add('hidden'));
+            document.querySelector(`.adv-panel[data-panel="${target}"]`).classList.remove('hidden');
+        });
+    });
+
+    /* ===========================
+       QUESTIONNAIRE
+       =========================== */
+    const questions = [
+        {
+            q: "Do you have official confirmation that you are part of the inheritance plan?",
+            options: [
+                "Yes, it's official and in writing.",
+                "We've talked about it, but nothing is formal yet.",
+                "No, I don't actually know if I'm included."
+            ]
+        },
+        {
+            q: "Do you know exactly how much you are inheriting and what those assets are (e.g., cash, real estate, stocks)?",
+            options: [
+                "Yes, I have the full picture and the specific numbers.",
+                "I have a rough idea, but I don't know the details.",
+                "No, I have no idea what the scale is."
+            ]
+        },
+        {
+            q: "When do you realistically expect to take over the primary leadership or decision-making role for this legacy?",
+            options: [
+                "Immediate: I am already stepping in or will be within the next year.",
+                "Mid-Term: I expect this transition to happen in the next 2\u20135 years.",
+                "Long-Term: This is likely 5+ years away, and I haven't started preparing yet."
+            ]
+        },
+        {
+            q: "Do you personally want to take on the responsibility of managing this inheritance?",
+            options: [
+                "Yes, I'm ready and willing to take it on.",
+                "I feel like I have to, but I'm not sure I want to.",
+                "No, I'd honestly rather not deal with it."
+            ]
+        },
+        {
+            q: "Does managing this inheritance fit with your personal life goals and your own values?",
+            options: [
+                "Yes, it aligns perfectly with my life plan.",
+                "Some parts fit, but other parts feel like a conflict.",
+                "No, this feels like it will get in the way of my personal goals."
+            ]
+        },
+        {
+            q: "Do you feel ready to be the person making the final decisions about this wealth?",
+            options: [
+                "Yes, I feel prepared to lead.",
+                "I'm getting there, but I still have a lot of doubts.",
+                "No, the idea of being in charge of this is stressful."
+            ]
+        },
+        {
+            q: "If you took over tomorrow, do you have the financial and business knowledge to manage these assets well?",
+            options: [
+                "Yes, I have the skills and knowledge I need.",
+                "I know the basics, but I'd be guessing on the big stuff.",
+                "No, I don't have the right background for this."
+            ]
+        },
+        {
+            q: "Do you have a clear plan for what you want to do with this money over the next 10 years?",
+            options: [
+                "Yes, I know exactly what I want to achieve with it.",
+                "I have some ideas, but nothing solid.",
+                "No, I haven't thought about a long-term plan yet."
+            ]
+        },
+        {
+            q: "Do you need an independent expert to help you figure out how to manage this and reach your goals?",
+            options: [
+                "Yes, I definitely want professional, unbiased advice.",
+                "Maybe later, but I'm not sure yet.",
+                "No, I'm fine doing it on my own or with the current bank."
+            ]
+        },
+        {
+            q: "If you were to seek expert assistance, which of these areas would be your biggest priority?",
+            multi: true,
+            options: [
+                "Financial & Business Literacy: Understanding the technical side of the assets, legal & tax matters.",
+                "Strategic Vision: Developing a clear 10-year plan or impact thesis for the capital.",
+                "Family Navigation: Helping have productive, non-emotional conversations with parents about the transition.",
+                "Confidence & Leadership: Coaching to feel mentally and emotionally ready to take the lead.",
+                "Peer Connection: Finding a community of other heirs dealing with similar responsibilities."
+            ]
+        }
+    ];
+
+    let currentQ = 0;
+    const answers = [];
+    const multiAnswers = new Set();
+
+    function openQuestionnaire() {
+        currentQ = 0;
+        answers.length = 0;
+        multiAnswers.clear();
+        document.getElementById('questionnaire-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        document.getElementById('q-question-area').classList.remove('hidden');
+        document.getElementById('q-results').classList.add('hidden');
+        document.getElementById('q-nav').classList.remove('hidden');
+        renderQuestion();
+    }
+
+    function closeQuestionnaire() {
+        document.getElementById('questionnaire-modal').classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    function renderQuestion() {
+        const q = questions[currentQ];
+        document.getElementById('q-title').textContent = q.q;
+        document.getElementById('q-progress-text').textContent = `Question ${currentQ + 1} of ${questions.length}`;
+        const pct = ((currentQ + 1) / questions.length * 100);
+        document.getElementById('q-progress-pct').textContent = Math.round(pct) + '%';
+        document.getElementById('q-progress-bar').style.width = pct + '%';
+
+        const optContainer = document.getElementById('q-options');
+        optContainer.innerHTML = '';
+
+        if (q.multi) {
+            q.options.forEach((opt, i) => {
+                const div = document.createElement('div');
+                div.className = 'questionnaire-option glass-modal p-4 rounded-xl flex items-start gap-3' + (multiAnswers.has(i) ? ' selected' : '');
+                div.innerHTML = `<span class="text-gold mt-0.5 text-sm flex-shrink-0">${multiAnswers.has(i) ? '&#9635;' : '&#9634;'}</span><span class="text-sm text-[#a0a0b0] leading-relaxed">${opt}</span>`;
+                div.onclick = () => {
+                    if (multiAnswers.has(i)) multiAnswers.delete(i);
+                    else multiAnswers.add(i);
+                    renderQuestion();
+                };
+                optContainer.appendChild(div);
+            });
+            const nextBtn = document.getElementById('q-next');
+            if (multiAnswers.size > 0) { nextBtn.classList.remove('opacity-50', 'pointer-events-none'); }
+            else { nextBtn.classList.add('opacity-50', 'pointer-events-none'); }
+        } else {
+            q.options.forEach((opt, i) => {
+                const letter = String.fromCharCode(65 + i);
+                const div = document.createElement('div');
+                div.className = 'questionnaire-option glass-modal p-4 rounded-xl flex items-start gap-3' + (answers[currentQ] === i ? ' selected' : '');
+                div.innerHTML = `<span class="text-gold font-medium text-sm flex-shrink-0">${letter}.</span><span class="text-sm text-[#a0a0b0] leading-relaxed">${opt}</span>`;
+                div.onclick = () => { answers[currentQ] = i; renderQuestion(); };
+                optContainer.appendChild(div);
+            });
+            const nextBtn = document.getElementById('q-next');
+            if (answers[currentQ] !== undefined) { nextBtn.classList.remove('opacity-50', 'pointer-events-none'); }
+            else { nextBtn.classList.add('opacity-50', 'pointer-events-none'); }
+        }
+
+        document.getElementById('q-prev').classList.toggle('hidden', currentQ === 0);
+        document.getElementById('q-next').textContent = currentQ === questions.length - 1 ? 'See Results' : 'Next \u2192';
+    }
+
+    function nextQuestion() {
+        if (currentQ < questions.length - 1) {
+            currentQ++;
+            renderQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentQ > 0) {
+            currentQ--;
+            renderQuestion();
+        }
+    }
+
+    function showResults() {
+        let score = 0;
+        for (let i = 0; i < 9; i++) {
+            score += (3 - (answers[i] || 0));
+        }
+
+        let tier, icon, desc;
+        if (score >= 22) {
+            tier = 'Legacy Leader';
+            icon = '\u2726';
+            desc = "You are well-positioned to take the reins of your family legacy. Your awareness, readiness, and clarity put you ahead of most next-generation heirs. A stewardship partner can help you refine your strategy and maximize impact.";
+        } else if (score >= 15) {
+            tier = 'Emerging Steward';
+            icon = '\u2662';
+            desc = "You're on your way but could benefit from structured guidance. There are key areas where deeper clarity and confidence will help you transition from designated successor to true legacy leader.";
+        } else {
+            tier = 'Foundation Builder';
+            icon = '\u25C7';
+            desc = "You're at the beginning of your stewardship journey, and that's perfectly okay. Building the right foundation now \u2014 with the right support \u2014 will set you up for confident leadership when the time comes.";
+        }
+
+        document.getElementById('q-question-area').classList.add('hidden');
+        document.getElementById('q-nav').classList.add('hidden');
+        document.getElementById('q-results').classList.remove('hidden');
+
+        document.getElementById('q-result-icon').textContent = icon;
+        document.getElementById('q-result-tier').textContent = tier;
+        document.getElementById('q-result-score').textContent = `Your readiness score: ${score} / 27`;
+        document.getElementById('q-result-desc').textContent = desc;
+
+        const priorityLabels = ['Financial & Business Literacy', 'Strategic Vision', 'Family Navigation', 'Confidence & Leadership', 'Peer Connection'];
+        if (multiAnswers.size > 0) {
+            const prioHtml = '<p class="text-[#8a8a9a] text-sm mb-3">Your priority areas:</p><div class="flex flex-wrap gap-2 justify-center">' +
+                [...multiAnswers].map(i => `<span class="px-3 py-1 rounded-full bg-gold/10 border border-gold/30 text-gold text-xs">${priorityLabels[i]}</span>`).join('') + '</div>';
+            document.getElementById('q-result-priorities').innerHTML = prioHtml;
+        }
+    }
+
+    </script>
+</body>
+</html>
