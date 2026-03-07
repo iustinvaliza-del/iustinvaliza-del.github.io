@@ -121,6 +121,8 @@
 
         .mobile-menu { transform: translateX(100%); transition: transform 0.3s ease; }
         .mobile-menu.open { transform: translateX(0); }
+        .mobile-overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .mobile-overlay.open { opacity: 1; pointer-events: auto; }
 
         /* Hero text backdrop — subtle overlay behind text area for readability */
         .hero-canvas-mask {
@@ -172,8 +174,10 @@
                 <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h20M4 14h20M4 21h20"/></svg>
             </button>
         </div>
+        <!-- Mobile Overlay -->
+        <div id="mobile-overlay" class="mobile-overlay fixed inset-0 bg-charcoal/40 z-40 lg:hidden" onclick="toggleMobile()"></div>
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="mobile-menu fixed top-0 right-0 h-full w-72 bg-cream z-50 p-8 lg:hidden shadow-2xl">
+        <div id="mobile-menu" class="mobile-menu fixed top-0 right-0 h-full w-72 z-50 p-8 lg:hidden shadow-2xl" style="background: #F0EBE3;">
             <button onclick="toggleMobile()" class="absolute top-6 right-6 text-charcoal">
                 <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
             </button>
@@ -1030,6 +1034,7 @@
 
     function toggleMobile() {
         document.getElementById('mobile-menu').classList.toggle('open');
+        document.getElementById('mobile-overlay').classList.toggle('open');
     }
 
     /* ===========================
