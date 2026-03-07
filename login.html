@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In | Legacy Stewards</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#c9a96e',
+                        'gold-light': '#e8d5b5',
+                        'gold-dark': '#a8864f',
+                        rose: '#b76e79',
+                        cream: '#F0EBE3',
+                        sand: '#E6DED3',
+                        charcoal: '#2C2C35',
+                        muted: '#6B6B7B',
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/shared.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="w-full max-w-md">
+            <!-- Logo -->
+            <div class="text-center mb-8">
+                <a href="index.html" class="inline-flex items-center gap-3 mb-6">
+                    <div class="w-12 h-12 rounded-full border-2 border-gold flex items-center justify-center bg-[#F7F3ED]/80">
+                        <span class="font-serif text-gold font-bold text-base">LS</span>
+                    </div>
+                </a>
+                <h1 class="font-serif text-3xl text-charcoal mb-2">Welcome Back</h1>
+                <p class="text-muted text-sm">Sign in to your Legacy Stewards portal</p>
+            </div>
+
+            <!-- Already Logged In Card (hidden by default) -->
+            <div id="already-logged-in" class="card p-8 hidden">
+                <div class="text-center space-y-4">
+                    <div class="w-14 h-14 rounded-full bg-gold/10 flex items-center justify-center mx-auto">
+                        <svg class="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                    </div>
+                    <p class="text-sm text-charcoal">You're signed in as</p>
+                    <p id="logged-in-name" class="font-serif text-xl text-charcoal font-semibold"></p>
+                    <p id="logged-in-email" class="text-sm text-muted -mt-2"></p>
+                    <a id="go-to-dashboard" href="#" class="btn-gold text-sm w-full block mt-4">Go to Dashboard</a>
+                    <button id="switch-account-btn" class="text-sm text-muted hover:text-gold transition-colors mt-2 w-full">
+                        Sign in with a different account
+                    </button>
+                </div>
+            </div>
+
+            <!-- Login Card -->
+            <div id="login-card" class="card p-8">
+                <form id="login-form" class="space-y-5">
+                    <div>
+                        <label class="form-label">Email Address</label>
+                        <input type="email" id="login-email" required class="form-input" placeholder="your.email@example.com" autocomplete="email">
+                    </div>
+                    <div>
+                        <label class="form-label">Password</label>
+                        <input type="password" id="login-password" required class="form-input" placeholder="Enter your password" autocomplete="current-password">
+                    </div>
+
+                    <!-- Error Message -->
+                    <div id="login-error" class="hidden text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg p-3"></div>
+
+                    <button type="submit" id="login-btn" class="btn-gold text-sm w-full">
+                        Sign In
+                    </button>
+                </form>
+            </div>
+
+            <!-- Back to Home -->
+            <div class="text-center mt-6">
+                <a href="index.html" class="text-sm text-muted hover:text-gold transition-colors">
+                    &larr; Back to Legacy Stewards
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+    <!-- App Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+
+    <script>
+        const loginCard = document.getElementById('login-card');
+        const alreadyLoggedIn = document.getElementById('already-logged-in');
+
+        // If already logged in, show "already signed in" card
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                try {
+                    const profile = await Auth.getUserProfile(user.uid);
+                    if (profile) {
+                        const dashUrl = profile.role === 'client' ? 'client-dashboard.html' : 'admin-dashboard.html';
+                        document.getElementById('logged-in-name').textContent = profile.displayName || 'User';
+                        document.getElementById('logged-in-email').textContent = profile.email;
+                        document.getElementById('go-to-dashboard').href = dashUrl;
+                        loginCard.classList.add('hidden');
+                        alreadyLoggedIn.classList.remove('hidden');
+                    }
+                } catch (e) {
+                    // Profile not found — stay on login page
+                }
+            } else {
+                loginCard.classList.remove('hidden');
+                alreadyLoggedIn.classList.add('hidden');
+            }
+        });
+
+        // "Sign in with a different account" — signs out and shows login form
+        document.getElementById('switch-account-btn').addEventListener('click', async () => {
+            await auth.signOut();
+            Auth.clearCache();
+            loginCard.classList.remove('hidden');
+            alreadyLoggedIn.classList.add('hidden');
+        });
+
+        // Handle form submit
+        const form = document.getElementById('login-form');
+        const emailInput = document.getElementById('login-email');
+        const passwordInput = document.getElementById('login-password');
+        const errorEl = document.getElementById('login-error');
+        const loginBtn = document.getElementById('login-btn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Signing in...';
+
+            await Auth.handleLogin(emailInput.value.trim(), passwordInput.value, errorEl);
+
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Sign In';
+        });
+    </script>
+</body>
+</html>

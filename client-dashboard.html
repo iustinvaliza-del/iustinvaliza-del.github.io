@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard | Legacy Stewards</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#c9a96e',
+                        'gold-light': '#e8d5b5',
+                        'gold-dark': '#a8864f',
+                        rose: '#b76e79',
+                        cream: '#F0EBE3',
+                        sand: '#E6DED3',
+                        charcoal: '#2C2C35',
+                        muted: '#6B6B7B',
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/shared.css">
+</head>
+<body>
+
+    <!-- ==================== NAVIGATION ==================== -->
+    <nav class="fixed top-0 left-0 w-full z-50 bg-[#FDFAF6] border-b border-gold/10">
+        <div class="max-w-6xl mx-auto px-6 py-3.5 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full border-2 border-gold flex items-center justify-center bg-[#F7F3ED]/80">
+                    <span class="font-serif text-gold font-bold text-xs">LS</span>
+                </div>
+                <span class="font-serif text-charcoal tracking-wide hidden sm:block">Legacy Stewards</span>
+            </a>
+            <div class="flex items-center gap-4">
+                <span id="user-name" class="text-sm text-charcoal font-medium hidden sm:block"></span>
+                <button onclick="Auth.logout()" class="text-sm text-muted hover:text-gold transition-colors">Sign Out</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main id="dashboard-content" class="pt-20 pb-16 px-6">
+        <div class="max-w-4xl mx-auto">
+
+            <!-- Welcome -->
+            <section class="mb-10">
+                <h1 class="font-serif text-2xl md:text-3xl text-charcoal mb-1">
+                    Welcome back, <span id="welcome-name"></span>
+                </h1>
+                <p class="text-muted text-sm">
+                    Your stewardship journey overview &middot;
+                    Steward: <span id="steward-name" class="text-gold font-medium">Loading...</span>
+                </p>
+            </section>
+
+            <!-- Summary Cards -->
+            <section class="grid sm:grid-cols-3 gap-4 mb-10">
+                <!-- Case Status -->
+                <div class="stat-card">
+                    <p class="text-xs text-muted uppercase tracking-wider mb-2">Case Status</p>
+                    <div class="flex items-center gap-3">
+                        <span id="case-status" class="badge badge-active">Loading</span>
+                    </div>
+                    <p id="case-title" class="text-sm text-charcoal mt-2 font-medium truncate"></p>
+                </div>
+                <!-- Milestone Progress -->
+                <div class="stat-card">
+                    <p class="text-xs text-muted uppercase tracking-wider mb-2">Progress</p>
+                    <div class="flex items-center justify-between mb-2">
+                        <span id="milestone-count" class="text-sm text-charcoal font-medium">--</span>
+                        <span id="milestone-pct" class="text-sm text-gold font-semibold">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="milestone-bar" class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <!-- Current Phase -->
+                <div class="stat-card">
+                    <p class="text-xs text-muted uppercase tracking-wider mb-2">Current Phase</p>
+                    <p id="latest-activity" class="text-sm text-charcoal font-medium">Loading...</p>
+                </div>
+            </section>
+
+            <!-- Timeline -->
+            <section class="mb-12">
+                <h2 class="font-serif text-xl text-charcoal mb-6">Your Stewardship Timeline</h2>
+                <div id="timeline-container" class="timeline">
+                    <!-- Skeleton loading -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot timeline-dot-upcoming"></div>
+                        <div class="skeleton h-20 w-full"></div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot timeline-dot-upcoming"></div>
+                        <div class="skeleton h-20 w-full"></div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot timeline-dot-upcoming"></div>
+                        <div class="skeleton h-20 w-full"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Updates from Steward -->
+            <section class="mb-12">
+                <h2 class="font-serif text-xl text-charcoal mb-6">Updates from Your Steward</h2>
+                <div id="notes-container">
+                    <div class="skeleton h-16 w-full mb-3"></div>
+                    <div class="skeleton h-16 w-full"></div>
+                </div>
+            </section>
+
+            <!-- Documents -->
+            <section class="mb-12">
+                <h2 class="font-serif text-xl text-charcoal mb-6">Your Documents</h2>
+                <div id="documents-container">
+                    <div class="skeleton h-14 w-full"></div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="border-t border-gold/10 py-6 px-6 text-center">
+        <p class="text-muted text-xs">&copy; 2026 Legacy Stewards. All rights reserved.</p>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+
+    <!-- App Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/client-dashboard.js"></script>
+</body>
+</html>
