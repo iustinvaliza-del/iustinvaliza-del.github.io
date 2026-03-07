@@ -356,7 +356,7 @@ const AdminDashboard = (() => {
                                 ${m.description ? `<p class="text-sm text-muted leading-relaxed">${escapeHtml(m.description)}</p>` : ''}
                             </div>
                             <div class="flex items-center gap-2 flex-shrink-0">
-                                <select onchange="AdminDashboard.updateMilestoneStatus('${m.id}', this.value)" class="form-select text-xs py-1 px-2 w-auto">
+                                <select onchange="AdminDashboard.updateMilestoneStatus('${m.id}', this.value)" class="form-select-sm">
                                     <option value="upcoming" ${m.status === 'upcoming' ? 'selected' : ''}>Upcoming</option>
                                     <option value="in-progress" ${m.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
                                     <option value="completed" ${m.status === 'completed' ? 'selected' : ''}>Completed</option>
@@ -766,7 +766,7 @@ const AdminDashboard = (() => {
                 <td class="td-name">${escapeHtml(m.displayName)}</td>
                 <td>${escapeHtml(m.email)}</td>
                 <td>
-                    <select onchange="AdminDashboard.updateTeamRole('${m.id}', this.value)" class="form-select text-xs py-1 px-2 w-auto">
+                    <select onchange="AdminDashboard.updateTeamRole('${m.id}', this.value)" class="form-select-sm">
                         <option value="employee" ${m.role === 'employee' ? 'selected' : ''}>Employee</option>
                         <option value="admin" ${m.role === 'admin' ? 'selected' : ''}>Admin</option>
                     </select>
