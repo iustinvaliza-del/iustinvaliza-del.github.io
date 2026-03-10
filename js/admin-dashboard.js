@@ -6,6 +6,7 @@ const AdminDashboard = (() => {
     let currentProfile = null;
     let currentCaseId = null;
     let currentCaseData = null;
+    let unsubAdminMessages = null;
 
     // Default milestones for new cases
     const DEFAULT_MILESTONES = [
@@ -277,6 +278,7 @@ const AdminDashboard = (() => {
             loadCaseMilestones(caseId);
             loadCaseNotes(caseId);
             loadCaseDocuments(caseId);
+            initAdminMessaging(caseId);
         } catch (err) {
             console.error('Failed to open case:', err);
         }
@@ -807,6 +809,115 @@ const AdminDashboard = (() => {
         } catch (err) {
             console.error('Failed to add team member:', err);
         }
+    }
+
+    // ─── Admin Messaging ───
+
+    function initAdminMessaging(caseId) {
+        if (unsubAdminMessages) unsubAdminMessages();
+
+        const messagesRef = db.collection('cases').doc(caseId).collection('messages');
+        const q = messagesRef.orderBy('timestamp', 'asc');
+
+        unsubAdminMessages = q.onSnapshot((snapshot) => {
+            const thread = document.getElementById('admin-message-thread');
+            if (!thread) return;
+
+            if (snapshot.empty) {
+                thread.innerHTML = '<p class="text-sm text-muted text-center mt-8">No messages with this client yet.</p>';
+                return;
+            }
+
+            thread.innerHTML = '';
+            snapshot.forEach(docSnap => {
+                const msg = docSnap.data();
+                const isSteward = msg.senderRole === 'steward';
+                const bubble = document.createElement('div');
+                bubble.className = `flex flex-col max-w-[80%] ${isSteward ? 'self-end items-end' : 'self-start items-start'}`;
+                bubble.innerHTML = `
+                    <div class="px-4 py-2.5 rounded-2xl text-sm leading-relaxed
+                        ${isSteward
+                            ? 'bg-gold text-white rounded-br-sm'
+                            : 'bg-charcoal/5 text-charcoal rounded-bl-sm border border-charcoal/10'}">
+                        ${escapeHtml(msg.text)}
+                    </div>
+                    <span class="text-[10px] text-muted mt-1">
+                        ${escapeHtml(msg.senderName || (isSteward ? 'Steward' : 'Client'))} &middot; ${msg.timestamp ? formatAdminTimestamp(msg.timestamp) : 'Just now'}
+                    </span>
+                `;
+                thread.appendChild(bubble);
+            });
+
+            thread.scrollTop = thread.scrollHeight;
+
+            // Mark client messages as read
+            snapshot.forEach(docSnap => {
+                const msg = docSnap.data();
+                if (msg.senderRole === 'client' && !msg.read) {
+                    docSnap.ref.update({ read: true }).catch(() => {});
+                }
+            });
+        }, (err) => {
+            console.error('Admin messages listener error:', err);
+        });
+
+        // Send handler
+        const sendBtn = document.getElementById('admin-send-message-btn');
+        const input = document.getElementById('admin-message-input');
+
+        if (sendBtn && input) {
+            // Remove old listeners by replacing elements
+            const newBtn = sendBtn.cloneNode(true);
+            sendBtn.parentNode.replaceChild(newBtn, sendBtn);
+            const newInput = input.cloneNode(true);
+            input.parentNode.replaceChild(newInput, input);
+
+            newBtn.addEventListener('click', () => sendAdminMessage(messagesRef, newInput));
+            newInput.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    newBtn.click();
+                }
+            });
+        }
+    }
+
+    async function sendAdminMessage(messagesRef, input) {
+        const text = input.value.trim();
+        if (!text) return;
+
+        input.value = '';
+        input.disabled = true;
+        const sendBtn = document.getElementById('admin-send-message-btn');
+        if (sendBtn) sendBtn.disabled = true;
+
+        try {
+            await messagesRef.add({
+                text,
+                senderId: currentProfile.uid,
+                senderName: currentProfile.displayName || currentProfile.email,
+                senderRole: 'steward',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                read: false,
+            });
+        } catch (e) {
+            console.error('Failed to send admin message:', e);
+            input.value = text;
+        } finally {
+            input.disabled = false;
+            if (sendBtn) sendBtn.disabled = false;
+            input.focus();
+        }
+    }
+
+    function formatAdminTimestamp(ts) {
+        if (!ts?.toDate) return '';
+        const d = ts.toDate();
+        const now = new Date();
+        const diff = now - d;
+        if (diff < 60000) return 'Just now';
+        if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+        if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+        return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
     }
 
     // ─── Modal Helpers ───

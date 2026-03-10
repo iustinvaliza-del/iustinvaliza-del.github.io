@@ -45,98 +45,162 @@
             </a>
             <div class="flex items-center gap-4">
                 <span id="user-name" class="text-sm text-charcoal font-medium hidden sm:block"></span>
-                <button onclick="Auth.logout()" class="text-sm text-muted hover:text-gold transition-colors">Sign Out</button>
+                <button onclick="Auth.logout()" class="text-sm text-muted hover:text-gold transition-colors cursor-pointer">Sign Out</button>
             </div>
         </div>
     </nav>
 
     <!-- ==================== MAIN CONTENT ==================== -->
-    <main id="dashboard-content" class="pt-20 pb-16 px-6">
-        <div class="max-w-4xl mx-auto">
+    <main id="dashboard-content" class="pt-[60px] h-screen flex flex-col overflow-hidden">
 
-            <!-- Welcome -->
-            <section class="mb-10">
-                <h1 class="font-serif text-2xl md:text-3xl text-charcoal mb-1">
-                    Welcome back, <span id="welcome-name"></span>
-                </h1>
-                <p class="text-muted text-sm">
-                    Your stewardship journey overview &middot;
-                    Steward: <span id="steward-name" class="text-gold font-medium">Loading...</span>
-                </p>
-            </section>
-
-            <!-- Summary Cards -->
-            <section class="grid sm:grid-cols-3 gap-4 mb-10">
-                <!-- Case Status -->
-                <div class="stat-card">
-                    <p class="text-xs text-muted uppercase tracking-wider mb-2">Case Status</p>
+        <!-- ===== TOP BAR: Profile + Glance Stats ===== -->
+        <div class="px-4 md:px-6 py-3 border-b border-gold/10 bg-[#FDFAF6] flex-shrink-0">
+            <div class="max-w-[1400px] mx-auto">
+                <!-- Profile row -->
+                <div class="flex items-center justify-between mb-2">
                     <div class="flex items-center gap-3">
-                        <span id="case-status" class="badge badge-active">Loading</span>
+                        <div id="client-avatar" class="w-10 h-10 rounded-full bg-gold/20 border-2 border-gold flex items-center justify-center text-gold font-serif text-sm font-bold overflow-hidden flex-shrink-0"></div>
+                        <div>
+                            <h1 class="font-serif text-lg text-charcoal leading-tight" id="client-name">Loading...</h1>
+                            <p class="text-[11px] text-charcoal/50" id="client-since"></p>
+                        </div>
                     </div>
-                    <p id="case-title" class="text-sm text-charcoal mt-2 font-medium truncate"></p>
-                </div>
-                <!-- Milestone Progress -->
-                <div class="stat-card">
-                    <p class="text-xs text-muted uppercase tracking-wider mb-2">Progress</p>
-                    <div class="flex items-center justify-between mb-2">
-                        <span id="milestone-count" class="text-sm text-charcoal font-medium">--</span>
-                        <span id="milestone-pct" class="text-sm text-gold font-semibold">0%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div id="milestone-bar" class="progress-fill" style="width: 0%"></div>
-                    </div>
-                </div>
-                <!-- Current Phase -->
-                <div class="stat-card">
-                    <p class="text-xs text-muted uppercase tracking-wider mb-2">Current Phase</p>
-                    <p id="latest-activity" class="text-sm text-charcoal font-medium">Loading...</p>
-                </div>
-            </section>
-
-            <!-- Timeline -->
-            <section class="mb-12">
-                <h2 class="font-serif text-xl text-charcoal mb-6">Your Stewardship Timeline</h2>
-                <div id="timeline-container" class="timeline">
-                    <!-- Skeleton loading -->
-                    <div class="timeline-item">
-                        <div class="timeline-dot timeline-dot-upcoming"></div>
-                        <div class="skeleton h-20 w-full"></div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-dot timeline-dot-upcoming"></div>
-                        <div class="skeleton h-20 w-full"></div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-dot timeline-dot-upcoming"></div>
-                        <div class="skeleton h-20 w-full"></div>
+                    <div class="flex items-center gap-3">
+                        <div class="text-right hidden sm:block">
+                            <p class="text-[11px] text-charcoal/50 uppercase tracking-wide font-medium">Your Steward</p>
+                            <p class="font-semibold text-charcoal text-sm leading-tight" id="steward-name">Loading...</p>
+                        </div>
+                        <div id="steward-avatar" class="w-10 h-10 rounded-full bg-charcoal/10 border-2 border-charcoal/20 flex items-center justify-center text-charcoal font-serif text-sm font-bold overflow-hidden flex-shrink-0"></div>
                     </div>
                 </div>
-            </section>
-
-            <!-- Updates from Steward -->
-            <section class="mb-12">
-                <h2 class="font-serif text-xl text-charcoal mb-6">Updates from Your Steward</h2>
-                <div id="notes-container">
-                    <div class="skeleton h-16 w-full mb-3"></div>
-                    <div class="skeleton h-16 w-full"></div>
+                <!-- Glance stats row -->
+                <div class="grid grid-cols-4 gap-2" id="glance-bar">
+                    <div class="bg-white/60 border border-gold/10 rounded-lg px-3 py-2">
+                        <p class="text-[10px] text-charcoal/40 uppercase tracking-wide font-medium">Phase</p>
+                        <p class="font-serif text-lg text-gold leading-tight" id="glance-phase">&mdash;</p>
+                        <p class="text-[10px] text-charcoal/50" id="glance-phase-name"></p>
+                    </div>
+                    <div class="bg-white/60 border border-gold/10 rounded-lg px-3 py-2">
+                        <p class="text-[10px] text-charcoal/40 uppercase tracking-wide font-medium">Milestones</p>
+                        <p class="font-serif text-lg text-gold leading-tight" id="glance-milestones">&mdash;</p>
+                        <p class="text-[10px] text-charcoal/50" id="glance-milestones-label">completed</p>
+                    </div>
+                    <div class="bg-white/60 border border-gold/10 rounded-lg px-3 py-2">
+                        <p class="text-[10px] text-charcoal/40 uppercase tracking-wide font-medium">Days</p>
+                        <p class="font-serif text-lg text-gold leading-tight" id="glance-days">&mdash;</p>
+                        <p class="text-[10px] text-charcoal/50">as client</p>
+                    </div>
+                    <div class="bg-white/60 border border-gold/10 rounded-lg px-3 py-2">
+                        <p class="text-[10px] text-charcoal/40 uppercase tracking-wide font-medium">Messages</p>
+                        <p class="font-serif text-lg text-gold leading-tight" id="glance-messages">&mdash;</p>
+                        <p class="text-[10px] text-charcoal/50" id="glance-messages-label">unread</p>
+                    </div>
                 </div>
-            </section>
-
-            <!-- Documents -->
-            <section class="mb-12">
-                <h2 class="font-serif text-xl text-charcoal mb-6">Your Documents</h2>
-                <div id="documents-container">
-                    <div class="skeleton h-14 w-full"></div>
-                </div>
-            </section>
-
+            </div>
         </div>
-    </main>
 
-    <!-- ==================== FOOTER ==================== -->
-    <footer class="border-t border-gold/10 py-6 px-6 text-center">
-        <p class="text-muted text-xs">&copy; 2026 Legacy Stewards. All rights reserved.</p>
-    </footer>
+        <!-- ===== 3-COLUMN LAYOUT ===== -->
+        <div class="flex-1 overflow-hidden px-4 md:px-6 py-4">
+            <div class="max-w-[1400px] mx-auto h-full grid grid-cols-1 md:grid-cols-[200px_1fr_320px] gap-4">
+
+                <!-- ===== LEFT COLUMN: Journey + Status ===== -->
+                <div class="hidden md:flex flex-col gap-4 overflow-y-auto dashboard-column pr-2">
+                    <!-- Journey Phases -->
+                    <div>
+                        <h2 class="font-serif text-sm text-charcoal mb-3 uppercase tracking-wider">Journey</h2>
+                        <div id="journey-steps" class="space-y-1"></div>
+                    </div>
+
+                    <!-- Status Block -->
+                    <div class="mt-auto">
+                        <div id="status-block" class="p-3 rounded-lg border border-gold/20 bg-white/60">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span id="status-badge" class="px-2 py-0.5 rounded-full text-[10px] font-semibold">Loading</span>
+                            </div>
+                            <p class="text-xs text-charcoal font-medium leading-snug" id="status-meaning">Loading...</p>
+                            <p class="text-[10px] text-charcoal/50 mt-1 leading-snug" id="status-next-action"></p>
+                            <p class="text-[10px] text-charcoal/30 mt-1" id="status-updated"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== CENTER COLUMN: Milestones ===== -->
+                <div class="overflow-y-auto dashboard-column pr-2">
+                    <!-- Mobile: Journey + Status (hidden on desktop) -->
+                    <div class="md:hidden mb-4">
+                        <div class="flex gap-2 overflow-x-auto pb-2" id="journey-steps-mobile"></div>
+                        <div id="status-block-mobile" class="p-3 rounded-lg border border-gold/20 bg-white/60 mt-3">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span id="status-badge-mobile" class="px-2 py-0.5 rounded-full text-[10px] font-semibold">Loading</span>
+                            </div>
+                            <p class="text-xs text-charcoal font-medium" id="status-meaning-mobile">Loading...</p>
+                            <p class="text-[10px] text-charcoal/50 mt-1" id="status-next-action-mobile"></p>
+                        </div>
+                    </div>
+
+                    <h2 class="font-serif text-base text-charcoal mb-3">Milestones</h2>
+                    <div id="timeline-container" class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot timeline-dot-upcoming"></div>
+                            <div class="skeleton h-16 w-full"></div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot timeline-dot-upcoming"></div>
+                            <div class="skeleton h-16 w-full"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== RIGHT COLUMN: Tabbed Panel ===== -->
+                <div class="flex flex-col overflow-hidden bg-white/40 border border-gold/15 rounded-xl">
+                    <!-- Tab bar -->
+                    <div class="flex border-b border-gold/10 flex-shrink-0">
+                        <button class="dashboard-tab active" data-tab="messages" onclick="ClientDashboard.switchTab('messages')">
+                            Messages <span id="tab-msg-badge" class="hidden ml-1 w-4 h-4 text-[9px] bg-gold text-white rounded-full inline-flex items-center justify-center"></span>
+                        </button>
+                        <button class="dashboard-tab" data-tab="notes" onclick="ClientDashboard.switchTab('notes')">Notes</button>
+                        <button class="dashboard-tab" data-tab="documents" onclick="ClientDashboard.switchTab('documents')">Docs</button>
+                    </div>
+
+                    <!-- Tab: Messages -->
+                    <div id="tab-panel-messages" class="tab-panel flex flex-col flex-1 overflow-hidden">
+                        <div id="message-thread" class="flex-1 overflow-y-auto p-3 flex flex-col gap-2 scroll-smooth">
+                            <p id="no-messages" class="text-xs text-charcoal/40 text-center mt-6">No messages yet. Send your steward a message below.</p>
+                        </div>
+                        <div class="p-3 border-t border-gold/10 flex-shrink-0">
+                            <div class="flex gap-2">
+                                <textarea id="message-input" rows="2"
+                                    placeholder="Write a message..."
+                                    class="flex-1 text-xs rounded-lg border border-charcoal/15 p-2 resize-none focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold/30 bg-white text-charcoal placeholder-charcoal/30"></textarea>
+                                <button id="send-message-btn"
+                                    class="px-3 py-2 bg-gold text-white text-xs font-semibold rounded-lg hover:bg-gold/90 transition-colors self-end cursor-pointer">
+                                    Send
+                                </button>
+                            </div>
+                            <p class="text-[10px] text-charcoal/30 mt-1">Ctrl+Enter to send</p>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Notes -->
+                    <div id="tab-panel-notes" class="tab-panel hidden flex-1 overflow-y-auto p-3">
+                        <div id="notes-container">
+                            <div class="skeleton h-12 w-full mb-2"></div>
+                            <div class="skeleton h-12 w-full"></div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Documents -->
+                    <div id="tab-panel-documents" class="tab-panel hidden flex-1 overflow-y-auto p-3">
+                        <div id="documents-container">
+                            <div class="skeleton h-10 w-full"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>

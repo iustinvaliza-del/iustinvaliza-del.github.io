@@ -269,6 +269,31 @@ body { background: #F0EBE3; color: #2C2C35; font-family: 'Inter', sans-serif; ov
 .mobile-menu-btn { display: none; }
 @media (max-width: 1024px) { .mobile-menu-btn { display: block; } }
 
+/* ─── Client Dashboard: Tabs ─── */
+.dashboard-tab {
+    flex: 1; padding: 0.625rem 0.5rem; text-align: center;
+    font-size: 0.75rem; font-weight: 500; color: #6B6B7B;
+    background: transparent; border: none; cursor: pointer;
+    transition: all 0.2s ease; position: relative;
+}
+.dashboard-tab:hover { color: #2C2C35; }
+.dashboard-tab.active {
+    color: #c9a96e; font-weight: 600;
+}
+.dashboard-tab.active::after {
+    content: ''; position: absolute; bottom: -1px; left: 20%; right: 20%;
+    height: 2px; background: #c9a96e; border-radius: 2px;
+}
+
+/* ─── Client Dashboard: Scrollable Columns ─── */
+.dashboard-column {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(201, 169, 110, 0.25) transparent;
+}
+.dashboard-column::-webkit-scrollbar { width: 4px; }
+.dashboard-column::-webkit-scrollbar-track { background: transparent; }
+.dashboard-column::-webkit-scrollbar-thumb { background: rgba(201, 169, 110, 0.25); border-radius: 2px; }
+
 /* ─── Login Page ─── */
 .login-container {
     min-height: 100vh; display: flex; align-items: center; justify-content: center;

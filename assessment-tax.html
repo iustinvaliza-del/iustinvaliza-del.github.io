@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Awareness Assessment | Legacy Stewards</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#c9a96e',
+                        'gold-light': '#e8d5b5',
+                        'gold-dark': '#a8864f',
+                        rose: '#b76e79',
+                        cream: '#F0EBE3',
+                        sand: '#E6DED3',
+                        charcoal: '#2C2C35',
+                        muted: '#6B6B7B',
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { background: #F0EBE3; color: #2C2C35; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #c9a96e, #a8864f);
+            color: #fff; font-weight: 600; border-radius: 50px;
+            padding: 14px 36px; transition: all 0.4s ease;
+            box-shadow: 0 4px 20px rgba(201, 169, 110, 0.25);
+            cursor: pointer; border: none;
+        }
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201, 169, 110, 0.4); }
+
+        .btn-outline {
+            border: 1.5px solid #c9a96e; color: #c9a96e;
+            border-radius: 50px; padding: 14px 36px; transition: all 0.4s ease;
+            background: transparent; cursor: pointer; font-weight: 600;
+        }
+        .btn-outline:hover { background: rgba(201, 169, 110, 0.08); }
+
+        .gold-gradient {
+            background: linear-gradient(135deg, #c9a96e, #a8864f, #c9a96e);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
+        /* Quiz option styling */
+        .quiz-option {
+            background: rgba(255,255,255,0.04);
+            border: 1.5px solid rgba(201,169,110,0.15);
+            border-radius: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #ccc;
+        }
+        .quiz-option:hover {
+            border-color: rgba(201,169,110,0.4);
+            background: rgba(201,169,110,0.06);
+        }
+        .quiz-option.selected {
+            border-color: #c9a96e;
+            background: rgba(201,169,110,0.12);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(201,169,110,0.15);
+        }
+        .quiz-option .option-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(201,169,110,0.3);
+            font-size: 13px;
+            font-weight: 600;
+            color: #c9a96e;
+            margin-right: 14px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        .quiz-option.selected .option-letter {
+            background: #c9a96e;
+            color: #0a0a18;
+            border-color: #c9a96e;
+        }
+
+        /* Progress bar */
+        .progress-track {
+            background: rgba(255,255,255,0.08);
+            border-radius: 100px;
+            height: 6px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #c9a96e, #e8d5b5);
+            border-radius: 100px;
+            transition: width 0.4s ease;
+        }
+
+        /* Result bar */
+        .result-bar-track {
+            background: rgba(255,255,255,0.08);
+            border-radius: 100px;
+            height: 10px;
+            overflow: hidden;
+        }
+        .result-bar-fill {
+            height: 100%;
+            border-radius: 100px;
+            transition: width 1s ease;
+        }
+
+        /* Fade transition */
+        .fade-in {
+            animation: fadeIn 0.35s ease forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====== NAVBAR ====== -->
+    <nav class="fixed top-0 left-0 w-full z-50 bg-cream/90 backdrop-blur-md border-b border-gold/10">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full border border-gold flex items-center justify-center">
+                    <span class="font-serif text-gold text-sm font-bold">LS</span>
+                </div>
+                <span class="font-serif text-charcoal text-lg hidden sm:inline">Legacy Stewards</span>
+            </a>
+            <div class="flex items-center gap-6 text-sm font-sans">
+                <a href="index.html#assessment" class="text-muted hover:text-gold transition-colors">Back to Overview</a>
+                <a href="login.html" class="text-muted hover:text-gold transition-colors">Client Portal</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ====== HERO ====== -->
+    <section class="pt-28 pb-16 px-6 bg-cream text-center">
+        <div class="max-w-3xl mx-auto">
+            <span class="inline-block text-gold text-xs font-semibold tracking-widest uppercase mb-4 font-sans">Deep-Dive Assessment</span>
+            <h1 class="font-serif text-4xl md:text-5xl text-charcoal mb-5 leading-tight">Tax Awareness Assessment</h1>
+            <p class="text-muted text-lg leading-relaxed max-w-2xl mx-auto">60 questions across 4 domains of tax knowledge for inherited wealth</p>
+            <div class="flex flex-wrap justify-center gap-3 mt-8">
+                <span class="inline-block bg-gold/10 text-gold-dark text-xs font-medium px-4 py-2 rounded-full">Estate & Inheritance</span>
+                <span class="inline-block bg-gold/10 text-gold-dark text-xs font-medium px-4 py-2 rounded-full">Capital Gains & Transfer Taxes</span>
+                <span class="inline-block bg-gold/10 text-gold-dark text-xs font-medium px-4 py-2 rounded-full">Cross-Border Obligations</span>
+                <span class="inline-block bg-gold/10 text-gold-dark text-xs font-medium px-4 py-2 rounded-full">Tax Planning Strategies</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== QUIZ SECTION ====== -->
+    <section id="quiz-section" class="py-16 px-6" style="background: #0a0a18;">
+        <div class="max-w-3xl mx-auto">
+
+            <!-- Progress area -->
+            <div id="quiz-progress" class="mb-10">
+                <div class="flex justify-between items-center mb-3">
+                    <span id="progress-text" class="text-sm text-gray-400 font-sans">Question 1 of 60</span>
+                    <span id="progress-pct" class="text-sm text-gold font-semibold font-sans">2%</span>
+                </div>
+                <div class="progress-track">
+                    <div id="progress-bar" class="progress-fill" style="width: 1.67%"></div>
+                </div>
+                <p id="section-label" class="text-xs text-gold/60 mt-3 font-sans italic">Section 1: Estate & Inheritance Tax Fundamentals</p>
+            </div>
+
+            <!-- Question area -->
+            <div id="question-area" class="fade-in">
+                <h2 id="q-text" class="font-serif text-2xl md:text-3xl text-white mb-8 leading-snug"></h2>
+                <div id="q-options" class="space-y-3 mb-10"></div>
+            </div>
+
+            <!-- Navigation -->
+            <div id="quiz-nav" class="flex justify-between items-center">
+                <button id="btn-prev" onclick="prevQuestion()" class="btn-outline text-sm px-6 py-3" style="display:none;">Previous</button>
+                <div></div>
+                <button id="btn-next" onclick="nextQuestion()" class="btn-gold text-sm px-8 py-3" disabled>Next</button>
+            </div>
+
+            <!-- Result Card -->
+            <div id="result-card" class="hidden">
+                <div class="text-center mb-10 fade-in">
+                    <span class="inline-block text-gold text-xs font-semibold tracking-widest uppercase mb-4 font-sans">Assessment Complete</span>
+                    <h2 id="result-tier" class="font-serif text-3xl md:text-4xl text-white mb-4"></h2>
+                    <p id="result-score-line" class="text-gray-400 text-lg font-sans mb-2"></p>
+                    <p id="result-description" class="text-gray-400 text-base leading-relaxed max-w-xl mx-auto"></p>
+                </div>
+
+                <!-- Section breakdowns -->
+                <div class="grid gap-6 mb-12">
+                    <div class="rounded-2xl p-6" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.12);">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="text-white font-semibold text-sm font-sans">Section 1: Estate & Inheritance Tax Fundamentals</h3>
+                            <span id="s1-score" class="text-gold font-bold text-sm font-sans"></span>
+                        </div>
+                        <div class="result-bar-track">
+                            <div id="s1-bar" class="result-bar-fill" style="width:0; background: linear-gradient(90deg, #c9a96e, #e8d5b5);"></div>
+                        </div>
+                        <p id="s1-level" class="text-xs text-gray-500 mt-2 font-sans"></p>
+                    </div>
+                    <div class="rounded-2xl p-6" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.12);">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="text-white font-semibold text-sm font-sans">Section 2: Capital Gains, Transfer Taxes & Stamp Duty</h3>
+                            <span id="s2-score" class="text-gold font-bold text-sm font-sans"></span>
+                        </div>
+                        <div class="result-bar-track">
+                            <div id="s2-bar" class="result-bar-fill" style="width:0; background: linear-gradient(90deg, #b76e79, #e8a5b0);"></div>
+                        </div>
+                        <p id="s2-level" class="text-xs text-gray-500 mt-2 font-sans"></p>
+                    </div>
+                    <div class="rounded-2xl p-6" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.12);">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="text-white font-semibold text-sm font-sans">Section 3: Cross-Border Tax Obligations & Treaties</h3>
+                            <span id="s3-score" class="text-gold font-bold text-sm font-sans"></span>
+                        </div>
+                        <div class="result-bar-track">
+                            <div id="s3-bar" class="result-bar-fill" style="width:0; background: linear-gradient(90deg, #6b8cce, #a5bde8);"></div>
+                        </div>
+                        <p id="s3-level" class="text-xs text-gray-500 mt-2 font-sans"></p>
+                    </div>
+                    <div class="rounded-2xl p-6" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(201,169,110,0.12);">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="text-white font-semibold text-sm font-sans">Section 4: Tax Planning Strategies & Structures</h3>
+                            <span id="s4-score" class="text-gold font-bold text-sm font-sans"></span>
+                        </div>
+                        <div class="result-bar-track">
+                            <div id="s4-bar" class="result-bar-fill" style="width:0; background: linear-gradient(90deg, #6bce8c, #a5e8c0);"></div>
+                        </div>
+                        <p id="s4-level" class="text-xs text-gray-500 mt-2 font-sans"></p>
+                    </div>
+                </div>
+
+                <!-- CTAs -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="index.html#contact" class="btn-gold text-center text-sm">Book a Discovery Call</a>
+                    <a href="index.html#assessment" class="btn-outline text-center text-sm">Return to Full Assessment</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="relative z-10 bg-sand border-t border-gold/10 py-12 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full border border-gold flex items-center justify-center">
+                            <span class="font-serif text-gold text-xs font-bold">LS</span>
+                        </div>
+                        <span class="font-serif text-charcoal">Legacy Stewards</span>
+                    </div>
+                    <p class="text-muted text-sm leading-relaxed">Independent stewardship partners for next-generation women of wealth in Southeast Asia.</p>
+                </div>
+                <div>
+                    <h4 class="text-charcoal font-medium text-sm mb-4">Services</h4>
+                    <ul class="space-y-2 text-muted text-sm">
+                        <li><a href="index.html#services" class="hover:text-gold transition-colors">Stewardship Coaching</a></li>
+                        <li><a href="index.html#assessment" class="hover:text-gold transition-colors">Heir Readiness Assessment</a></li>
+                        <li><a href="index.html#advisory" class="hover:text-gold transition-colors">Legal &amp; Tax Advisory</a></li>
+                        <li><a href="index.html#services" class="hover:text-gold transition-colors">Impact Investing</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-charcoal font-medium text-sm mb-4">Regions</h4>
+                    <ul class="space-y-2 text-muted text-sm">
+                        <li><a href="index.html#advisory" class="hover:text-gold transition-colors">Indonesia</a></li>
+                        <li><a href="index.html#advisory" class="hover:text-gold transition-colors">Singapore</a></li>
+                        <li><a href="index.html#advisory" class="hover:text-gold transition-colors">Philippines</a></li>
+                        <li><a href="index.html#advisory" class="hover:text-gold transition-colors">Malaysia, Thailand, Vietnam</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-charcoal font-medium text-sm mb-4">Connect</h4>
+                    <ul class="space-y-2 text-muted text-sm">
+                        <li><a href="index.html#contact" class="hover:text-gold transition-colors">Book a Discovery Call</a></li>
+                        <li><a href="index.html#insights" class="hover:text-gold transition-colors">Insights &amp; Blog</a></li>
+                        <li><a href="index.html#team" class="hover:text-gold transition-colors">Our Team</a></li>
+                        <li><a href="login.html" class="hover:text-gold transition-colors">Client Portal</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gold/10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <p class="text-muted text-xs">&copy; 2026 Legacy Stewards. All rights reserved.</p>
+                <div class="flex gap-6 text-muted text-xs">
+                    <a href="#" class="hover:text-gold transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-gold transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ====== QUIZ LOGIC ====== -->
+    <script>
+    (function() {
+        const STORAGE_KEY = 'assessment-tax-progress';
+
+        const sections = [
+            'Estate & Inheritance Tax Fundamentals',
+            'Capital Gains, Transfer Taxes & Stamp Duty',
+            'Cross-Border Tax Obligations & Treaties',
+            'Tax Planning Strategies & Structures'
+        ];
+
+        // All 60 questions. correct is 0-indexed (A=0, B=1, C=2, D=3)
+        const questions = [
+            // Section 1: Estate & Inheritance Tax Fundamentals (Q1-15)
+            {
+                q: "Which of the following SEA countries currently has NO estate or inheritance tax?",
+                options: ["Philippines", "Vietnam", "Malaysia", "Thailand"],
+                correct: 2, section: 0
+            },
+            {
+                q: "Singapore abolished its estate duty in 2008. What is the implication for heirs?",
+                options: [
+                    "All assets are still taxed through capital gains tax instead",
+                    "The transfer of assets upon death is not subject to estate duty, though income from those assets remains taxable",
+                    "Trusts are no longer valid in Singapore",
+                    "Foreign assets held by Singaporeans are now taxed at source"
+                ],
+                correct: 1, section: 0
+            },
+            {
+                q: "In the Philippines, estate tax is calculated on:",
+                options: [
+                    "The gross value of all assets",
+                    "The net taxable estate (gross assets minus allowable deductions)",
+                    "Only real estate assets",
+                    "Assets above a threshold of PHP 5 million"
+                ],
+                correct: 1, section: 0
+            },
+            {
+                q: "Thailand\u2019s inheritance tax applies at what rates?",
+                options: [
+                    "5% for all heirs",
+                    "5% for descendants/ascendants, 10% for all others",
+                    "10% flat for all heirs",
+                    "Progressive from 2% to 15%"
+                ],
+                correct: 1, section: 0
+            },
+            {
+                q: "Vietnam\u2019s inheritance tax of 10% applies to:",
+                options: [
+                    "All inherited assets with no threshold",
+                    "Inherited assets exceeding 10 million VND, with close family members exempt",
+                    "Only real estate assets",
+                    "Only foreign-source assets"
+                ],
+                correct: 1, section: 0
+            },
+            {
+                q: "What is \u201Cestate freeze\u201D as a tax planning concept?",
+                options: [
+                    "Freezing the valuation of an estate to avoid rising property taxes",
+                    "A strategy to fix the value of an estate at today\u2019s level so future appreciation accrues to the next generation, reducing future estate tax",
+                    "Preventing an estate from being distributed until taxes are settled",
+                    "Holding estate assets in a non-taxable frozen account"
+                ],
+                correct: 1, section: 0
+            },
+            {
+                q: "Which of the following is generally an allowable deduction from a Philippine gross estate?",
+                options: [
+                    "Funeral expenses",
+                    "The deceased\u2019s personal expenses in the last year of life",
+                    "Estimated future income the deceased would have earned",
+                    "Charitable donations made after death"
+                ],
+                correct: 0, section: 0
+            },
+            {
+                q: "In Indonesia, when you inherit real estate, you are liable for:",
+                options: [
+                    "A 10% inheritance tax on the assessed value",
+                    "BPHTB (Bea Perolehan Hak atas Tanah dan Bangunan) \u2014 a property transfer tax",
+                    "PPh (income tax) at the standard rate on the full value",
+                    "No tax \u2014 Indonesia has no property transfer tax"
+                ],
+                correct: 1, section: 0
+            },
+            {
+                q: "A \u201Cstepped-up basis\u201D for inherited assets means:",
+                options: [
+                    "The heir must pay tax on the step-up in value immediately upon inheritance",
+                    "The cost basis of the asset is reset to its fair market value at the date of death, reducing capital gains tax if sold",
+                    "The tax authority steps up its assessment to reflect full market value",
+                    "The heir must hold the asset for 5 years before the stepped-up basis applies"
+                ],
+                correct: 1, section: 0
+            },
+            {
+                q: "What is the estate tax filing deadline in the Philippines after the date of death?",
+                options: [
+                    "6 months",
+                    "1 year",
+                    "2 years",
+                    "3 years"
+                ],
+                correct: 1, section: 0
+            },
+            {
+                q: "A \u201Cunified credit\u201D (in jurisdictions that have it) allows:",
+                options: [
+                    "Unifying the estate and gift tax into a single payment",
+                    "A set amount of lifetime giving and bequests to pass tax-free",
+                    "Combining multiple heirs\u2019 exemptions into a single pool",
+                    "Reducing tax across multiple SEA jurisdictions simultaneously"
+                ],
+                correct: 1, section: 0
+            },
+            {
+                q: "What does \u201Cgross estate\u201D include for tax purposes?",
+                options: [
+                    "Only assets physically located in the deceased\u2019s country of residence",
+                    "Generally all assets owned or controlled by the deceased at death, including life insurance and trust interests",
+                    "Solely real estate and financial accounts",
+                    "Assets above a certain threshold value only"
+                ],
+                correct: 1, section: 0
+            },
+            {
+                q: "In Malaysia, a Muslim heir inheriting under faraid has what tax treatment?",
+                options: [
+                    "Subject to estate duty at 5%",
+                    "No inheritance tax, but RPGT may apply on property sales",
+                    "Subject to Zakat as a tax equivalent",
+                    "Foreign assets only are taxed"
+                ],
+                correct: 1, section: 0
+            },
+            {
+                q: "What is the purpose of an \u201Cestate tax marital deduction\u201D in jurisdictions that provide it?",
+                options: [
+                    "Allowing a bereaved spouse a tax deduction for funeral costs",
+                    "Permitting assets passing to a surviving spouse to qualify for an estate tax deduction, deferring tax until the second spouse dies",
+                    "Reducing estate taxes for married heirs in proportion to marriage duration",
+                    "An exemption that applies only to jointly held marital property"
+                ],
+                correct: 1, section: 0
+            },
+            {
+                q: "When is estate tax typically DUE (when does cash need to be available)?",
+                options: [
+                    "Within 10 years \u2014 you have plenty of time to liquidate assets",
+                    "Within months of death, creating a liquidity risk if assets are illiquid",
+                    "Only when assets are eventually sold",
+                    "It can always be paid in installments over 20 years"
+                ],
+                correct: 1, section: 0
+            },
+
+            // Section 2: Capital Gains, Transfer Taxes & Stamp Duty (Q16-30)
+            {
+                q: "A \u201Ccapital gains tax\u201D on inherited assets typically arises when:",
+                options: [
+                    "The asset is received at death",
+                    "The heir sells or disposes of the inherited asset at a gain above the stepped-up basis",
+                    "The asset generates income during the heir\u2019s ownership",
+                    "The trust holding the asset is wound up"
+                ],
+                correct: 1, section: 1
+            },
+            {
+                q: "Singapore has no capital gains tax. What is the implication for investors?",
+                options: [
+                    "All investment returns in Singapore are completely tax-free",
+                    "Gains from the sale of assets are not taxed as capital gains, though income (dividends, interest) remains taxable",
+                    "There are no tax obligations for Singapore residents at all",
+                    "Capital gains are taxed under income tax instead"
+                ],
+                correct: 1, section: 1
+            },
+            {
+                q: "Malaysia\u2019s RPGT (Real Property Gains Tax) is calculated on:",
+                options: [
+                    "The full sale price of the property",
+                    "The gain (sale price minus allowable cost) on the disposal of real property",
+                    "The rental yield of the property over the holding period",
+                    "A flat amount regardless of the actual gain"
+                ],
+                correct: 1, section: 1
+            },
+            {
+                q: "In which of these scenarios would stamp duty most likely apply?",
+                options: [
+                    "Receiving a cash inheritance",
+                    "Transferring real property ownership from a deceased estate to an heir",
+                    "Receiving listed shares as a gift",
+                    "Opening a new bank account with inherited funds"
+                ],
+                correct: 1, section: 1
+            },
+            {
+                q: "What is \u201Cdomicile\u201D and why does it matter for cross-border tax?",
+                options: [
+                    "The physical location of assets",
+                    "The country where a person has their permanent home and intends to remain, which determines which country\u2019s inheritance and estate tax law applies to the worldwide estate",
+                    "The nationality of the deceased",
+                    "The country where a will is registered"
+                ],
+                correct: 1, section: 1
+            },
+            {
+                q: "Thailand\u2019s Property Transfer Fee is charged at what rate at the Land Department?",
+                options: [
+                    "10% \u2014 equivalent to the inheritance tax rate",
+                    "A much lower rate than direct sale, making inheritance transfers relatively affordable",
+                    "The same rate as a commercial sale",
+                    "Zero \u2014 all property transfers in Thailand are exempt"
+                ],
+                correct: 1, section: 1
+            },
+            {
+                q: "In the Philippines, what happens if estate tax is NOT paid within the filing deadline?",
+                options: [
+                    "A 30-day grace period applies automatically",
+                    "Surcharges and interest penalties accrue, and the estate cannot be transferred until settled",
+                    "The estate is seized by the government immediately",
+                    "The heirs are personally liable only if they received cash"
+                ],
+                correct: 1, section: 1
+            },
+            {
+                q: "A \u201Cgift tax\u201D is designed to prevent:",
+                options: [
+                    "Heirs from receiving gifts during a lifetime",
+                    "Individuals from avoiding estate tax by giving away assets before death",
+                    "Companies from giving bonuses disguised as gifts",
+                    "Charitable giving that reduces taxable income"
+                ],
+                correct: 1, section: 1
+            },
+            {
+                q: "What is a \u201Cgranny flat interest\u201D in the context of estate planning?",
+                options: [
+                    "An elderly person\u2019s portion of a trust",
+                    "A life interest in a property given to an older family member in exchange for transferring the property to the next generation, with tax implications",
+                    "An interest rate applied to estate loans for elderly taxpayers",
+                    "A Singaporean tax exemption for elderly property owners"
+                ],
+                correct: 1, section: 1
+            },
+            {
+                q: "Vietnam exempts close relatives from inheritance tax. Which of these qualifies for exemption?",
+                options: [
+                    "Cousins",
+                    "Children",
+                    "Nieces and nephews",
+                    "Stepchildren (no legal adoption)"
+                ],
+                correct: 1, section: 1
+            },
+            {
+                q: "\u201CRollover relief\u201D in capital gains tax contexts typically means:",
+                options: [
+                    "Tax is waived entirely on the rollover transaction",
+                    "The gain from selling an asset is deferred if reinvested in a qualifying replacement asset",
+                    "Tax payments are rolled into the next calendar year",
+                    "A discount because the asset was held for more than 10 years"
+                ],
+                correct: 1, section: 1
+            },
+            {
+                q: "For a non-resident inheriting Singapore assets, which tax concern is most relevant?",
+                options: [
+                    "Singapore capital gains tax on investment returns",
+                    "Possible estate or inheritance tax in the heir\u2019s home country on Singapore assets",
+                    "Singapore withholding tax on the inheritance",
+                    "Singapore income tax on the deceased\u2019s final year earnings"
+                ],
+                correct: 1, section: 1
+            },
+            {
+                q: "What is an \u201Cinterposed entity\u201D in tax planning, and what risk does it carry?",
+                options: [
+                    "A trust that sits between the estate and the beneficiary, which can be challenged as a sham if lacking commercial substance",
+                    "A company used to hold family assets, which always reduces tax legally",
+                    "A government body that mediates estate disputes",
+                    "A third party investor in a family holding company"
+                ],
+                correct: 0, section: 1
+            },
+            {
+                q: "At what point does Malaysia\u2019s RPGT become zero for Malaysian citizens disposing of property?",
+                options: [
+                    "After holding for 3 years",
+                    "There is a one-time private residence exemption for owner-occupied homes",
+                    "RPGT is always payable regardless of holding period",
+                    "After holding for 20 years"
+                ],
+                correct: 1, section: 1
+            },
+            {
+                q: "The \u201Cwash-sale rule\u201D in securities law is designed to prevent:",
+                options: [
+                    "Selling assets within 30 days of inheritance",
+                    "Selling a security at a loss and immediately buying back the same security just to claim a tax loss",
+                    "Laundering money through estate accounts",
+                    "Disposing of illiquid assets below market value"
+                ],
+                correct: 1, section: 1
+            },
+
+            // Section 3: Cross-Border Tax Obligations & Treaties (Q31-45)
+            {
+                q: "A \u201Cdouble tax treaty\u201D (DTT) between two countries is designed to:",
+                options: [
+                    "Double the tax on cross-border transactions",
+                    "Prevent the same income or gain from being taxed in both countries",
+                    "Automatically exempt all assets in treaty countries from inheritance tax",
+                    "Allow companies to operate in both countries at a preferential tax rate"
+                ],
+                correct: 1, section: 2
+            },
+            {
+                q: "Singapore has an extensive network of tax treaties. Their primary purpose for HNW individuals is:",
+                options: [
+                    "Allowing Singapore-based trusts to operate internationally",
+                    "Reducing or eliminating withholding tax on dividends, interest, and royalties from Singapore to treaty partners",
+                    "Exempting Singapore residents from tax in all treaty countries",
+                    "Preventing Singaporeans from being taxed in Singapore on foreign income"
+                ],
+                correct: 1, section: 2
+            },
+            {
+                q: "\u201CControlled Foreign Corporation\u201D (CFC) rules exist to:",
+                options: [
+                    "Allow families to hold assets in foreign companies tax-free",
+                    "Prevent income earned in low-tax offshore entities from avoiding taxation in the owner\u2019s home country",
+                    "Regulate family offices operating across multiple jurisdictions",
+                    "Limit how many foreign entities a family can control"
+                ],
+                correct: 1, section: 2
+            },
+            {
+                q: "For a Philippine estate with foreign assets, what is the general rule?",
+                options: [
+                    "Foreign assets are completely exempt from Philippine estate tax",
+                    "The worldwide assets of a Philippine domiciliary are included in the gross estate for Philippine estate tax",
+                    "Only assets in ASEAN member states are included",
+                    "Foreign bank accounts are excluded"
+                ],
+                correct: 1, section: 2
+            },
+            {
+                q: "The OECD\u2019s \u201CCommon Reporting Standard\u201D (CRS) requires:",
+                options: [
+                    "Families to report their net worth to the OECD annually",
+                    "Financial institutions to automatically share information about foreign account holders with their home tax authority",
+                    "Countries to adopt the same inheritance tax rates",
+                    "Banks to report only accounts above USD 1 million"
+                ],
+                correct: 1, section: 2
+            },
+            {
+                q: "What is \u201Ctax residency\u201D and how does it differ from citizenship?",
+                options: [
+                    "They are identical",
+                    "Tax residency is determined by where you actually live and spend time (physical presence tests), while citizenship is determined by birth or naturalisation",
+                    "Citizenship determines worldwide income tax; residency only determines local tax",
+                    "Tax residency is a status granted by governments on application"
+                ],
+                correct: 1, section: 2
+            },
+            {
+                q: "For a wealthy family with members in Singapore, Malaysia, and Philippines, what is the most critical cross-border tax risk?",
+                options: [
+                    "That all three countries will charge capital gains tax on the same assets",
+                    "That assets may be subject to estate/inheritance tax in multiple jurisdictions simultaneously",
+                    "That currency exchange losses are treated as taxable income",
+                    "That trusts registered in one country will not be recognised in others"
+                ],
+                correct: 1, section: 2
+            },
+            {
+                q: "An \u201Coffshore trust\u201D can provide tax benefits, but those benefits are generally contingent on:",
+                options: [
+                    "Being registered in a zero-tax jurisdiction",
+                    "The settlor giving up genuine control and meeting the substance requirements of the jurisdiction",
+                    "The trust having fewer than three beneficiaries",
+                    "All beneficiaries being non-residents"
+                ],
+                correct: 1, section: 2
+            },
+            {
+                q: "What is a \u201Csubstance over form\u201D approach taken by tax authorities?",
+                options: [
+                    "Looking at the formal legal structure of a transaction regardless of its economic reality",
+                    "Looking through the legal form of a transaction to tax it based on its economic substance",
+                    "Applying the highest possible tax rate to complex structures",
+                    "Simplifying tax calculations for complex cross-border structures"
+                ],
+                correct: 1, section: 2
+            },
+            {
+                q: "\u201CTransfer pricing\u201D rules are most relevant to families that:",
+                options: [
+                    "Transfer property between family members during their lifetime",
+                    "Operate related-party transactions across multiple jurisdictions",
+                    "Use trusts to transfer assets to beneficiaries",
+                    "Gift assets between family members across borders"
+                ],
+                correct: 1, section: 2
+            },
+            {
+                q: "Which SEA country has ratified the most comprehensive network of double tax treaties in the region?",
+                options: [
+                    "Vietnam",
+                    "Thailand",
+                    "Singapore",
+                    "Philippines"
+                ],
+                correct: 2, section: 2
+            },
+            {
+                q: "A \u201CPFIC\u201D (Passive Foreign Investment Company) is a concern for:",
+                options: [
+                    "All investors holding foreign assets",
+                    "US persons holding foreign mutual funds or passive investments, which carry complex and often punitive US tax rules",
+                    "Any non-US person investing in the US",
+                    "Only listed companies with passive income above a threshold"
+                ],
+                correct: 1, section: 2
+            },
+            {
+                q: "What is the purpose of FATCA (Foreign Account Tax Compliance Act)?",
+                options: [
+                    "A US law requiring foreign financial institutions to report US persons\u2019 account information to the IRS",
+                    "A general international anti-money laundering standard",
+                    "An ASEAN agreement on automatic tax information exchange",
+                    "A law governing tax compliance for family offices"
+                ],
+                correct: 0, section: 2
+            },
+            {
+                q: "Why does the concept of \u201Csitus\u201D matter for cross-border estate planning?",
+                options: [
+                    "It determines the nationality of the deceased",
+                    "It determines which country has jurisdiction to tax a particular asset",
+                    "It establishes which language the estate documents must be in",
+                    "It determines which exchange rate to use for foreign assets"
+                ],
+                correct: 1, section: 2
+            },
+            {
+                q: "For a non-domiciled UK resident with SEA assets, the key tax risk is:",
+                options: [
+                    "UK capital gains tax on all worldwide assets",
+                    "UK inheritance tax on UK-situs assets, with worldwide exposure if the individual has been UK resident for long enough",
+                    "Full double taxation in both the UK and SEA",
+                    "No UK tax exposure since the assets are located in SEA"
+                ],
+                correct: 1, section: 2
+            },
+
+            // Section 4: Tax Planning Strategies & Structures (Q46-60)
+            {
+                q: "\u201CTax-loss harvesting\u201D involves:",
+                options: [
+                    "Selling loss-making assets to reduce taxable gains elsewhere in the portfolio",
+                    "Harvesting income from tax-exempt accounts",
+                    "Reducing tax by donating assets to charity at a loss",
+                    "Deferring tax losses to future years"
+                ],
+                correct: 0, section: 3
+            },
+            {
+                q: "A \u201Ccharitable remainder trust\u201D (CRT) works by:",
+                options: [
+                    "Donating assets to charity immediately",
+                    "Transferring assets to a trust that pays income to the grantor for life, with the remainder going to charity",
+                    "Holding assets in trust for charity with no income to family",
+                    "Converting taxable assets to charitable assets"
+                ],
+                correct: 1, section: 3
+            },
+            {
+                q: "What is the primary tax advantage of using a trust for a family business?",
+                options: [
+                    "All trust income is automatically tax-exempt",
+                    "Potential to split income among multiple beneficiaries in lower tax brackets and to protect assets from estate tax",
+                    "Trusts can indefinitely defer tax on accumulated income",
+                    "Business trusts are not subject to capital gains tax"
+                ],
+                correct: 1, section: 3
+            },
+            {
+                q: "\u201CAnnual exclusion gifts\u201D (in jurisdictions with gift tax) allow:",
+                options: [
+                    "A one-time lifetime gift free of tax",
+                    "Gifts up to a certain annual amount per recipient to pass free of gift tax",
+                    "Gifts to charities only",
+                    "Gifts between spouses without limit"
+                ],
+                correct: 1, section: 3
+            },
+            {
+                q: "Which strategy is most effective for reducing the gross estate for estate tax purposes while maintaining some family control?",
+                options: [
+                    "Converting all assets to cash",
+                    "Funding an irrevocable life insurance trust (ILIT)",
+                    "Giving all assets to children immediately",
+                    "Registering assets in a foreign jurisdiction"
+                ],
+                correct: 1, section: 3
+            },
+            {
+                q: "A \u201Cfamily limited partnership\u201D (FLP) provides what key tax benefit?",
+                options: [
+                    "Complete avoidance of all taxes on transferred assets",
+                    "The ability to apply valuation discounts (for lack of control and marketability) when transferring limited partnership interests",
+                    "Full exemption from gift tax on all FLP transfers",
+                    "Conversion of income into tax-exempt capital gains"
+                ],
+                correct: 1, section: 3
+            },
+            {
+                q: "What is \u201Cincome splitting\u201D in a family wealth context?",
+                options: [
+                    "Dividing income equally among family members to reduce administrative costs",
+                    "Distributing income across multiple family members or entities in lower tax brackets to reduce the overall family tax burden",
+                    "Splitting income between two countries to claim treaty benefits in both",
+                    "A strategy that applies only to family businesses"
+                ],
+                correct: 1, section: 3
+            },
+            {
+                q: "The \u201Canti-avoidance\u201D provisions in most tax systems are designed to:",
+                options: [
+                    "Simplify tax compliance for families",
+                    "Prevent artificial arrangements that have no commercial purpose beyond reducing tax",
+                    "Prevent families from using legitimate trusts",
+                    "Specifically target offshore family offices"
+                ],
+                correct: 1, section: 3
+            },
+            {
+                q: "When is an \u201Cinsurance wrapper\u201D most tax-efficient?",
+                options: [
+                    "When the investments inside generate high dividend income",
+                    "In jurisdictions where investment income within an insurance policy is not taxed until withdrawal",
+                    "Always",
+                    "Only for assets subject to capital gains tax"
+                ],
+                correct: 1, section: 3
+            },
+            {
+                q: "A \u201Cphilanthropic vehicle\u201D like a private foundation provides what dual benefit?",
+                options: [
+                    "A current tax deduction for the endowment and control over how assets are deployed charitably over time",
+                    "Complete tax exemption on all family income if a foundation is established",
+                    "Avoidance of inheritance tax on all assets transferred in perpetuity",
+                    "Both A and B"
+                ],
+                correct: 0, section: 3
+            },
+            {
+                q: "\u201CPre-immigration tax planning\u201D is important because:",
+                options: [
+                    "All countries charge an entry tax on incoming wealthy individuals",
+                    "Some countries impose exit taxes when you leave, and the receiving country may tax worldwide income from day one of residency",
+                    "It only matters if you are moving to a higher-tax country",
+                    "Tax residency cannot be changed once established"
+                ],
+                correct: 1, section: 3
+            },
+            {
+                q: "What is the key risk of aggressive tax planning for a family in SEA?",
+                options: [
+                    "Other family members may not approve",
+                    "Regulatory crackdown, reputational damage, and potential penalties if structures are deemed to lack commercial substance",
+                    "Foreign asset protections may be lost",
+                    "Only applies to families with assets above USD 100 million"
+                ],
+                correct: 1, section: 3
+            },
+            {
+                q: "A \u201Ctax-transparent\u201D structure differs from a \u201Ctax-opaque\u201D one in that:",
+                options: [
+                    "Tax-transparent structures pay no taxes at all",
+                    "Income in a transparent structure flows through to the investors/partners who are taxed directly",
+                    "Transparent structures must disclose all assets to tax authorities",
+                    "Tax-opaque structures are always more efficient"
+                ],
+                correct: 1, section: 3
+            },
+            {
+                q: "For a business owner planning to sell the family business, the primary tax planning consideration is:",
+                options: [
+                    "Whether to accept a lower price",
+                    "Structuring the transaction to maximise capital gains treatment and utilising available exemptions or reliefs",
+                    "Whether to use the proceeds to start a new business",
+                    "How quickly to distribute the proceeds to family members"
+                ],
+                correct: 1, section: 3
+            },
+            {
+                q: "What is the most tax-efficient way to pass wealth to the next generation during your lifetime?",
+                options: [
+                    "Gifting cash regularly up to the annual exclusion limit",
+                    "Gifting appreciating assets while they are still relatively low in value, so future appreciation is outside the estate",
+                    "Keeping all assets in your name and relying on the stepped-up basis at death",
+                    "Converting all assets to life insurance policies"
+                ],
+                correct: 1, section: 3
+            }
+        ];
+
+        const letters = ['A', 'B', 'C', 'D'];
+        let currentQ = 0;
+        let answers = {};
+
+        // Restore progress from sessionStorage
+        function loadProgress() {
+            try {
+                const saved = sessionStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    answers = data.answers || {};
+                    currentQ = data.currentQ || 0;
+                }
+            } catch(e) { /* ignore */ }
+        }
+
+        function saveProgress() {
+            try {
+                sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    answers: answers,
+                    currentQ: currentQ
+                }));
+            } catch(e) { /* ignore */ }
+        }
+
+        function getSectionLabel(idx) {
+            if (idx < 15) return 'Section 1: ' + sections[0];
+            if (idx < 30) return 'Section 2: ' + sections[1];
+            if (idx < 45) return 'Section 3: ' + sections[2];
+            return 'Section 4: ' + sections[3];
+        }
+
+        function renderQuestion() {
+            const q = questions[currentQ];
+            const area = document.getElementById('question-area');
+            area.classList.remove('fade-in');
+            void area.offsetWidth; // trigger reflow
+            area.classList.add('fade-in');
+
+            // Progress
+            document.getElementById('progress-text').textContent = 'Question ' + (currentQ + 1) + ' of 60';
+            const pct = Math.round(((currentQ + 1) / 60) * 100);
+            document.getElementById('progress-pct').textContent = pct + '%';
+            document.getElementById('progress-bar').style.width = pct + '%';
+            document.getElementById('section-label').textContent = getSectionLabel(currentQ);
+
+            // Question text
+            document.getElementById('q-text').textContent = 'Q' + (currentQ + 1) + '. ' + q.q;
+
+            // Options
+            const container = document.getElementById('q-options');
+            container.innerHTML = '';
+            q.options.forEach(function(opt, i) {
+                const div = document.createElement('div');
+                div.className = 'quiz-option flex items-start';
+                if (answers[currentQ] === i) div.classList.add('selected');
+                div.innerHTML = '<span class="option-letter">' + letters[i] + '</span><span class="text-sm leading-relaxed pt-0.5">' + opt + '</span>';
+                div.addEventListener('click', function() {
+                    answers[currentQ] = i;
+                    saveProgress();
+                    document.querySelectorAll('.quiz-option').forEach(function(el) { el.classList.remove('selected'); });
+                    div.classList.add('selected');
+                    document.getElementById('btn-next').disabled = false;
+                });
+                container.appendChild(div);
+            });
+
+            // Navigation
+            document.getElementById('btn-prev').style.display = currentQ === 0 ? 'none' : 'inline-block';
+            document.getElementById('btn-next').disabled = answers[currentQ] === undefined;
+
+            if (currentQ === 59) {
+                document.getElementById('btn-next').textContent = 'See Results';
+            } else {
+                document.getElementById('btn-next').textContent = 'Next';
+            }
+        }
+
+        window.nextQuestion = function() {
+            if (answers[currentQ] === undefined) return;
+            if (currentQ === 59) {
+                showResults();
+                return;
+            }
+            currentQ++;
+            saveProgress();
+            renderQuestion();
+        };
+
+        window.prevQuestion = function() {
+            if (currentQ === 0) return;
+            currentQ--;
+            saveProgress();
+            renderQuestion();
+        };
+
+        function getSectionScore(sectionIdx) {
+            let correct = 0;
+            const start = sectionIdx * 15;
+            for (let i = start; i < start + 15; i++) {
+                if (answers[i] === questions[i].correct) correct++;
+            }
+            return correct;
+        }
+
+        function getLevelLabel(score) {
+            if (score <= 5) return 'Foundational';
+            if (score <= 10) return 'Developing';
+            return 'Advanced';
+        }
+
+        function getTier(total) {
+            if (total <= 20) return {
+                name: 'Tax Foundations',
+                description: 'Tax risk on inherited wealth is often invisible until it strikes. Our advisory will map your full tax exposure across all your jurisdictions.'
+            };
+            if (total <= 40) return {
+                name: 'Developing Tax Literacy',
+                description: 'You understand the basics, but cross-border complexity and planning structures are areas where gaps can be costly.'
+            };
+            if (total <= 55) return {
+                name: 'Advanced Tax Literacy',
+                description: 'Strong foundation. Your deep-dive will focus on advanced structuring, anti-avoidance considerations, and pre-immigration planning.'
+            };
+            return {
+                name: 'Tax Expert',
+                description: 'Exceptional tax knowledge. Our advisory partnership will focus on bespoke structuring and staying ahead of regulatory change across SEA.'
+            };
+        }
+
+        function showResults() {
+            // Hide quiz elements
+            document.getElementById('quiz-progress').style.display = 'none';
+            document.getElementById('question-area').style.display = 'none';
+            document.getElementById('quiz-nav').style.display = 'none';
+            document.getElementById('result-card').classList.remove('hidden');
+
+            const s1 = getSectionScore(0);
+            const s2 = getSectionScore(1);
+            const s3 = getSectionScore(2);
+            const s4 = getSectionScore(3);
+            const total = s1 + s2 + s3 + s4;
+            const tier = getTier(total);
+
+            document.getElementById('result-tier').textContent = tier.name;
+            document.getElementById('result-score-line').textContent = 'You scored ' + total + ' out of 60';
+            document.getElementById('result-description').textContent = tier.description;
+
+            // Section scores
+            document.getElementById('s1-score').textContent = s1 + ' / 15';
+            document.getElementById('s1-level').textContent = getLevelLabel(s1);
+            document.getElementById('s2-score').textContent = s2 + ' / 15';
+            document.getElementById('s2-level').textContent = getLevelLabel(s2);
+            document.getElementById('s3-score').textContent = s3 + ' / 15';
+            document.getElementById('s3-level').textContent = getLevelLabel(s3);
+            document.getElementById('s4-score').textContent = s4 + ' / 15';
+            document.getElementById('s4-level').textContent = getLevelLabel(s4);
+
+            // Animate bars
+            setTimeout(function() {
+                document.getElementById('s1-bar').style.width = (s1 / 15 * 100) + '%';
+                document.getElementById('s2-bar').style.width = (s2 / 15 * 100) + '%';
+                document.getElementById('s3-bar').style.width = (s3 / 15 * 100) + '%';
+                document.getElementById('s4-bar').style.width = (s4 / 15 * 100) + '%';
+            }, 100);
+
+            // Clear saved progress
+            sessionStorage.removeItem(STORAGE_KEY);
+        }
+
+        // Initialize
+        loadProgress();
+        renderQuestion();
+    })();
+    </script>
+
+</body>
+</html>

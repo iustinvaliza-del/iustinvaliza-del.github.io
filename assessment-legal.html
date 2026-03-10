@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Readiness Assessment | Legacy Stewards</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#c9a96e',
+                        'gold-light': '#e8d5b5',
+                        'gold-dark': '#a8864f',
+                        rose: '#b76e79',
+                        cream: '#F0EBE3',
+                        sand: '#E6DED3',
+                        charcoal: '#2C2C35',
+                        muted: '#6B6B7B',
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { background: #0a0a18; color: #F0EBE3; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #c9a96e, #a8864f);
+            color: #fff; font-weight: 600; border-radius: 50px;
+            padding: 14px 36px; transition: all 0.4s ease;
+            box-shadow: 0 4px 20px rgba(201, 169, 110, 0.25);
+            cursor: pointer; border: none;
+        }
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201, 169, 110, 0.4); }
+        .btn-gold:disabled, .btn-gold.disabled { opacity: 0.4; pointer-events: none; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .btn-outline {
+            border: 1.5px solid #c9a96e; color: #c9a96e;
+            border-radius: 50px; padding: 14px 36px; transition: all 0.4s ease;
+            background: transparent; cursor: pointer;
+        }
+        .btn-outline:hover { background: rgba(201, 169, 110, 0.08); }
+
+        .gold-gradient {
+            background: linear-gradient(135deg, #c9a96e, #a8864f, #c9a96e);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
+        .progress-fill { transition: width 0.5s ease; }
+
+        .questionnaire-option {
+            cursor: pointer; transition: all 0.3s ease;
+            border: 1px solid rgba(201, 169, 110, 0.15);
+            border-radius: 12px;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .questionnaire-option:hover { border-color: rgba(201, 169, 110, 0.5); background: rgba(201, 169, 110, 0.08); }
+        .questionnaire-option.selected { border-color: #c9a96e; background: rgba(201, 169, 110, 0.15); }
+
+        .glass-modal {
+            background: rgba(15, 15, 25, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(201, 169, 110, 0.15);
+            border-radius: 16px;
+        }
+
+        .score-fill { transition: width 1s ease-out; }
+
+        .nav-scrolled {
+            background: rgba(10, 10, 24, 0.95) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border-bottom: 1px solid rgba(201, 169, 110, 0.12) !important;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.2) !important;
+        }
+
+        ::selection { background: rgba(201, 169, 110, 0.25); color: #F0EBE3; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a18; }
+        ::-webkit-scrollbar-thumb { background: rgba(201, 169, 110, 0.35); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(201, 169, 110, 0.55); }
+
+        .mobile-menu { transform: translateX(100%); transition: transform 0.3s ease; }
+        .mobile-menu.open { transform: translateX(0); }
+        .mobile-overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .mobile-overlay.open { opacity: 1; pointer-events: auto; }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== NAVIGATION ==================== -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500" style="background: rgba(10, 10, 24, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full border-2 border-gold flex items-center justify-center bg-[#F7F3ED]/10">
+                    <span class="font-serif text-gold font-bold text-sm">LS</span>
+                </div>
+                <span class="font-serif text-lg text-cream tracking-wide hidden sm:block">Legacy Stewards</span>
+            </a>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="index.html#assessment" class="text-sm text-[#8a8a9a] hover:text-gold transition-colors">&larr; Back to Overview</a>
+                <a href="login.html" class="btn-outline text-sm px-5 py-2">Client Portal</a>
+            </div>
+            <button id="menu-btn" class="md:hidden text-cream" onclick="toggleMobile()">
+                <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h20M4 14h20M4 21h20"/></svg>
+            </button>
+        </div>
+        <!-- Mobile Overlay -->
+        <div id="mobile-overlay" class="mobile-overlay fixed inset-0 bg-charcoal/60 z-40 md:hidden" onclick="toggleMobile()"></div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu fixed top-0 right-0 h-full w-72 z-50 p-8 md:hidden shadow-2xl" style="background: #12121f;">
+            <button onclick="toggleMobile()" class="absolute top-6 right-6 text-cream">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+            <div class="flex flex-col gap-6 mt-16">
+                <a href="index.html#assessment" onclick="toggleMobile()" class="text-cream hover:text-gold transition-colors">&larr; Back to Overview</a>
+                <a href="login.html" onclick="toggleMobile()" class="btn-outline text-sm text-center py-2.5">Client Portal</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== HERO ==================== -->
+    <section class="pt-32 pb-16 px-6 text-center relative">
+        <div class="max-w-3xl mx-auto">
+            <p class="text-gold text-sm tracking-[0.3em] uppercase mb-4 font-sans font-medium">Deep-Dive Assessment</p>
+            <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold leading-tight mb-4 text-cream">
+                Legal Readiness <span class="gold-gradient">Assessment</span>
+            </h1>
+            <p class="text-[#8a8a9a] text-base md:text-lg max-w-xl mx-auto leading-relaxed">
+                60 questions across 4 domains of inheritance law in Southeast Asia
+            </p>
+        </div>
+    </section>
+
+    <!-- ==================== QUIZ AREA ==================== -->
+    <section class="px-6 pb-24">
+        <div class="w-full max-w-2xl mx-auto">
+
+            <!-- Progress -->
+            <div class="mb-8" id="quiz-progress-container">
+                <div class="flex justify-between text-sm text-[#8a8a9a] mb-2">
+                    <span id="q-progress-text">Question 1 of 60</span>
+                    <span id="q-section-name">Intestate Succession</span>
+                </div>
+                <div class="flex justify-between text-xs text-[#8a8a9a]/60 mb-1">
+                    <span id="q-section-range"></span>
+                    <span id="q-progress-pct">2%</span>
+                </div>
+                <div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                    <div id="q-progress-bar" class="h-full bg-gradient-to-r from-gold to-gold-light rounded-full progress-fill" style="width: 2%"></div>
+                </div>
+            </div>
+
+            <!-- Question Area -->
+            <div id="q-question-area" class="glass-modal p-8 md:p-10">
+                <h3 id="q-title" class="font-serif text-xl md:text-2xl text-white mb-8 leading-snug"></h3>
+                <div id="q-options" class="space-y-3"></div>
+            </div>
+
+            <!-- Results Area -->
+            <div id="q-results" class="hidden">
+                <div class="glass-modal p-8 md:p-10 text-center">
+                    <div class="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center mx-auto mb-6">
+                        <span class="text-3xl">&#9878;</span>
+                    </div>
+                    <h2 class="font-serif text-2xl md:text-3xl text-white mb-2">Your Legal Readiness Results</h2>
+                    <p class="text-[#8a8a9a] text-sm mb-8">Here is how you performed across the four domains of legal knowledge</p>
+
+                    <!-- Overall score -->
+                    <div class="mb-8">
+                        <span id="total-score" class="font-serif text-5xl text-gold"></span>
+                        <span class="text-[#8a8a9a] text-sm"> / 60</span>
+                        <p id="overall-tier" class="font-semibold text-lg text-gold-light mt-2"></p>
+                        <p id="overall-desc" class="text-sm text-[#8a8a9a] mt-2 max-w-lg mx-auto leading-relaxed"></p>
+                    </div>
+
+                    <!-- Per-section breakdown -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 text-left">
+                        <!-- Section 1 -->
+                        <div class="border border-gold/20 rounded-lg p-5 bg-white/5">
+                            <h4 class="font-serif text-base text-white mb-1">Intestate Succession</h4>
+                            <p class="text-xs text-[#8a8a9a] mb-3">Questions 1 &ndash; 15</p>
+                            <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+                                <div class="score-fill h-2 bg-gold rounded-full" id="sec1-bar" style="width: 0%"></div>
+                            </div>
+                            <p class="text-sm font-semibold mt-2 text-white" id="sec1-score"></p>
+                            <p class="text-xs text-gold mt-1" id="sec1-label"></p>
+                        </div>
+                        <!-- Section 2 -->
+                        <div class="border border-gold/20 rounded-lg p-5 bg-white/5">
+                            <h4 class="font-serif text-base text-white mb-1">Wills, Trusts &amp; Estate Planning</h4>
+                            <p class="text-xs text-[#8a8a9a] mb-3">Questions 16 &ndash; 30</p>
+                            <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+                                <div class="score-fill h-2 bg-gold rounded-full" id="sec2-bar" style="width: 0%"></div>
+                            </div>
+                            <p class="text-sm font-semibold mt-2 text-white" id="sec2-score"></p>
+                            <p class="text-xs text-gold mt-1" id="sec2-label"></p>
+                        </div>
+                        <!-- Section 3 -->
+                        <div class="border border-gold/20 rounded-lg p-5 bg-white/5">
+                            <h4 class="font-serif text-base text-white mb-1">SEA-Specific &amp; Religious Law</h4>
+                            <p class="text-xs text-[#8a8a9a] mb-3">Questions 31 &ndash; 45</p>
+                            <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+                                <div class="score-fill h-2 bg-gold rounded-full" id="sec3-bar" style="width: 0%"></div>
+                            </div>
+                            <p class="text-sm font-semibold mt-2 text-white" id="sec3-score"></p>
+                            <p class="text-xs text-gold mt-1" id="sec3-label"></p>
+                        </div>
+                        <!-- Section 4 -->
+                        <div class="border border-gold/20 rounded-lg p-5 bg-white/5">
+                            <h4 class="font-serif text-base text-white mb-1">Governance &amp; Protective Structures</h4>
+                            <p class="text-xs text-[#8a8a9a] mb-3">Questions 46 &ndash; 60</p>
+                            <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+                                <div class="score-fill h-2 bg-gold rounded-full" id="sec4-bar" style="width: 0%"></div>
+                            </div>
+                            <p class="text-sm font-semibold mt-2 text-white" id="sec4-score"></p>
+                            <p class="text-xs text-gold mt-1" id="sec4-label"></p>
+                        </div>
+                    </div>
+
+                    <!-- CTA -->
+                    <div class="p-5 bg-white/5 rounded-lg border border-white/10">
+                        <p class="text-sm text-[#8a8a9a] leading-relaxed">Your results reveal specific knowledge gaps our advisory team can address. We will tailor a stewardship roadmap based on your unique legal profile.</p>
+                        <a href="index.html#contact" class="mt-4 inline-block btn-gold text-sm px-8">Book a Discovery Call &rarr;</a>
+                        <p class="mt-3 text-xs text-[#8a8a9a]/60">
+                            <a href="index.html#assessment" class="underline hover:text-gold text-[#8a8a9a]">Return to full assessment &rarr;</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div id="q-nav" class="flex justify-between mt-8">
+                <button id="q-prev" onclick="prevQuestion()" class="text-[#8a8a9a] hover:text-gold transition-colors text-sm disabled:opacity-30 disabled:pointer-events-none" disabled>&larr; Previous</button>
+                <div></div>
+                <button id="q-next" onclick="nextQuestion()" class="btn-gold text-sm px-8 disabled" disabled>Next &rarr;</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="relative z-10 border-t border-gold/10 py-12 px-6" style="background: #0d0d1a;">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full border border-gold flex items-center justify-center">
+                            <span class="font-serif text-gold text-xs font-bold">LS</span>
+                        </div>
+                        <span class="font-serif text-cream">Legacy Stewards</span>
+                    </div>
+                    <p class="text-[#8a8a9a] text-sm leading-relaxed">Independent stewardship partners for next-generation women of wealth in Southeast Asia.</p>
+                </div>
+                <div>
+                    <h4 class="text-cream font-medium text-sm mb-4">Services</h4>
+                    <ul class="space-y-2 text-[#8a8a9a] text-sm">
+                        <li><a href="index.html#services" class="hover:text-gold transition-colors">Stewardship Coaching</a></li>
+                        <li><a href="index.html#assessment" class="hover:text-gold transition-colors">Heir Readiness Assessment</a></li>
+                        <li><a href="index.html#advisory" class="hover:text-gold transition-colors">Legal &amp; Tax Advisory</a></li>
+                        <li><a href="index.html#services" class="hover:text-gold transition-colors">Impact Investing</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-cream font-medium text-sm mb-4">Regions</h4>
+                    <ul class="space-y-2 text-[#8a8a9a] text-sm">
+                        <li><a href="index.html#advisory" class="hover:text-gold transition-colors">Indonesia</a></li>
+                        <li><a href="index.html#advisory" class="hover:text-gold transition-colors">Singapore</a></li>
+                        <li><a href="index.html#advisory" class="hover:text-gold transition-colors">Philippines</a></li>
+                        <li><a href="index.html#advisory" class="hover:text-gold transition-colors">Malaysia, Thailand, Vietnam</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-cream font-medium text-sm mb-4">Connect</h4>
+                    <ul class="space-y-2 text-[#8a8a9a] text-sm">
+                        <li><a href="index.html#contact" class="hover:text-gold transition-colors">Book a Discovery Call</a></li>
+                        <li><a href="index.html#insights" class="hover:text-gold transition-colors">Insights &amp; Blog</a></li>
+                        <li><a href="index.html#team" class="hover:text-gold transition-colors">Our Team</a></li>
+                        <li><a href="login.html" class="hover:text-gold transition-colors">Client Portal</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gold/10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <p class="text-[#8a8a9a] text-xs">&copy; 2026 Legacy Stewards. All rights reserved.</p>
+                <div class="flex gap-6 text-[#8a8a9a] text-xs">
+                    <a href="#" class="hover:text-gold transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-gold transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== SCRIPTS ==================== -->
+    <script>
+    /* ===== Mobile Menu Toggle ===== */
+    function toggleMobile() {
+        document.getElementById('mobile-menu').classList.toggle('open');
+        document.getElementById('mobile-overlay').classList.toggle('open');
+    }
+
+    /* ===== Nav scroll effect ===== */
+    window.addEventListener('scroll', function() {
+        var nav = document.getElementById('navbar');
+        if (window.scrollY > 20) {
+            nav.classList.add('nav-scrolled');
+        } else {
+            nav.classList.remove('nav-scrolled');
+        }
+    });
+
+    /* ===== QUESTIONS DATA ===== */
+    var SECTIONS = [
+        { name: 'Intestate Succession', range: 'Q1 \u2013 Q15', start: 0, end: 15 },
+        { name: 'Wills, Trusts & Estate Planning', range: 'Q16 \u2013 Q30', start: 15, end: 30 },
+        { name: 'SEA-Specific & Religious Law', range: 'Q31 \u2013 Q45', start: 30, end: 45 },
+        { name: 'Governance & Protective Structures', range: 'Q46 \u2013 Q60', start: 45, end: 60 }
+    ];
+
+    var QUESTIONS = [
+        /* ===== Section 1: Intestate Succession (Q1-15) ===== */
+        {
+            q: 'What does "intestate" mean in the context of estate law?',
+            options: [
+                'Having a very large estate',
+                'Dying without a valid will',
+                'Having disputed assets',
+                'Being a non-resident at the time of death'
+            ],
+            correct: 1
+        },
+        {
+            q: 'In Singapore, if a non-Muslim person dies intestate and leaves a spouse and two children, what does the spouse receive under the Intestate Succession Act?',
+            options: [
+                'The entire estate',
+                'Nothing \u2014 children take all',
+                'One-third of the estate',
+                'Half of the estate only if they were married over 10 years'
+            ],
+            correct: 2
+        },
+        {
+            q: 'Under Islamic inheritance law (faraid), what is the general rule about shares for male vs female heirs of the same class?',
+            options: [
+                'They receive equal shares',
+                'Female heirs receive double',
+                'Male heirs receive double the share of a female heir at the same level',
+                'Shares are determined by age, not gender'
+            ],
+            correct: 2
+        },
+        {
+            q: 'In the Philippines, "compulsory heirs" refers to:',
+            options: [
+                'Heirs who are forced to accept the inheritance',
+                'Government-appointed trustees',
+                'Heirs who have a legally protected right to a portion of the estate',
+                'The eldest child only'
+            ],
+            correct: 2
+        },
+        {
+            q: 'What is "forced heirship"?',
+            options: [
+                'A law that forces heirs to manage family businesses',
+                'A legal rule that reserves a portion of an estate for certain heirs regardless of the will',
+                'A process of forcing the sale of estate assets to pay taxes',
+                'A clause in a will appointing mandatory trustees'
+            ],
+            correct: 1
+        },
+        {
+            q: 'In Thailand, statutory heirs are divided into classes. Which class has the highest priority?',
+            options: [
+                'Siblings',
+                'Parents',
+                'Spouse and children',
+                'Grandparents'
+            ],
+            correct: 2
+        },
+        {
+            q: 'Indonesia\'s inheritance system is pluralistic. Which of the following is NOT one of the three main legal systems that can apply?',
+            options: [
+                'The Civil Code (KUHPerdata)',
+                'Islamic law (Hukum Islam)',
+                'Common law (British-derived)',
+                'Customary law (Adat)'
+            ],
+            correct: 2
+        },
+        {
+            q: 'In Vietnam, if a person dies intestate, the first line of heirs includes:',
+            options: [
+                'Siblings and grandparents',
+                'Spouse, parents, and children',
+                'Children only',
+                'The eldest child and spouse only'
+            ],
+            correct: 1
+        },
+        {
+            q: 'What is the "legitime" in Philippine inheritance law?',
+            options: [
+                'A notarised will',
+                'The legally reserved share that cannot be taken away from compulsory heirs',
+                'The government\'s inheritance tax',
+                'A special trust for minor children'
+            ],
+            correct: 1
+        },
+        {
+            q: 'Which SEA country has NO inheritance or estate tax?',
+            options: [
+                'Philippines',
+                'Vietnam',
+                'Singapore',
+                'Thailand'
+            ],
+            correct: 2
+        },
+        {
+            q: 'What happens to a will if the testator (person who made it) remarries in most common law jurisdictions?',
+            options: [
+                'Nothing \u2014 the will remains fully valid',
+                'The will is automatically revoked unless it was made in contemplation of the marriage',
+                'Only the provisions for the former spouse are revoked',
+                'The will must be re-signed but remains otherwise valid'
+            ],
+            correct: 1
+        },
+        {
+            q: '"Per stirpes" distribution means:',
+            options: [
+                'Equal shares for all surviving relatives',
+                'Assets go to the state if no direct heirs survive',
+                'A deceased heir\'s share passes to their own children rather than being redistributed',
+                'Distribution is made by a court-appointed administrator'
+            ],
+            correct: 2
+        },
+        {
+            q: 'In Malaysia, the Distribution Act 1958 applies to:',
+            options: [
+                'All Malaysians regardless of religion',
+                'Non-Muslims only',
+                'Muslims only',
+                'Foreigners owning Malaysian assets'
+            ],
+            correct: 1
+        },
+        {
+            q: 'A person who dies intestate with no identifiable heirs \u2014 what typically happens to the estate?',
+            options: [
+                'It is distributed equally among all known relatives',
+                'It escheats to the state (goes to the government)',
+                'It is held in trust indefinitely by the courts',
+                'It passes to the most recent employer'
+            ],
+            correct: 1
+        },
+        {
+            q: 'What is the role of an "administrator" (as opposed to an "executor") in estate proceedings?',
+            options: [
+                'They are identical roles with different names in different jurisdictions',
+                'An administrator is appointed by a court when there is no will or no named executor',
+                'An administrator handles tax obligations; an executor handles beneficiaries',
+                'An administrator only manages real estate assets'
+            ],
+            correct: 1
+        },
+        /* ===== Section 2: Wills, Trusts & Estate Planning (Q16-30) ===== */
+        {
+            q: 'What is the primary advantage of a discretionary trust over a fixed trust?',
+            options: [
+                'It is cheaper to set up',
+                'The trustee has flexibility to distribute assets based on changing beneficiary circumstances',
+                'It automatically avoids all taxes',
+                'It bypasses the need for a will'
+            ],
+            correct: 1
+        },
+        {
+            q: 'A "testamentary trust" is:',
+            options: [
+                'A trust created during the testator\'s lifetime',
+                'A trust that comes into existence upon the testator\'s death, as set out in the will',
+                'A trust specifically for minors',
+                'A trust managed by the government'
+            ],
+            correct: 1
+        },
+        {
+            q: 'What is the key difference between a revocable and irrevocable trust?',
+            options: [
+                'Revocable trusts are cheaper; irrevocable trusts are more expensive',
+                'A revocable trust can be changed or dissolved by the grantor; an irrevocable trust generally cannot',
+                'Irrevocable trusts always avoid probate; revocable ones do not',
+                'There is no meaningful legal difference'
+            ],
+            correct: 1
+        },
+        {
+            q: 'What does "probate" refer to?',
+            options: [
+                'A tax on inherited property',
+                'The legal process of validating a will and administering an estate through the courts',
+                'The registration of a trust with tax authorities',
+                'A dispute between heirs about asset distribution'
+            ],
+            correct: 1
+        },
+        {
+            q: 'Which of the following assets typically BYPASSES probate?',
+            options: [
+                'Real estate held solely in the deceased\'s name',
+                'A jointly held bank account with right of survivorship',
+                'Personal property listed in a will',
+                'Business shares held in the deceased\'s name'
+            ],
+            correct: 1
+        },
+        {
+            q: 'What is a "letter of wishes" in the context of a trust?',
+            options: [
+                'A legally binding codicil to a will',
+                'A non-binding document from the settlor expressing preferences on how trustees should exercise their discretion',
+                'A formal instruction to the trustee that overrides the trust deed',
+                'A letter sent to beneficiaries explaining the trust'
+            ],
+            correct: 1
+        },
+        {
+            q: 'What is a "family limited partnership" (FLP) commonly used for in wealth planning?',
+            options: [
+                'Running a family business exclusively',
+                'Facilitating wealth transfer while retaining some control and potentially reducing gift/estate tax',
+                'Avoiding inheritance laws by converting assets to partnership interests',
+                'Managing international real estate portfolios'
+            ],
+            correct: 1
+        },
+        {
+            q: '"Portability" of the estate tax exemption (in relevant jurisdictions) allows:',
+            options: [
+                'Transferring assets across borders without tax',
+                'A surviving spouse to use the deceased spouse\'s unused exemption',
+                'Moving trusts between jurisdictions tax-free',
+                'Heirs to defer estate taxes for up to 10 years'
+            ],
+            correct: 1
+        },
+        {
+            q: 'What is the main purpose of a "buy-sell agreement" in a family business context?',
+            options: [
+                'To force family members to sell shares when they turn 65',
+                'To establish the process and pricing for transferring ownership when a partner dies or exits',
+                'To prevent any family member from selling to outside parties',
+                'To value the business for tax purposes only'
+            ],
+            correct: 1
+        },
+        {
+            q: 'A "generation-skipping trust" (GST) is primarily designed to:',
+            options: [
+                'Disinherit one generation in favour of another',
+                'Pass assets to grandchildren or later generations while minimising estate taxes at each generation',
+                'Manage assets for minor grandchildren until they reach adulthood',
+                'Avoid forced heirship rules'
+            ],
+            correct: 1
+        },
+        {
+            q: 'What is the "rule against perpetuities"?',
+            options: [
+                'A rule preventing family businesses from operating indefinitely',
+                'A legal principle limiting how long a trust can hold assets before they must be distributed',
+                'A tax rule against transferring wealth across more than three generations',
+                'A Sharia law concept preventing perpetual trusts'
+            ],
+            correct: 1
+        },
+        {
+            q: 'Which document gives someone the legal authority to manage financial affairs on behalf of another person who is incapacitated?',
+            options: [
+                'A living will',
+                'A testamentary trust',
+                'A durable power of attorney',
+                'An advance directive'
+            ],
+            correct: 2
+        },
+        {
+            q: 'What is a "GRAT" (Grantor Retained Annuity Trust)?',
+            options: [
+                'A trust that pays a fixed annuity to charity',
+                'An estate planning tool where the grantor retains annuity payments and transfers appreciation tax-efficiently to heirs',
+                'A government-regulated annuity trust for retirees',
+                'A trust used to fund education expenses'
+            ],
+            correct: 1
+        },
+        {
+            q: 'In Singapore, what is the main legislation governing trusts?',
+            options: [
+                'The Companies Act',
+                'The Trustees Act',
+                'The Wills Act',
+                'The Intestate Succession Act'
+            ],
+            correct: 1
+        },
+        {
+            q: 'What does "in terrorem" (no-contest) clause in a will typically do?',
+            options: [
+                'Prevents the will from being contested in any circumstance',
+                'Disinherits a beneficiary who unsuccessfully challenges the will',
+                'Forces all heirs to arbitrate disputes rather than litigate',
+                'Converts a contested will into a trust automatically'
+            ],
+            correct: 1
+        },
+        /* ===== Section 3: SEA-Specific & Religious Law (Q31-45) ===== */
+        {
+            q: 'In Malaysia, Muslim inheritance is governed by:',
+            options: [
+                'The Distribution Act 1958',
+                'Faraid (Islamic inheritance law)',
+                'The Companies Act',
+                'Common law precedent'
+            ],
+            correct: 1
+        },
+        {
+            q: 'Under Indonesian law, a foreign national who inherits freehold land (Hak Milik) must:',
+            options: [
+                'Register the property with the Indonesian Investment Authority',
+                'Pay a one-time foreign ownership surcharge to retain it',
+                'Transfer or sell the property within one year',
+                'Convert it to a leasehold (Hak Pakai) and hold it indefinitely'
+            ],
+            correct: 2
+        },
+        {
+            q: 'In the Philippines, the estate tax rate as of the TRAIN Law (2018) is:',
+            options: [
+                'Progressive, ranging from 5% to 20%',
+                'A flat 6% on the net taxable estate',
+                '10% for direct heirs, 20% for others',
+                'Zero for immediate family members'
+            ],
+            correct: 1
+        },
+        {
+            q: 'Singapore abolished estate duty in:',
+            options: [
+                '2001',
+                '2008',
+                '2015',
+                '2020'
+            ],
+            correct: 1
+        },
+        {
+            q: 'Thailand\'s inheritance tax applies when the inherited amount exceeds:',
+            options: [
+                '10 million THB',
+                '50 million THB',
+                '100 million THB',
+                'There is no threshold \u2014 all inheritances are taxed'
+            ],
+            correct: 2
+        },
+        {
+            q: 'In Vietnam, inheritance tax is levied at:',
+            options: [
+                '5% on all inherited assets',
+                '10% on the value exceeding a threshold, with exemptions for close family',
+                'A progressive rate from 2% to 15%',
+                'Vietnam has no inheritance tax'
+            ],
+            correct: 1
+        },
+        {
+            q: 'The "Women\'s Charter" in Singapore is significant for female heirs because it:',
+            options: [
+                'Gives women a larger share of the estate than men',
+                'Guarantees women the right to own and manage property independently',
+                'Requires that women appoint female trustees',
+                'Prevents women from being written out of a will'
+            ],
+            correct: 1
+        },
+        {
+            q: 'Adat (customary law) in Indonesia can affect inheritance by:',
+            options: [
+                'Only applying to Muslims',
+                'Overriding Islamic law in all circumstances',
+                'Varying significantly between ethnic groups and potentially affecting how assets are distributed',
+                'Only applying to land that has been in a family for more than 50 years'
+            ],
+            correct: 2
+        },
+        {
+            q: 'In the Philippines, the deadline for filing the estate tax return after death is:',
+            options: [
+                '6 months',
+                '1 year',
+                '2 years',
+                '5 years'
+            ],
+            correct: 1
+        },
+        {
+            q: 'A key challenge for HNW heirs with assets in multiple SEA countries is:',
+            options: [
+                'Having to appoint a separate executor in each country',
+                'That each country applies its own inheritance and tax laws, creating potential double taxation and conflicting rules',
+                'That Southeast Asian courts do not recognise foreign wills under any circumstances',
+                'That inheritance is only taxed in the country of the deceased\'s citizenship'
+            ],
+            correct: 1
+        },
+        {
+            q: 'In Thailand, foreign nationals generally:',
+            options: [
+                'Have the same property rights as Thai citizens',
+                'Cannot own freehold land but can own buildings or condo units',
+                'May own land up to 5 rai with government approval',
+                'Must own land through a Thai spouse only'
+            ],
+            correct: 1
+        },
+        {
+            q: 'Malaysia\'s Real Property Gains Tax (RPGT) may apply when:',
+            options: [
+                'Receiving an inheritance',
+                'Selling an inherited property',
+                'Transferring property to a trust',
+                'Registering a property in a family member\'s name'
+            ],
+            correct: 1
+        },
+        {
+            q: 'Under Philippine law, "Free Portion" of an estate refers to:',
+            options: [
+                'Assets exempt from estate tax',
+                'The portion of the estate the testator can freely distribute by will, after satisfying the legitime',
+                'Property held jointly that passes outside the estate',
+                'Assets bequeathed to charity'
+            ],
+            correct: 1
+        },
+        {
+            q: 'In Singapore, the Intestate Succession Act does NOT apply to:',
+            options: [
+                'Non-Muslim Singapore citizens',
+                'Foreign nationals with Singapore assets',
+                'Muslims, who are governed by the AMLA (Administration of Muslim Law Act)',
+                'Permanent residents'
+            ],
+            correct: 2
+        },
+        {
+            q: 'What is a "Hibah" in Islamic estate planning?',
+            options: [
+                'An Islamic will (equivalent to a testament)',
+                'A gift made during the donor\'s lifetime that passes outside the estate and bypasses faraid rules',
+                'A charitable endowment (waqf) for religious purposes',
+                'A trust structure recognised under Malaysian law'
+            ],
+            correct: 1
+        },
+        /* ===== Section 4: Governance & Protective Structures (Q46-60) ===== */
+        {
+            q: 'What is a "family constitution" in the context of wealth governance?',
+            options: [
+                'A legal document registered with the court establishing family succession',
+                'A non-legally-binding document that sets out shared values, decision-making processes, and governance norms for a wealthy family',
+                'A formal constitution for a family holding company',
+                'A document required by banks for multi-generational accounts'
+            ],
+            correct: 1
+        },
+        {
+            q: 'A "family office" serves what primary function for UHNW families?',
+            options: [
+                'Providing residential and domestic staff management',
+                'Centralising investment management, administration, legal, tax, and family services',
+                'Managing only philanthropic activities',
+                'Acting as a trustee for all family trusts'
+            ],
+            correct: 1
+        },
+        {
+            q: 'What is the main difference between a Single Family Office (SFO) and a Multi-Family Office (MFO)?',
+            options: [
+                'SFOs manage charitable foundations; MFOs manage investment portfolios',
+                'An SFO serves one family exclusively; an MFO provides similar services to multiple families',
+                'SFOs are regulated; MFOs are not',
+                'MFOs only operate in offshore jurisdictions'
+            ],
+            correct: 1
+        },
+        {
+            q: 'A "lasting power of attorney" (LPA) specifically enables:',
+            options: [
+                'Someone to act on your behalf only in financial matters',
+                'A designated person to make financial and/or personal welfare decisions if you lose mental capacity',
+                'Transfer of assets outside of the estate upon death',
+                'Management of business affairs during overseas travel'
+            ],
+            correct: 1
+        },
+        {
+            q: 'What is a "shareholder agreement" most critical for in a family business?',
+            options: [
+                'Registering shares with the tax authority',
+                'Setting out the rights and obligations of shareholders, buy-out mechanisms, and dispute resolution processes',
+                'Determining dividend policy for listed companies',
+                'Valuing the business for inheritance tax purposes'
+            ],
+            correct: 1
+        },
+        {
+            q: '"Governance risk" in the context of family wealth refers to:',
+            options: [
+                'Regulatory risk from changing government policies',
+                'The risk that poor decision-making structures, conflicts, or lack of accountability erode family wealth',
+                'The risk of investing in government bonds',
+                'Operational risk in a family business'
+            ],
+            correct: 1
+        },
+        {
+            q: 'A "beneficiary controlled trust" is primarily used to:',
+            options: [
+                'Give the beneficiary full control over the trust assets immediately',
+                'Give the beneficiary meaningful oversight or input while a trustee still manages the assets, balancing control with asset protection',
+                'Replace the need for a trustee with the beneficiary acting as sole manager',
+                'Convert a discretionary trust into a fixed trust'
+            ],
+            correct: 1
+        },
+        {
+            q: 'Which of the following is typically NOT a valid way to resolve family inheritance disputes?',
+            options: [
+                'Mediation',
+                'Arbitration',
+                'Social media campaigns',
+                'Litigation'
+            ],
+            correct: 2
+        },
+        {
+            q: 'What is "succession planning" at the family governance level?',
+            options: [
+                'Planning who will inherit financial assets only',
+                'A comprehensive process for preparing the next generation to lead family enterprises, trusts, and philanthropic activities',
+                'Tax planning to minimise estate taxes during a transition',
+                'Selecting the family\'s legal representatives'
+            ],
+            correct: 1
+        },
+        {
+            q: 'The primary risk of having no trust structure for a high-value inheritance is:',
+            options: [
+                'Higher returns on investment',
+                'Potential loss of wealth due to beneficiary mismanagement, creditors, divorce, or forced heirship rules',
+                'Reduced tax obligations',
+                'Simplified administration'
+            ],
+            correct: 1
+        },
+        {
+            q: 'A "protector" in a trust structure is:',
+            options: [
+                'A person who guards trust assets physically',
+                'An independent third party with specific oversight powers over the trustee, often including the power to change trustees',
+                'A government-appointed guardian for minor beneficiaries',
+                'Another name for a co-trustee'
+            ],
+            correct: 1
+        },
+        {
+            q: 'Which SEA jurisdiction is most commonly used for establishing offshore family trusts due to its mature legal framework?',
+            options: [
+                'Vietnam',
+                'Indonesia',
+                'Singapore',
+                'Thailand'
+            ],
+            correct: 2
+        },
+        {
+            q: 'A "letter of instruction" differs from a will in that:',
+            options: [
+                'A letter of instruction is legally binding; a will is not',
+                'A letter of instruction is not legally binding but provides practical guidance on wishes and logistics to executors',
+                'A letter of instruction replaces the need for a will',
+                'Letters of instruction only apply to digital assets'
+            ],
+            correct: 1
+        },
+        {
+            q: 'What is the purpose of a "governance review" for a family holding structure every 3\u20135 years?',
+            options: [
+                'To comply with mandatory regulatory requirements in all SEA jurisdictions',
+                'To ensure structures remain aligned with changing family circumstances, tax laws, and investment objectives',
+                'To renegotiate trustee fees',
+                'To file updated family constitutions with courts'
+            ],
+            correct: 1
+        },
+        {
+            q: 'For a female heir in a jurisdiction where Islamic faraid applies, what is the most effective strategy to ensure assets pass according to her wishes rather than the default faraid shares?',
+            options: [
+                'Making a faraid-compliant will',
+                'Converting assets to cash',
+                'Using lifetime gifting (hibah), trusts, or joint ownership structures to pass assets outside the estate',
+                'Registering the estate in a foreign jurisdiction'
+            ],
+            correct: 2
+        }
+    ];
+
+    /* ===== QUIZ STATE ===== */
+    var STORAGE_KEY = 'assessment-legal-progress';
+    var currentQ = 0;
+    var answers = new Array(QUESTIONS.length).fill(null);
+
+    /* Restore progress from sessionStorage */
+    (function restoreProgress() {
+        try {
+            var saved = sessionStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                var data = JSON.parse(saved);
+                if (data && data.answers && data.answers.length === QUESTIONS.length) {
+                    answers = data.answers;
+                    currentQ = typeof data.currentQ === 'number' ? data.currentQ : 0;
+                }
+            }
+        } catch(e) { /* ignore */ }
+    })();
+
+    function saveProgress() {
+        try {
+            sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ answers: answers, currentQ: currentQ }));
+        } catch(e) { /* ignore */ }
+    }
+
+    function getSectionForQuestion(idx) {
+        for (var i = 0; i < SECTIONS.length; i++) {
+            if (idx >= SECTIONS[i].start && idx < SECTIONS[i].end) return SECTIONS[i];
+        }
+        return SECTIONS[0];
+    }
+
+    function renderQuestion() {
+        var section = getSectionForQuestion(currentQ);
+        var qNum = currentQ + 1;
+        var pct = Math.round((qNum / QUESTIONS.length) * 100);
+
+        document.getElementById('q-progress-text').textContent = 'Question ' + qNum + ' of ' + QUESTIONS.length;
+        document.getElementById('q-section-name').textContent = section.name;
+        document.getElementById('q-section-range').textContent = section.range;
+        document.getElementById('q-progress-pct').textContent = pct + '%';
+        document.getElementById('q-progress-bar').style.width = pct + '%';
+
+        var data = QUESTIONS[currentQ];
+        document.getElementById('q-title').textContent = 'Q' + qNum + '. ' + data.q;
+
+        var letters = ['A', 'B', 'C', 'D'];
+        var optionsHtml = '';
+        for (var i = 0; i < data.options.length; i++) {
+            var selected = answers[currentQ] === i ? ' selected' : '';
+            optionsHtml += '<div class="questionnaire-option flex items-start gap-3' + selected + '" onclick="selectAnswer(' + i + ')">' +
+                '<span class="w-7 h-7 flex-shrink-0 rounded-full border border-gold/40 flex items-center justify-center text-xs font-semibold text-gold mt-0.5">' + letters[i] + '</span>' +
+                '<span class="text-white/90 text-sm leading-relaxed">' + data.options[i] + '</span>' +
+                '</div>';
+        }
+        document.getElementById('q-options').innerHTML = optionsHtml;
+
+        /* Previous button */
+        var prevBtn = document.getElementById('q-prev');
+        prevBtn.disabled = currentQ === 0;
+
+        /* Next button */
+        updateNextButton();
+    }
+
+    function updateNextButton() {
+        var nextBtn = document.getElementById('q-next');
+        if (answers[currentQ] !== null) {
+            nextBtn.disabled = false;
+            nextBtn.classList.remove('disabled');
+        } else {
+            nextBtn.disabled = true;
+            nextBtn.classList.add('disabled');
+        }
+
+        /* Change text on last question */
+        if (currentQ === QUESTIONS.length - 1) {
+            nextBtn.innerHTML = 'See Results &rarr;';
+        } else {
+            nextBtn.innerHTML = 'Next &rarr;';
+        }
+    }
+
+    function selectAnswer(idx) {
+        answers[currentQ] = idx;
+        saveProgress();
+
+        /* Update option visuals */
+        var options = document.getElementById('q-options').children;
+        for (var i = 0; i < options.length; i++) {
+            options[i].classList.remove('selected');
+        }
+        options[idx].classList.add('selected');
+
+        updateNextButton();
+    }
+
+    function nextQuestion() {
+        if (answers[currentQ] === null) return;
+
+        if (currentQ < QUESTIONS.length - 1) {
+            currentQ++;
+            saveProgress();
+            renderQuestion();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            showResults();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentQ > 0) {
+            currentQ--;
+            saveProgress();
+            renderQuestion();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
+    function getSectionLabel(score) {
+        if (score <= 5) return 'Foundational';
+        if (score <= 10) return 'Developing';
+        return 'Advanced';
+    }
+
+    function showResults() {
+        /* Calculate section scores */
+        var sectionScores = [];
+        for (var s = 0; s < SECTIONS.length; s++) {
+            var score = 0;
+            for (var i = SECTIONS[s].start; i < SECTIONS[s].end; i++) {
+                if (answers[i] === QUESTIONS[i].correct) score++;
+            }
+            sectionScores.push(score);
+        }
+        var total = sectionScores.reduce(function(a, b) { return a + b; }, 0);
+
+        /* Overall tier */
+        var tier, desc;
+        if (total <= 20) {
+            tier = 'Legal Foundations';
+            desc = 'Your priority is building core knowledge of succession law and will structures. Our Legal & Tax Advisory will fill these gaps systematically.';
+        } else if (total <= 40) {
+            tier = 'Developing Legal Literacy';
+            desc = 'You have a solid working understanding but cross-border complexity and trust structures are areas to deepen.';
+        } else if (total <= 55) {
+            tier = 'Advanced Legal Literacy';
+            desc = 'Strong grasp of the legal landscape. Focus on advanced governance structures and jurisdiction-specific nuances.';
+        } else {
+            tier = 'Legal Expert';
+            desc = 'Exceptional legal knowledge. Our advisory will focus on bespoke structuring and emerging changes in SEA regulation.';
+        }
+
+        /* Hide quiz, show results */
+        document.getElementById('q-question-area').classList.add('hidden');
+        document.getElementById('q-nav').classList.add('hidden');
+        document.getElementById('quiz-progress-container').classList.add('hidden');
+        document.getElementById('q-results').classList.remove('hidden');
+
+        /* Populate results */
+        document.getElementById('total-score').textContent = total;
+        document.getElementById('overall-tier').textContent = tier;
+        document.getElementById('overall-desc').textContent = desc;
+
+        /* Section bars */
+        for (var j = 0; j < 4; j++) {
+            var barPct = Math.round((sectionScores[j] / 15) * 100);
+            var barEl = document.getElementById('sec' + (j + 1) + '-bar');
+            var scoreEl = document.getElementById('sec' + (j + 1) + '-score');
+            var labelEl = document.getElementById('sec' + (j + 1) + '-label');
+
+            scoreEl.textContent = sectionScores[j] + ' / 15';
+            labelEl.textContent = getSectionLabel(sectionScores[j]);
+
+            /* Animate bars after a short delay */
+            (function(el, pct) {
+                setTimeout(function() {
+                    el.style.width = pct + '%';
+                }, 200);
+            })(barEl, barPct);
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ===== INIT ===== */
+    /* Check if all questions are answered (returning user who completed) */
+    var allAnswered = answers.every(function(a) { return a !== null; });
+    if (allAnswered && answers.length === QUESTIONS.length) {
+        showResults();
+    } else {
+        renderQuestion();
+    }
+    </script>
+</body>
+</html>

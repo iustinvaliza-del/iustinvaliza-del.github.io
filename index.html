@@ -147,6 +147,14 @@
             border: 1px solid rgba(201, 169, 110, 0.15);
             border-radius: 16px;
         }
+
+        @keyframes pulse-gold {
+            0%, 100% { box-shadow: 0 4px 20px rgba(201, 169, 110, 0.25), 0 0 0 0 rgba(201, 169, 110, 0.4); }
+            50% { box-shadow: 0 4px 20px rgba(201, 169, 110, 0.25), 0 0 0 10px rgba(201, 169, 110, 0); }
+        }
+        .assessment-cta-pulse { animation: pulse-gold 2.5s ease-in-out infinite; }
+
+        .score-fill { transition: width 1s ease-out; }
     </style>
 </head>
 <body>
@@ -167,6 +175,7 @@
                 <a href="#advisory" class="text-sm text-muted hover:text-gold transition-colors">Advisory</a>
                 <a href="#team" class="text-sm text-muted hover:text-gold transition-colors">Team</a>
                 <a href="#insights" class="text-sm text-muted hover:text-gold transition-colors">Insights</a>
+                <a href="education.html" class="text-sm text-muted hover:text-gold transition-colors">Education</a>
                 <a href="login.html" class="btn-outline text-sm px-5 py-2">Client Portal</a>
                 <button onclick="openQuestionnaire()" class="btn-gold text-sm px-6 py-2.5">Start Assessment</button>
             </div>
@@ -188,6 +197,7 @@
                 <a href="#advisory" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Advisory</a>
                 <a href="#team" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Team</a>
                 <a href="#insights" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Insights</a>
+                <a href="education.html" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Education</a>
                 <a href="login.html" onclick="toggleMobile()" class="btn-outline text-sm text-center py-2.5">Client Portal</a>
                 <button onclick="openQuestionnaire(); toggleMobile();" class="btn-gold text-sm mt-4">Start Assessment</button>
             </div>
@@ -305,7 +315,7 @@
                     <p class="text-muted max-w-2xl mx-auto mb-8 leading-relaxed">
                         Take our confidential 10-question assessment to understand where you stand on your journey from designated successor to legacy leader. Get personalized insights and a clear path forward.
                     </p>
-                    <button onclick="openQuestionnaire()" class="btn-gold text-base">Begin Your Assessment</button>
+                    <button onclick="openQuestionnaire()" class="btn-gold text-base assessment-cta-pulse">Begin Your Assessment</button>
                     <p class="text-muted/60 text-xs mt-4">Takes approximately 3 minutes &bull; Completely confidential</p>
                 </div>
             </div>
@@ -608,24 +618,24 @@
                     <p class="text-muted mt-4">Perspectives on the challenges and opportunities facing next-generation women of wealth.</p>
                 </div>
                 <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="card card-hover p-6 section-reveal cursor-pointer">
-                        <p class="text-gold text-xs tracking-widest uppercase mb-3">Stewardship</p>
-                        <h3 class="font-serif text-lg text-charcoal mb-3">The Confidence Gap: Why Capable Heirs Still Doubt Themselves</h3>
-                        <p class="text-muted text-sm leading-relaxed mb-4">Exploring the psychological barriers that even highly educated and competent female heirs face when stepping into leadership roles.</p>
-                        <span class="text-gold text-sm font-medium">Coming Soon &rarr;</span>
-                    </div>
-                    <div class="card card-hover p-6 section-reveal cursor-pointer">
-                        <p class="text-rose text-xs tracking-widest uppercase mb-3">Family Dynamics</p>
-                        <h3 class="font-serif text-lg text-charcoal mb-3">Bridging the Generational Trust Gap in Asian Families</h3>
-                        <p class="text-muted text-sm leading-relaxed mb-4">How to navigate conversations about succession when cultural expectations and personal ambitions diverge.</p>
-                        <span class="text-gold text-sm font-medium">Coming Soon &rarr;</span>
-                    </div>
-                    <div class="card card-hover p-6 section-reveal cursor-pointer">
-                        <p class="text-gold text-xs tracking-widest uppercase mb-3">Impact</p>
-                        <h3 class="font-serif text-lg text-charcoal mb-3">Values-Aligned Investing: Beyond Traditional Wealth Management</h3>
-                        <p class="text-muted text-sm leading-relaxed mb-4">How next-generation leaders are redefining what it means to manage family wealth with purpose and impact.</p>
-                        <span class="text-gold text-sm font-medium">Coming Soon &rarr;</span>
-                    </div>
+                    <a href="education.html#alpha-beta" class="card card-hover p-6 section-reveal cursor-pointer block">
+                        <p class="text-blue-600 text-xs tracking-widest uppercase mb-3">Fundamentals</p>
+                        <h3 class="font-serif text-lg text-charcoal mb-3">Alpha, Beta &amp; the Language of Returns</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Every private banker uses these words. Most heirs don&rsquo;t know what they mean &mdash; and that information asymmetry is expensive.</p>
+                        <span class="text-gold text-sm font-medium">Read the Explainer &rarr;</span>
+                    </a>
+                    <a href="education.html#portfolio-construction" class="card card-hover p-6 section-reveal cursor-pointer block">
+                        <p class="text-emerald-600 text-xs tracking-widest uppercase mb-3">Portfolio</p>
+                        <h3 class="font-serif text-lg text-charcoal mb-3">How the World&rsquo;s Best Investors Build Portfolios</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">From the Yale Endowment to the global family office benchmark &mdash; a clear breakdown of how sophisticated capital is actually allocated.</p>
+                        <span class="text-gold text-sm font-medium">Read the Explainer &rarr;</span>
+                    </a>
+                    <a href="education.html#impact-investing" class="card card-hover p-6 section-reveal cursor-pointer block">
+                        <p class="text-purple-600 text-xs tracking-widest uppercase mb-3">Impact</p>
+                        <h3 class="font-serif text-lg text-charcoal mb-3">Values-Aligned Investing in Southeast Asia</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">APAC family offices lead the world in impact investing adoption. Here&rsquo;s how to align your inheritance with your values &mdash; without sacrificing returns.</p>
+                        <span class="text-gold text-sm font-medium">Read the Explainer &rarr;</span>
+                    </a>
                 </div>
             </div>
         </section>
@@ -755,14 +765,71 @@
                 </div>
                 <!-- Results Area -->
                 <div id="q-results" class="hidden text-center">
-                    <div id="q-result-icon" class="text-6xl mb-6 text-gold"></div>
-                    <h3 id="q-result-tier" class="font-serif text-3xl md:text-4xl text-gold-light mb-4"></h3>
-                    <p id="q-result-score" class="text-[#8a8a9a] mb-4"></p>
-                    <p id="q-result-desc" class="text-[#8a8a9a] leading-relaxed max-w-lg mx-auto mb-6"></p>
-                    <div id="q-result-priorities" class="mb-8"></div>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                        <button onclick="closeQuestionnaire(); setTimeout(scrollToContact, 300);" class="btn-gold">Book a Discovery Call</button>
-                        <button onclick="closeQuestionnaire()" class="btn-outline" style="color: #c9a96e;">Close</button>
+                    <h2 class="font-serif text-2xl md:text-3xl text-white mb-2">Your Heir Readiness Profile</h2>
+                    <p class="text-[#8a8a9a] text-sm mb-6">Here's where you stand across the three pillars of legacy stewardship</p>
+
+                    <!-- Overall score -->
+                    <div class="mb-8">
+                        <span id="total-score" class="font-serif text-5xl text-gold"></span>
+                        <span class="text-[#8a8a9a] text-sm">/10 overall</span>
+                        <p id="overall-tier" class="font-semibold text-lg text-gold-light mt-1"></p>
+                        <p id="overall-desc" class="text-sm text-[#8a8a9a] mt-1 max-w-lg mx-auto leading-relaxed"></p>
+                    </div>
+
+                    <!-- Per-domain breakdown -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-left">
+                        <!-- Legal -->
+                        <div class="border border-gold/30 rounded-lg p-5 bg-white/5">
+                            <div class="text-2xl mb-2">&#9878;</div>
+                            <h3 class="font-serif text-lg text-white">Legal Readiness</h3>
+                            <div class="mt-3 h-2 bg-white/10 rounded-full overflow-hidden">
+                                <div class="score-fill h-2 bg-gold rounded-full" id="legal-bar" style="width: 0%"></div>
+                            </div>
+                            <p class="text-sm font-semibold mt-2 text-white" id="legal-score"></p>
+                            <p class="text-xs text-gold mt-1" id="legal-label"></p>
+                            <p class="text-xs text-[#8a8a9a] mt-2 leading-relaxed" id="legal-interp"></p>
+                            <a href="assessment-legal.html" class="mt-4 inline-block text-xs font-semibold text-gold border border-gold/50 rounded px-3 py-1.5 hover:bg-gold hover:text-white transition-colors">
+                                Go Deeper &mdash; Legal &rarr;
+                            </a>
+                        </div>
+                        <!-- Tax -->
+                        <div class="border border-gold/30 rounded-lg p-5 bg-white/5">
+                            <div class="text-2xl mb-2">&#127963;</div>
+                            <h3 class="font-serif text-lg text-white">Tax Awareness</h3>
+                            <div class="mt-3 h-2 bg-white/10 rounded-full overflow-hidden">
+                                <div class="score-fill h-2 bg-gold rounded-full" id="tax-bar" style="width: 0%"></div>
+                            </div>
+                            <p class="text-sm font-semibold mt-2 text-white" id="tax-score"></p>
+                            <p class="text-xs text-gold mt-1" id="tax-label"></p>
+                            <p class="text-xs text-[#8a8a9a] mt-2 leading-relaxed" id="tax-interp"></p>
+                            <a href="assessment-tax.html" class="mt-4 inline-block text-xs font-semibold text-gold border border-gold/50 rounded px-3 py-1.5 hover:bg-gold hover:text-white transition-colors">
+                                Go Deeper &mdash; Tax &rarr;
+                            </a>
+                        </div>
+                        <!-- Finance -->
+                        <div class="border border-gold/30 rounded-lg p-5 bg-white/5">
+                            <div class="text-2xl mb-2">&#128202;</div>
+                            <h3 class="font-serif text-lg text-white">Financial Knowledge</h3>
+                            <div class="mt-3 h-2 bg-white/10 rounded-full overflow-hidden">
+                                <div class="score-fill h-2 bg-gold rounded-full" id="finance-bar" style="width: 0%"></div>
+                            </div>
+                            <p class="text-sm font-semibold mt-2 text-white" id="finance-score"></p>
+                            <p class="text-xs text-gold mt-1" id="finance-label"></p>
+                            <p class="text-xs text-[#8a8a9a] mt-2 leading-relaxed" id="finance-interp"></p>
+                            <a href="assessment-finance.html" class="mt-4 inline-block text-xs font-semibold text-gold border border-gold/50 rounded px-3 py-1.5 hover:bg-gold hover:text-white transition-colors">
+                                Go Deeper &mdash; Finance &rarr;
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Priority areas -->
+                    <div id="q-result-priorities" class="mb-6"></div>
+
+                    <!-- CTA block -->
+                    <div class="p-5 bg-white/5 rounded-lg border border-white/10">
+                        <p class="text-sm text-[#8a8a9a]">Your personalised stewardship roadmap will be prepared based on your full profile. Our advisors use your scores to tailor every session to your actual knowledge gaps.</p>
+                        <button onclick="closeQuestionnaire(); setTimeout(scrollToContact, 300);" class="mt-4 btn-gold">Book Your Free Discovery Call &rarr;</button>
+                        <p class="mt-3 text-xs text-[#8a8a9a]/60">Not ready yet? <a href="#" onclick="event.preventDefault(); closeQuestionnaire(); setTimeout(function(){ document.getElementById('assessment').scrollIntoView({behavior:'smooth'}); }, 300);" class="underline hover:text-gold text-[#8a8a9a]">I'll do this later &rarr;</a></p>
                     </div>
                 </div>
                 <!-- Navigation -->
@@ -1063,6 +1130,7 @@
     const questions = [
         {
             q: "Do you have official confirmation that you are part of the inheritance plan?",
+            domain: 'legal', area: 'Legal Readiness \u2014 Understanding succession structures',
             options: [
                 "Yes, it's official and in writing.",
                 "We've talked about it, but nothing is formal yet.",
@@ -1071,6 +1139,7 @@
         },
         {
             q: "Do you know exactly how much you are inheriting and what those assets are (e.g., cash, real estate, stocks)?",
+            domain: 'legal', area: 'Legal Readiness \u2014 Estate visibility & asset mapping',
             options: [
                 "Yes, I have the full picture and the specific numbers.",
                 "I have a rough idea, but I don't know the details.",
@@ -1079,6 +1148,7 @@
         },
         {
             q: "When do you realistically expect to take over the primary leadership or decision-making role for this legacy?",
+            domain: 'legal', area: 'Legal Readiness \u2014 Transition timeline awareness',
             options: [
                 "Immediate: I am already stepping in or will be within the next year.",
                 "Mid-Term: I expect this transition to happen in the next 2\u20135 years.",
@@ -1087,6 +1157,7 @@
         },
         {
             q: "Do you personally want to take on the responsibility of managing this inheritance?",
+            domain: 'legal', area: 'Legal Readiness \u2014 Willingness & mandate clarity',
             options: [
                 "Yes, I'm ready and willing to take it on.",
                 "I feel like I have to, but I'm not sure I want to.",
@@ -1095,6 +1166,7 @@
         },
         {
             q: "Does managing this inheritance fit with your personal life goals and your own values?",
+            domain: 'tax', area: 'Tax Awareness \u2014 Values alignment & planning horizon',
             options: [
                 "Yes, it aligns perfectly with my life plan.",
                 "Some parts fit, but other parts feel like a conflict.",
@@ -1103,6 +1175,7 @@
         },
         {
             q: "Do you feel ready to be the person making the final decisions about this wealth?",
+            domain: 'tax', area: 'Tax Awareness \u2014 Decision-making confidence',
             options: [
                 "Yes, I feel prepared to lead.",
                 "I'm getting there, but I still have a lot of doubts.",
@@ -1111,6 +1184,7 @@
         },
         {
             q: "If you took over tomorrow, do you have the financial and business knowledge to manage these assets well?",
+            domain: 'tax', area: 'Tax Awareness \u2014 Operational readiness',
             options: [
                 "Yes, I have the skills and knowledge I need.",
                 "I know the basics, but I'd be guessing on the big stuff.",
@@ -1119,6 +1193,7 @@
         },
         {
             q: "Do you have a clear plan for what you want to do with this money over the next 10 years?",
+            domain: 'finance', area: 'Financial Knowledge \u2014 Strategic planning',
             options: [
                 "Yes, I know exactly what I want to achieve with it.",
                 "I have some ideas, but nothing solid.",
@@ -1127,6 +1202,7 @@
         },
         {
             q: "Do you need an independent expert to help you figure out how to manage this and reach your goals?",
+            domain: 'finance', area: 'Financial Knowledge \u2014 Advisory awareness',
             options: [
                 "Yes, I definitely want professional, unbiased advice.",
                 "Maybe later, but I'm not sure yet.",
@@ -1135,6 +1211,7 @@
         },
         {
             q: "If you were to seek expert assistance, which of these areas would be your biggest priority?",
+            domain: 'finance', area: 'Financial Knowledge \u2014 Priority self-assessment',
             multi: true,
             options: [
                 "Financial & Business Literacy: Understanding the technical side of the assets, legal & tax matters.",
@@ -1169,7 +1246,7 @@
 
     function renderQuestion() {
         const q = questions[currentQ];
-        document.getElementById('q-title').textContent = q.q;
+        document.getElementById('q-title').innerHTML = (q.area ? `<span class="block text-xs italic text-gold/70 mb-3 font-sans font-normal">${q.area}</span>` : '') + q.q;
         document.getElementById('q-progress-text').textContent = `Question ${currentQ + 1} of ${questions.length}`;
         const pct = ((currentQ + 1) / questions.length * 100);
         document.getElementById('q-progress-pct').textContent = Math.round(pct) + '%';
@@ -1228,35 +1305,82 @@
     }
 
     function showResults() {
-        let score = 0;
+        // Compute per-domain scores (first answer = best = 1pt, last = 0pt for 3-option questions)
+        const domainScores = { legal: 0, tax: 0, finance: 0 };
+        const domainMax = { legal: 4, tax: 3, finance: 3 };
         for (let i = 0; i < 9; i++) {
-            score += (3 - (answers[i] || 0));
+            const val = answers[i] === 0 ? 1 : 0; // first option = 1 point, others = 0
+            domainScores[questions[i].domain] += val;
+        }
+        const totalScore = domainScores.legal + domainScores.tax + domainScores.finance;
+
+        // Domain labels & interpretations
+        function legalLabel(s) {
+            if (s <= 1) return { label: 'Foundational', interp: "You're at the start of your legal literacy journey. Understanding inheritance law in your jurisdiction is the critical first step." };
+            if (s <= 3) return { label: 'Developing', interp: 'You have a working grasp of legal concepts but have gaps in cross-border and trust structures that could expose your estate.' };
+            return { label: 'Advanced', interp: 'Strong legal foundation. Your gaps, if any, are in the nuances of multi-jurisdictional planning.' };
+        }
+        function taxLabel(s) {
+            if (s <= 1) return { label: 'Foundational', interp: 'Tax obligations on inherited wealth are often invisible until they create a crisis. Building this knowledge is urgent.' };
+            if (s === 2) return { label: 'Developing', interp: 'You understand basic tax concepts but may not have full visibility of cross-border and structuring options.' };
+            return { label: 'Advanced', interp: 'Solid tax awareness. Deep-dive assessment will identify any jurisdiction-specific blind spots.' };
+        }
+        function financeLabel(s) {
+            if (s <= 1) return { label: 'Foundational', interp: 'Financial fundamentals \u2014 portfolio construction, risk management, generating returns \u2014 will be central to your stewardship curriculum.' };
+            if (s === 2) return { label: 'Developing', interp: "You understand investing basics but may not yet be confident managing a complex multi-asset portfolio." };
+            return { label: 'Advanced', interp: 'Strong financial foundation. Focus your deep-dive on advanced topics: alternatives, impact investing, and family office structures.' };
         }
 
-        let tier, icon, desc;
-        if (score >= 22) {
-            tier = 'Legacy Leader';
-            icon = '\u2726';
-            desc = "You are well-positioned to take the reins of your family legacy. Your awareness, readiness, and clarity put you ahead of most next-generation heirs. A stewardship partner can help you refine your strategy and maximize impact.";
-        } else if (score >= 15) {
+        const legal = legalLabel(domainScores.legal);
+        const tax = taxLabel(domainScores.tax);
+        const finance = financeLabel(domainScores.finance);
+
+        // Overall tier
+        let tier, tierDesc;
+        if (totalScore <= 3) {
             tier = 'Emerging Steward';
-            icon = '\u2662';
-            desc = "You're on your way but could benefit from structured guidance. There are key areas where deeper clarity and confidence will help you transition from designated successor to true legacy leader.";
+            tierDesc = "Your stewardship journey is just beginning. That's exactly what we're here for \u2014 every confident legacy leader started here.";
+        } else if (totalScore <= 6) {
+            tier = 'Developing Steward';
+            tierDesc = 'You have real foundations to build on. Targeted learning in your weaker domains will accelerate your transition to lead steward.';
+        } else if (totalScore <= 9) {
+            tier = 'Advancing Steward';
+            tierDesc = "You're well on your way. Deep-dive assessments will sharpen your edges and close the remaining gaps.";
         } else {
-            tier = 'Foundation Builder';
-            icon = '\u25C7';
-            desc = "You're at the beginning of your stewardship journey, and that's perfectly okay. Building the right foundation now \u2014 with the right support \u2014 will set you up for confident leadership when the time comes.";
+            tier = 'Confident Steward';
+            tierDesc = 'Exceptional readiness across all three pillars. Our advisory will focus on execution, family governance, and advanced structuring.';
         }
 
+        // Show results
         document.getElementById('q-question-area').classList.add('hidden');
         document.getElementById('q-nav').classList.add('hidden');
         document.getElementById('q-results').classList.remove('hidden');
 
-        document.getElementById('q-result-icon').textContent = icon;
-        document.getElementById('q-result-tier').textContent = tier;
-        document.getElementById('q-result-score').textContent = `Your readiness score: ${score} / 27`;
-        document.getElementById('q-result-desc').textContent = desc;
+        document.getElementById('total-score').textContent = totalScore;
+        document.getElementById('overall-tier').textContent = tier;
+        document.getElementById('overall-desc').textContent = tierDesc;
 
+        // Populate domain cards
+        document.getElementById('legal-score').textContent = `${domainScores.legal} / ${domainMax.legal}`;
+        document.getElementById('legal-label').textContent = legal.label;
+        document.getElementById('legal-interp').textContent = legal.interp;
+
+        document.getElementById('tax-score').textContent = `${domainScores.tax} / ${domainMax.tax}`;
+        document.getElementById('tax-label').textContent = tax.label;
+        document.getElementById('tax-interp').textContent = tax.interp;
+
+        document.getElementById('finance-score').textContent = `${domainScores.finance} / ${domainMax.finance}`;
+        document.getElementById('finance-label').textContent = finance.label;
+        document.getElementById('finance-interp').textContent = finance.interp;
+
+        // Animate score bars
+        setTimeout(() => {
+            document.getElementById('legal-bar').style.width = (domainScores.legal / domainMax.legal * 100) + '%';
+            document.getElementById('tax-bar').style.width = (domainScores.tax / domainMax.tax * 100) + '%';
+            document.getElementById('finance-bar').style.width = (domainScores.finance / domainMax.finance * 100) + '%';
+        }, 100);
+
+        // Priority areas from Q10
         const priorityLabels = ['Financial & Business Literacy', 'Strategic Vision', 'Family Navigation', 'Confidence & Leadership', 'Peer Connection'];
         if (multiAnswers.size > 0) {
             const prioHtml = '<p class="text-[#8a8a9a] text-sm mb-3">Your priority areas:</p><div class="flex flex-wrap gap-2 justify-center">' +

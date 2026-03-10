@@ -4,10 +4,12 @@
 
 Legacy Stewards is a stewardship consulting platform for next-generation women of wealth in Southeast Asia. The site consists of:
 
-1. **Marketing Site** (`index.html`) — Public-facing single-page app with company info, services, team, and assessment tool
-2. **Client Dashboard** (`client-dashboard.html`) — Authenticated portal where clients see their stewardship progress timeline
-3. **Admin Dashboard** (`admin-dashboard.html`) — Authenticated portal where employees/admins manage clients, milestones, notes, and documents
-4. **Login Page** (`login.html`) — Unified login with role-based routing
+1. **Marketing Site** (`index.html`) — Public-facing single-page app with company info, services, team, assessment tool, and insights linking to education
+2. **Education Hub** (`education.html`) — 8-module financial literacy resource covering fundamentals, portfolio construction, benchmarks, risk, and impact investing
+3. **Assessment Pages** (`assessment-finance.html`, `assessment-tax.html`, `assessment-legal.html`) — Standalone multi-step assessment tools for financial, tax, and legal readiness
+4. **Client Dashboard** (`client-dashboard.html`) — Authenticated portal with U-shaped 3-column layout (journey | milestones | messages/notes/docs)
+5. **Admin Dashboard** (`admin-dashboard.html`) — Authenticated portal where employees/admins manage clients, milestones, notes, and documents
+6. **Login Page** (`login.html`) — Unified login with role-based routing
 
 ## Tech Stack
 
@@ -21,15 +23,19 @@ Legacy Stewards is a stewardship consulting platform for next-generation women o
 
 ```
 ├── index.html                 # Marketing site (single page, ~1200 lines)
+├── education.html             # Financial Education Hub (8 modules, filters, accordions)
+├── assessment-finance.html    # Financial readiness assessment
+├── assessment-tax.html        # Tax readiness assessment
+├── assessment-legal.html      # Legal readiness assessment
 ├── login.html                 # Unified login page
-├── client-dashboard.html      # Client portal
+├── client-dashboard.html      # Client portal (U-shaped 3-column layout)
 ├── admin-dashboard.html       # Employee/admin portal
 ├── css/
-│   └── shared.css             # Shared dashboard design system
+│   └── shared.css             # Shared dashboard + tab/column styles
 ├── js/
 │   ├── firebase-config.js     # Firebase initialization + global refs
 │   ├── auth.js                # Auth module (login, logout, guards, role routing)
-│   ├── client-dashboard.js    # Client dashboard logic + real-time listeners
+│   ├── client-dashboard.js    # Client dashboard logic (3-column, tabs, real-time)
 │   └── admin-dashboard.js     # Admin dashboard logic (CRUD, views, modals)
 ├── .claude/
 │   └── launch.json            # Dev server config for Claude preview
@@ -85,6 +91,9 @@ Two composite indexes are needed (auto-created via Firebase Console links):
 - **Real-time updates** — Client dashboard uses `onSnapshot` for milestones and notes
 - **Default milestones** — New cases auto-populate with 7 template milestones (see `DEFAULT_MILESTONES` in admin-dashboard.js)
 - **Visibility toggle** — Notes and documents have a `visibleToClient` boolean; client queries filter on this
+- **U-shaped dashboard** — Client dashboard uses a 3-column grid (`grid-cols-[200px_1fr_320px]`) with independent scrollable columns and tab switching (Messages/Notes/Docs) via `ClientDashboard.switchTab()`
+- **Education accordions** — `education.html` uses CSS `max-height` transitions for expand/collapse, only one module open at a time, with URL hash auto-opening for cross-page linking
+- **Topic filtering** — Education modules have `data-topic` attributes; filter pills toggle visibility
 
 ## Development
 

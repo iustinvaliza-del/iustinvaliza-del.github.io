@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Education Hub | Legacy Stewards</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#c9a96e',
+                        'gold-light': '#e8d5b5',
+                        'gold-dark': '#a8864f',
+                        rose: '#b76e79',
+                        cream: '#F0EBE3',
+                        sand: '#E6DED3',
+                        charcoal: '#2C2C35',
+                        muted: '#6B6B7B',
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { background: #F0EBE3; color: #2C2C35; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+        /* Reading progress bar */
+        #reading-progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #c9a96e, #e8d5b5); z-index: 100; width: 0%; transition: width 0.1s linear; }
+
+        /* Navigation */
+        .nav-scrolled { background: rgba(240,235,227,0.95) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(201,169,110,0.12); box-shadow: 0 1px 8px rgba(0,0,0,0.04); }
+
+        /* Mobile menu */
+        .mobile-overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .mobile-overlay.active { opacity: 1; pointer-events: auto; }
+        .mobile-menu { transform: translateX(100%); transition: transform 0.3s ease; }
+        .mobile-menu.active { transform: translateX(0); }
+
+        /* Filter pills */
+        .filter-pill { transition: all 0.3s ease; }
+        .filter-pill.active { background: #c9a96e !important; color: #fff !important; }
+
+        /* Module cards */
+        .module-card { transition: all 0.4s ease; }
+        .module-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,0.08); transform: translateY(-4px); border-color: rgba(201,169,110,0.4); }
+        .module-card.hidden-by-filter { display: none; }
+
+        /* Accordion */
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
+        .accordion-content.open { max-height: 5000px; }
+
+        /* Styled tables inside modules */
+        .module-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.875rem; }
+        .module-table th { background: #c9a96e; color: #fff; text-align: left; padding: 0.625rem 1rem; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .module-table td { padding: 0.625rem 1rem; border-bottom: 1px solid #E8E0D5; color: #6B6B7B; }
+        .module-table tr:nth-child(even) td { background: rgba(240,235,227,0.5); }
+        .module-table tr:nth-child(odd) td { background: #FDFAF6; }
+
+        /* Pull quotes */
+        .pull-quote { border-left: 3px solid #c9a96e; padding: 1rem 1.25rem; margin: 1.25rem 0; background: rgba(201,169,110,0.06); border-radius: 0 8px 8px 0; }
+        .pull-quote p { font-family: 'Playfair Display', serif; font-style: italic; color: #2C2C35; line-height: 1.6; }
+
+        /* Key term callout */
+        .key-term { border-left: 3px solid #c9a96e; padding: 0.75rem 1rem; margin: 1rem 0; background: #FDFAF6; border-radius: 0 8px 8px 0; }
+
+        /* Formula blocks */
+        .formula-block { background: #2C2C35; color: #e8d5b5; padding: 1rem 1.25rem; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 0.875rem; margin: 1rem 0; overflow-x: auto; }
+
+        /* Back to top */
+        #back-to-top { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        #back-to-top.visible { opacity: 1; pointer-events: auto; }
+
+        /* Gold gradient text */
+        .gold-gradient { background: linear-gradient(135deg, #c9a96e, #a8864f, #c9a96e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+        /* Btn styles */
+        .btn-gold { background: linear-gradient(135deg, #c9a96e, #a8864f); color: #fff; font-weight: 600; border-radius: 50px; padding: 14px 36px; transition: all 0.4s ease; box-shadow: 0 4px 20px rgba(201,169,110,0.25); cursor: pointer; border: none; display: inline-block; text-align: center; }
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,169,110,0.4); }
+        .btn-outline { border: 1.5px solid #c9a96e; color: #c9a96e; border-radius: 50px; padding: 14px 36px; transition: all 0.4s ease; background: transparent; cursor: pointer; }
+        .btn-outline:hover { background: rgba(201,169,110,0.08); }
+
+        ::selection { background: rgba(201,169,110,0.25); color: #2C2C35; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #F0EBE3; }
+        ::-webkit-scrollbar-thumb { background: rgba(201,169,110,0.35); border-radius: 3px; }
+    </style>
+</head>
+<body>
+
+<!-- Reading Progress Bar -->
+<div id="reading-progress"></div>
+
+<!-- ==================== NAVIGATION ==================== -->
+<nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500" style="background: transparent;">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href="index.html" class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full border-2 border-gold flex items-center justify-center bg-[#F7F3ED]/80">
+                <span class="font-serif text-gold font-bold text-sm">LS</span>
+            </div>
+            <span class="font-serif text-lg text-charcoal tracking-wide hidden sm:block">Legacy Stewards</span>
+        </a>
+        <div class="hidden lg:flex items-center gap-8">
+            <a href="index.html#about" class="text-sm text-muted hover:text-gold transition-colors">About</a>
+            <a href="index.html#services" class="text-sm text-muted hover:text-gold transition-colors">Services</a>
+            <a href="index.html#assessment" class="text-sm text-muted hover:text-gold transition-colors">Assessment</a>
+            <a href="index.html#advisory" class="text-sm text-muted hover:text-gold transition-colors">Advisory</a>
+            <a href="index.html#team" class="text-sm text-muted hover:text-gold transition-colors">Team</a>
+            <a href="index.html#insights" class="text-sm text-muted hover:text-gold transition-colors">Insights</a>
+            <a href="education.html" class="text-sm text-gold font-medium">Education</a>
+            <a href="login.html" class="btn-outline text-sm px-5 py-2">Client Portal</a>
+        </div>
+        <button id="menu-btn" class="lg:hidden text-charcoal" onclick="toggleMobile()">
+            <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h20M4 14h20M4 21h20"/></svg>
+        </button>
+    </div>
+    <!-- Mobile Overlay -->
+    <div id="mobile-overlay" class="mobile-overlay fixed inset-0 bg-charcoal/40 z-40 lg:hidden" onclick="toggleMobile()"></div>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu fixed top-0 right-0 h-full w-72 z-50 p-8 lg:hidden shadow-2xl" style="background: #F0EBE3;">
+        <button onclick="toggleMobile()" class="absolute top-6 right-6 text-charcoal">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+        <div class="flex flex-col gap-6 mt-16">
+            <a href="index.html#about" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">About</a>
+            <a href="index.html#services" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Services</a>
+            <a href="index.html#assessment" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Assessment</a>
+            <a href="index.html#advisory" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Advisory</a>
+            <a href="index.html#team" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Team</a>
+            <a href="index.html#insights" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Insights</a>
+            <a href="education.html" onclick="toggleMobile()" class="text-gold font-medium">Education</a>
+            <a href="login.html" onclick="toggleMobile()" class="btn-outline text-sm text-center py-2.5">Client Portal</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section class="relative pt-32 pb-20 md:pt-40 md:pb-28 px-6 bg-charcoal overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-gold/20 blur-[100px]"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full bg-gold/10 blur-[80px]"></div>
+    </div>
+    <div class="max-w-4xl mx-auto text-center relative z-10">
+        <div class="w-12 h-0.5 bg-gold mx-auto mb-8 hero-anim"></div>
+        <h1 class="font-serif text-4xl md:text-6xl font-bold text-cream mb-6 hero-anim">Financial Education Hub</h1>
+        <p class="text-gold-light text-lg md:text-xl font-light mb-3 hero-anim">Built for the next generation of legacy leaders.</p>
+        <p class="text-cream/60 text-base md:text-lg hero-anim">Understand the language of wealth &mdash; so you can lead with confidence.</p>
+        <div class="flex items-center justify-center gap-4 mt-8 text-sm text-cream/50 hero-anim">
+            <span>8 modules</span>
+            <span class="w-1 h-1 rounded-full bg-gold"></span>
+            <span>Plain-language explainers</span>
+            <span class="w-1 h-1 rounded-full bg-gold"></span>
+            <span>Real portfolio benchmarks</span>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== FILTER BAR ==================== -->
+<div class="sticky top-[72px] z-30 bg-cream/95 backdrop-blur-md border-b border-gold/10">
+    <div class="max-w-6xl mx-auto px-6 py-4">
+        <div class="flex items-center gap-2 overflow-x-auto pb-1">
+            <button class="filter-pill active px-4 py-2 rounded-full text-sm font-medium bg-cream text-charcoal border border-charcoal/10 flex-shrink-0 cursor-pointer" data-filter="all">All</button>
+            <button class="filter-pill px-4 py-2 rounded-full text-sm font-medium bg-cream text-charcoal border border-charcoal/10 flex-shrink-0 cursor-pointer" data-filter="fundamentals">Fundamentals</button>
+            <button class="filter-pill px-4 py-2 rounded-full text-sm font-medium bg-cream text-charcoal border border-charcoal/10 flex-shrink-0 cursor-pointer" data-filter="portfolio">Portfolio</button>
+            <button class="filter-pill px-4 py-2 rounded-full text-sm font-medium bg-cream text-charcoal border border-charcoal/10 flex-shrink-0 cursor-pointer" data-filter="benchmarks">Benchmarks</button>
+            <button class="filter-pill px-4 py-2 rounded-full text-sm font-medium bg-cream text-charcoal border border-charcoal/10 flex-shrink-0 cursor-pointer" data-filter="risk">Risk</button>
+            <button class="filter-pill px-4 py-2 rounded-full text-sm font-medium bg-cream text-charcoal border border-charcoal/10 flex-shrink-0 cursor-pointer" data-filter="impact">Impact</button>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== MODULES GRID ==================== -->
+<section class="py-12 md:py-16 px-6">
+    <div class="max-w-6xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-6" id="modules-grid">
+
+            <!-- ===== MODULE 1: Alpha & Beta ===== -->
+            <div class="module-card bg-[#FDFAF6] border border-gold/20 rounded-xl overflow-hidden" data-topic="fundamentals" id="alpha-beta">
+                <div class="p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-gold flex items-center justify-center text-white text-xs font-bold">1</div>
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-blue-100 text-blue-700">Fundamentals</span>
+                        <span class="text-xs text-muted ml-auto">4 min read</span>
+                    </div>
+                    <h3 class="font-serif text-xl text-charcoal mb-2">Alpha &amp; Beta: What They Really Mean</h3>
+                    <p class="text-muted text-sm leading-relaxed mb-4">Every private banker will talk about generating alpha. Here&rsquo;s what it actually means &mdash; and why confusing it with beta is one of the most expensive mistakes a new investor makes.</p>
+                    <button class="accordion-toggle text-gold text-sm font-medium hover:text-gold-dark transition-colors cursor-pointer" data-module="1">Read Module &rarr;</button>
+                </div>
+                <div class="accordion-content" data-module-content="1">
+                    <div class="px-6 pb-6 pt-2 bg-cream/40 border-t border-gold/10">
+                        <h4 class="font-serif text-lg text-charcoal mb-4">The Two Numbers Behind Every Investment Pitch</h4>
+                        <p class="text-sm text-muted leading-relaxed mb-4">When your wealth manager presents returns, they will often mention alpha and beta. These two Greek letters describe fundamentally different things &mdash; and conflating them is how fees get hidden in plain sight.</p>
+
+                        <div class="key-term">
+                            <p class="text-sm font-semibold text-charcoal mb-1">Beta: the return the market gives you for free</p>
+                            <p class="text-sm text-muted leading-relaxed">Beta measures how much an investment moves relative to its benchmark. A portfolio with a beta of 1.0 moves in lockstep with its index. A beta of 1.2 means it rises 12% when the index rises 10% &mdash; and falls 12% when the index falls 10%. A beta of 0.7 means it absorbs only 70% of market swings.</p>
+                        </div>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Beta is not skill. It is market exposure. Any investor can get beta cheaply &mdash; a simple index fund tracking the S&amp;P 500 or MSCI World costs as little as 0.03&ndash;0.07% per year in fees.</p>
+
+                        <div class="key-term">
+                            <p class="text-sm font-semibold text-charcoal mb-1">Alpha: the return that only skill can produce</p>
+                            <p class="text-sm text-muted leading-relaxed">Alpha is the return above and beyond what beta explains. If your portfolio returned 12% in a year when the market returned 10%, and your portfolio has a beta of 1.0, your manager generated approximately 2% of alpha.</p>
+                        </div>
+
+                        <div class="pull-quote">
+                            <p class="text-sm">&ldquo;How much of my return is alpha, and how much is just beta I could get more cheaply elsewhere?&rdquo;</p>
+                        </div>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Why this matters for inherited wealth</h5>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Inherited portfolios often arrive with a legacy of active management relationships built over decades. Some generate genuine alpha &mdash; most do not. Research consistently shows that over 80% of active fund managers underperform their benchmark after fees over 10-year periods (S&amp;P SPIVA Scorecard, 2024).</p>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Your job as a new steward is not to assume that yesterday&rsquo;s managers are tomorrow&rsquo;s alpha generators. It is to require evidence.</p>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">What to ask your banker</h5>
+                        <ol class="list-decimal list-inside text-sm text-muted leading-relaxed space-y-1 mb-4">
+                            <li>&ldquo;What is this portfolio&rsquo;s beta to its benchmark?&rdquo;</li>
+                            <li>&ldquo;What is the alpha, net of all fees, over the last 5 and 10 years?&rdquo;</li>
+                            <li>&ldquo;How much of our portfolio am I paying active management fees for beta I could get passively?&rdquo;</li>
+                        </ol>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">The formula (simplified)</h5>
+                        <div class="formula-block">Portfolio Return = (Beta &times; Market Return) + Alpha + Fees</div>
+                        <p class="text-sm text-muted leading-relaxed">The goal of a well-structured family office is to maximise alpha while being intentional &mdash; not accidental &mdash; about how much beta exposure you carry.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== MODULE 2: Sharpe Ratio ===== -->
+            <div class="module-card bg-[#FDFAF6] border border-gold/20 rounded-xl overflow-hidden" data-topic="fundamentals" id="sharpe-ratio">
+                <div class="p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-gold flex items-center justify-center text-white text-xs font-bold">2</div>
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-blue-100 text-blue-700">Fundamentals</span>
+                        <span class="text-xs text-muted ml-auto">3 min read</span>
+                    </div>
+                    <h3 class="font-serif text-xl text-charcoal mb-2">The Sharpe Ratio: Risk-Adjusted Returns</h3>
+                    <p class="text-muted text-sm leading-relaxed mb-4">Two funds both returned 12% last year. They are not equal. The Sharpe ratio tells you which one took a reckless amount of risk to get there.</p>
+                    <button class="accordion-toggle text-gold text-sm font-medium hover:text-gold-dark transition-colors cursor-pointer" data-module="2">Read Module &rarr;</button>
+                </div>
+                <div class="accordion-content" data-module-content="2">
+                    <div class="px-6 pb-6 pt-2 bg-cream/40 border-t border-gold/10">
+                        <h4 class="font-serif text-lg text-charcoal mb-4">Comparing Returns Properly</h4>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Raw returns are almost meaningless without context. A 15% return achieved by betting on a single volatile asset is very different from a 12% return produced by a well-diversified portfolio with low volatility.</p>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-4 mb-2">The formula</h5>
+                        <div class="formula-block">Sharpe Ratio = (Portfolio Return &minus; Risk-Free Rate) &divide; Standard Deviation of Returns</div>
+                        <ul class="list-disc list-inside text-sm text-muted leading-relaxed space-y-1 mb-4">
+                            <li><strong class="text-charcoal">Portfolio Return</strong>: what your portfolio actually earned</li>
+                            <li><strong class="text-charcoal">Risk-Free Rate</strong>: typically the yield on short-term government bonds &mdash; the &ldquo;free&rdquo; return you could have earned with no risk</li>
+                            <li><strong class="text-charcoal">Standard Deviation</strong>: how wildly the portfolio&rsquo;s returns fluctuated month to month</li>
+                        </ul>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">What a good Sharpe ratio looks like</h5>
+                        <table class="module-table">
+                            <thead><tr><th>Sharpe Ratio</th><th>Interpretation</th></tr></thead>
+                            <tbody>
+                                <tr><td>Below 0</td><td>Return did not beat the risk-free rate &mdash; you took risk for nothing</td></tr>
+                                <tr><td>0 &ndash; 0.5</td><td>Adequate, but not impressive</td></tr>
+                                <tr><td>0.5 &ndash; 1.0</td><td>Good &mdash; reasonable return per unit of risk</td></tr>
+                                <tr><td>Above 1.0</td><td>Excellent &mdash; strong risk-adjusted performance</td></tr>
+                                <tr><td>Above 2.0</td><td>Exceptional &mdash; rare outside top-quartile managers</td></tr>
+                            </tbody>
+                        </table>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Why it matters for heirs</h5>
+                        <p class="text-sm text-muted leading-relaxed mb-4">When comparing investment managers, always ask for Sharpe ratios over 3 and 10 year periods, not just raw returns. A manager who delivered 18% returns but with a Sharpe of 0.3 took enormous risk to get there. A manager with 11% returns and a Sharpe of 1.2 almost certainly served their clients better.</p>
+
+                        <div class="key-term">
+                            <p class="text-sm font-semibold text-charcoal mb-1">The Sortino improvement</p>
+                            <p class="text-sm text-muted leading-relaxed">The Sortino ratio is the Sharpe ratio&rsquo;s more sophisticated cousin. It only penalises downside volatility (losses), not upside volatility (gains). Since heirs are typically more concerned with protecting capital than with upside swings, the Sortino is often more relevant for your purposes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== MODULE 3: Portfolio Construction ===== -->
+            <div class="module-card bg-[#FDFAF6] border border-gold/20 rounded-xl overflow-hidden" data-topic="portfolio" id="portfolio-construction">
+                <div class="p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-gold flex items-center justify-center text-white text-xs font-bold">3</div>
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-700">Portfolio</span>
+                        <span class="text-xs text-muted ml-auto">6 min read</span>
+                    </div>
+                    <h3 class="font-serif text-xl text-charcoal mb-2">Portfolio Construction 101</h3>
+                    <p class="text-muted text-sm leading-relaxed mb-4">How do the world&rsquo;s most sophisticated investors actually build a portfolio? It starts with an Investment Policy Statement and ends with disciplined rebalancing &mdash; everything in between is where most heirs make mistakes.</p>
+                    <button class="accordion-toggle text-gold text-sm font-medium hover:text-gold-dark transition-colors cursor-pointer" data-module="3">Read Module &rarr;</button>
+                </div>
+                <div class="accordion-content" data-module-content="3">
+                    <div class="px-6 pb-6 pt-2 bg-cream/40 border-t border-gold/10">
+                        <h4 class="font-serif text-lg text-charcoal mb-4">From Scattered Assets to a Coherent Portfolio</h4>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Many inherited portfolios are not portfolios at all &mdash; they are collections of historical decisions: a property bought in 2001, a hedge fund relationship from 2008, a stock position that was never sold. Your first task as a new steward is to understand what you actually own &mdash; and then build toward intention.</p>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Step 1: The Investment Policy Statement (IPS)</h5>
+                        <p class="text-sm text-muted leading-relaxed mb-2">Before buying or selling anything, a family office should have an Investment Policy Statement. This is a written document that defines:</p>
+                        <ul class="list-disc list-inside text-sm text-muted leading-relaxed space-y-1 mb-4">
+                            <li><strong class="text-charcoal">Return objective</strong>: what annualised real return you need to meet your spending goals</li>
+                            <li><strong class="text-charcoal">Risk tolerance</strong>: the maximum drawdown (peak-to-trough loss) you can emotionally and practically sustain</li>
+                            <li><strong class="text-charcoal">Time horizon</strong>: are you investing for your generation, or in perpetuity?</li>
+                            <li><strong class="text-charcoal">Liquidity requirements</strong>: how much cash must be accessible within 90 days?</li>
+                            <li><strong class="text-charcoal">Constraints</strong>: ethical restrictions, concentration limits, currency exposure limits</li>
+                            <li><strong class="text-charcoal">Asset allocation targets</strong>: the strategic mix across asset classes</li>
+                        </ul>
+                        <div class="pull-quote">
+                            <p class="text-sm">Without an IPS, you have no framework for saying no to opportunities &mdash; and every manager will pitch you an &ldquo;exceptional opportunity.&rdquo;</p>
+                        </div>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Step 2: Strategic Asset Allocation</h5>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Strategic allocation is the long-term target mix across broad asset classes. It is the single most important determinant of your portfolio&rsquo;s long-term returns &mdash; more important than any individual stock pick or manager selection.</p>
+                        <table class="module-table">
+                            <thead><tr><th>Asset Class</th><th>Conservative</th><th>Balanced</th><th>Growth</th></tr></thead>
+                            <tbody>
+                                <tr><td>Public Equities</td><td>20&ndash;30%</td><td>30&ndash;40%</td><td>40&ndash;55%</td></tr>
+                                <tr><td>Fixed Income</td><td>25&ndash;35%</td><td>15&ndash;25%</td><td>5&ndash;15%</td></tr>
+                                <tr><td>Private Equity</td><td>10&ndash;15%</td><td>15&ndash;25%</td><td>20&ndash;30%</td></tr>
+                                <tr><td>Real Assets</td><td>10&ndash;15%</td><td>10&ndash;15%</td><td>10&ndash;15%</td></tr>
+                                <tr><td>Hedge Funds / Abs. Return</td><td>5&ndash;10%</td><td>5&ndash;10%</td><td>5&ndash;10%</td></tr>
+                                <tr><td>Cash</td><td>5&ndash;10%</td><td>5&ndash;10%</td><td>5&ndash;10%</td></tr>
+                            </tbody>
+                        </table>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Step 3: Diversification &mdash; the only free lunch</h5>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Nobel laureate Harry Markowitz called diversification the only free lunch in investing. By combining assets with low or negative correlation, you can reduce overall portfolio risk without proportionally reducing return.</p>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Correlation matters more than most heirs realise. During the 2022 market downturn, both equities and bonds fell simultaneously &mdash; a reminder that the traditional 60/40 model assumes low bond-equity correlation, which does not always hold.</p>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Step 4: Manager Selection</h5>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Within each asset class, you need to decide: active or passive management? For public equity markets &mdash; especially liquid, efficient markets like large-cap US equities &mdash; passive index funds typically outperform active managers after fees. For less efficient markets (emerging markets, small caps, private equity, private credit), skilled active managers can add genuine alpha.</p>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Step 5: Rebalancing</h5>
+                        <p class="text-sm text-muted leading-relaxed">Markets drift. A 40% equity allocation becomes 50% after a bull run. Rebalancing &mdash; selling what has grown and buying what has lagged &mdash; enforces discipline and systematically buys low, sells high. Most family offices rebalance annually or when any asset class drifts more than 5% from its target.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== MODULE 4: Yale Model ===== -->
+            <div class="module-card bg-[#FDFAF6] border border-gold/20 rounded-xl overflow-hidden" data-topic="benchmarks" id="yale-model">
+                <div class="p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-gold flex items-center justify-center text-white text-xs font-bold">4</div>
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-100 text-amber-700">Benchmarks</span>
+                        <span class="text-xs text-muted ml-auto">5 min read</span>
+                    </div>
+                    <h3 class="font-serif text-xl text-charcoal mb-2">The Yale Endowment Model</h3>
+                    <p class="text-muted text-sm leading-relaxed mb-4">Yale&rsquo;s endowment has returned 9.4% per annum over the last decade &mdash; outperforming a simple 70/30 stock-bond portfolio by 2.2% per year. Here&rsquo;s the philosophy behind one of the most influential investment models ever built.</p>
+                    <button class="accordion-toggle text-gold text-sm font-medium hover:text-gold-dark transition-colors cursor-pointer" data-module="4">Read Module &rarr;</button>
+                </div>
+                <div class="accordion-content" data-module-content="4">
+                    <div class="px-6 pb-6 pt-2 bg-cream/40 border-t border-gold/10">
+                        <h4 class="font-serif text-lg text-charcoal mb-4">Pioneering the Alternatives Era</h4>
+                        <p class="text-sm text-muted leading-relaxed mb-4">The Yale Endowment &mdash; now valued at $44.1 billion &mdash; is one of the most studied investment portfolios in the world. Managed by Yale&rsquo;s Investment Office under the philosophy pioneered by the late David Swensen (CIO 1985&ndash;2021) and continued by current CIO Matt Mendelsohn, it has produced a 10-year annualised return of 9.4% (as of June 2025), exceeding the median peer endowment by 1.4% per annum and outperforming a 70/30 stock-bond portfolio by 2.2% per year.</p>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-3">The core principles of the Yale Model</h5>
+
+                        <div class="key-term mb-3">
+                            <p class="text-sm font-semibold text-charcoal mb-1">1. Equity orientation</p>
+                            <p class="text-sm text-muted leading-relaxed">Roughly 95% of the endowment is invested in assets expected to produce equity-like returns. Fixed income and cash &mdash; which preserve capital but do not grow it &mdash; are deliberately minimised. This reflects Yale&rsquo;s perpetual time horizon: when you invest forever, you can afford to ride out volatility in exchange for higher long-run returns.</p>
+                        </div>
+                        <div class="key-term mb-3">
+                            <p class="text-sm font-semibold text-charcoal mb-1">2. Radical diversification through alternatives</p>
+                            <p class="text-sm text-muted leading-relaxed">Unlike a traditional 60/40 portfolio, Yale allocates heavily to alternative asset classes: private equity, venture capital, hedge funds (absolute return strategies), real assets, and natural resources. These alternatives historically offer returns uncorrelated with public markets, improving the portfolio&rsquo;s risk-adjusted performance.</p>
+                        </div>
+                        <div class="key-term mb-3">
+                            <p class="text-sm font-semibold text-charcoal mb-1">3. Illiquidity as an opportunity</p>
+                            <p class="text-sm text-muted leading-relaxed">Yale deliberately accepts illiquidity. Private equity and venture capital investments are locked up for 7&ndash;12 years. Yale can afford this because, unlike an individual investor, it never needs to liquidate everything at once. For a family with a long time horizon, accepting illiquidity in part of the portfolio is a powerful return enhancer.</p>
+                        </div>
+                        <div class="key-term mb-3">
+                            <p class="text-sm font-semibold text-charcoal mb-1">4. Manager selection as the primary edge</p>
+                            <p class="text-sm text-muted leading-relaxed">Yale does not pick stocks &mdash; it picks managers. Identifying and accessing top-quartile private equity, venture capital, and hedge fund managers is where Yale believes its true edge lies. This is manager alpha, not market alpha.</p>
+                        </div>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Yale&rsquo;s asset allocation (approximate, FY2024)</h5>
+                        <table class="module-table">
+                            <thead><tr><th>Asset Class</th><th>Approx. Allocation</th></tr></thead>
+                            <tbody>
+                                <tr><td>Absolute Return (Hedge Funds)</td><td>~23%</td></tr>
+                                <tr><td>Venture Capital</td><td>~16%</td></tr>
+                                <tr><td>Leveraged Buyouts (PE)</td><td>~15%</td></tr>
+                                <tr><td>Real Assets (Real Estate, Natural Resources)</td><td>~13%</td></tr>
+                                <tr><td>Foreign Equity</td><td>~12%</td></tr>
+                                <tr><td>Bonds and Cash</td><td>~5%</td></tr>
+                                <tr><td>Domestic Equity</td><td>~3%</td></tr>
+                                <tr><td>Other</td><td>~13%</td></tr>
+                            </tbody>
+                        </table>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">What heirs can apply from the Yale Model</h5>
+                        <p class="text-sm text-muted leading-relaxed mb-2">The Yale Model is not directly replicable for most family wealth holders &mdash; Yale has access to top-quartile managers who will not accept smaller investors. However, its principles translate:</p>
+                        <ul class="list-disc list-inside text-sm text-muted leading-relaxed space-y-1 mb-4">
+                            <li>Extend your time horizon and accept some illiquidity for the return premium it offers</li>
+                            <li>Think in decades, not quarters &mdash; do not let short-term noise force long-term mistakes</li>
+                            <li>Diversify aggressively across asset classes, not just within equities</li>
+                            <li>Invest through relationships and due diligence, not product shelves</li>
+                        </ul>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">The 2024 caveat</h5>
+                        <p class="text-sm text-muted leading-relaxed">Yale&rsquo;s 5.7% return in FY2024 lagged the S&amp;P 500&rsquo;s ~25% gain significantly. CIO Mendelsohn acknowledged this directly: heavy private asset allocation lags in strong public market years when exits are limited. This is the cost of the Yale model in the short term &mdash; and why the model only works for investors with genuine long-term conviction. FY2025 recovered strongly at 11.1%.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== MODULE 5: UBS Benchmark ===== -->
+            <div class="module-card bg-[#FDFAF6] border border-gold/20 rounded-xl overflow-hidden" data-topic="benchmarks" id="ubs-benchmark">
+                <div class="p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-gold flex items-center justify-center text-white text-xs font-bold">5</div>
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-100 text-amber-700">Benchmarks</span>
+                        <span class="text-xs text-muted ml-auto">4 min read</span>
+                    </div>
+                    <h3 class="font-serif text-xl text-charcoal mb-2">The UBS Family Office Benchmark</h3>
+                    <p class="text-muted text-sm leading-relaxed mb-4">How do the world&rsquo;s largest family offices actually allocate capital? The UBS Global Family Office Report &mdash; covering 317 offices with an average net worth of $2.7 billion &mdash; is the closest thing to a peer benchmark for ultra-high-net-worth investing.</p>
+                    <button class="accordion-toggle text-gold text-sm font-medium hover:text-gold-dark transition-colors cursor-pointer" data-module="5">Read Module &rarr;</button>
+                </div>
+                <div class="accordion-content" data-module-content="5">
+                    <div class="px-6 pb-6 pt-2 bg-cream/40 border-t border-gold/10">
+                        <h4 class="font-serif text-lg text-charcoal mb-4">What $2.7 Billion Families Actually Do</h4>
+                        <p class="text-sm text-muted leading-relaxed mb-4">The UBS Global Family Office Report 2025 surveys 317 single family offices across 30+ markets, managing portfolios averaging $1.1 billion with families averaging $2.7 billion in net worth. It is the most comprehensive annual snapshot of how the ultra-wealthy invest.</p>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Global average asset allocation (2024)</h5>
+                        <table class="module-table">
+                            <thead><tr><th>Asset Class</th><th>Global Average</th></tr></thead>
+                            <tbody>
+                                <tr><td colspan="2" class="font-semibold text-charcoal !bg-gold/5">Traditional Assets (56% total)</td></tr>
+                                <tr><td>Public Equities (developed markets)</td><td>26%</td></tr>
+                                <tr><td>Fixed Income</td><td>~13%</td></tr>
+                                <tr><td>Cash</td><td>8%</td></tr>
+                                <tr><td>Public Equities (emerging markets)</td><td>4%</td></tr>
+                                <tr><td colspan="2" class="font-semibold text-charcoal !bg-gold/5">Alternative Assets (44% total)</td></tr>
+                                <tr><td>Private Equity</td><td>21%</td></tr>
+                                <tr><td>Real Estate</td><td>10%</td></tr>
+                                <tr><td>Hedge Funds</td><td>5%</td></tr>
+                                <tr><td>Precious Metals</td><td>2%</td></tr>
+                                <tr><td>Private Debt</td><td>2%</td></tr>
+                                <tr><td>Infrastructure</td><td>1%</td></tr>
+                            </tbody>
+                        </table>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Key shift from 2023: cash allocations fell from 10% to 8% as rate expectations shifted, while developed market equity rose from 24% to 26%. Private equity remains the largest alternatives allocation despite a slight reduction from 22% in 2023.</p>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">What APAC family offices do differently</h5>
+                        <p class="text-sm text-muted leading-relaxed mb-2">For your context as an heir in Southeast Asia, the APAC-specific findings from UBS 2024 are particularly relevant:</p>
+                        <ul class="list-disc list-inside text-sm text-muted leading-relaxed space-y-1 mb-4">
+                            <li>APAC family offices hold more alternatives than the global average</li>
+                            <li>45% plan to increase developed market fixed income exposure</li>
+                            <li>31% plan to increase hedge fund allocations over 5 years</li>
+                            <li>36% are focused on impact investing &mdash; significantly above global peers</li>
+                            <li>Healthcare is the top thematic (59%) followed by clean tech (40%) and philanthropy (39%)</li>
+                            <li>78% of APAC family office portfolios are actively managed, versus 64% globally</li>
+                        </ul>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">The concentration problem</h5>
+                        <p class="text-sm text-muted leading-relaxed mb-4">The UBS data also highlights a critical risk for families of your type: only 53% of family offices globally have a formal succession plan in place. And only 26% involve the next generation from the outset. The most common reason for not having a plan: &ldquo;We have time.&rdquo;</p>
+                        <p class="text-sm text-muted leading-relaxed mb-4">For a newly inheriting heir, this data underscores the urgency of engagement &mdash; not passivity.</p>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">What this benchmark means for you</h5>
+                        <ul class="list-disc list-inside text-sm text-muted leading-relaxed space-y-1">
+                            <li>A 40%+ allocation to alternatives is appropriate if you have a long time horizon and can tolerate illiquidity</li>
+                            <li>Impact and ESG integration is not a niche preference in APAC &mdash; it is mainstream in family office circles</li>
+                            <li>Cash above 10% of the portfolio is an opportunity cost, not safety &mdash; especially in moderate-inflation environments</li>
+                            <li>Your private banker&rsquo;s standard product shelf does not look like this portfolio &mdash; most of the value is in private markets that require active sourcing</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== MODULE 6: Understanding Risk ===== -->
+            <div class="module-card bg-[#FDFAF6] border border-gold/20 rounded-xl overflow-hidden" data-topic="risk" id="understanding-risk">
+                <div class="p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-gold flex items-center justify-center text-white text-xs font-bold">6</div>
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-red-100 text-red-700">Risk</span>
+                        <span class="text-xs text-muted ml-auto">5 min read</span>
+                    </div>
+                    <h3 class="font-serif text-xl text-charcoal mb-2">Understanding Risk: Not Just Volatility</h3>
+                    <p class="text-muted text-sm leading-relaxed mb-4">Your private banker will manage volatility. Nobody else will manage your liquidity risk, concentration risk, estate tax risk, or the risk that your structures fail in a jurisdiction you didn&rsquo;t anticipate. These are the risks that actually destroy inherited wealth.</p>
+                    <button class="accordion-toggle text-gold text-sm font-medium hover:text-gold-dark transition-colors cursor-pointer" data-module="6">Read Module &rarr;</button>
+                </div>
+                <div class="accordion-content" data-module-content="6">
+                    <div class="px-6 pb-6 pt-2 bg-cream/40 border-t border-gold/10">
+                        <h4 class="font-serif text-lg text-charcoal mb-4">The Risks That Don&rsquo;t Show Up on a Bloomberg Screen</h4>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Investment risk is typically measured by volatility &mdash; the standard deviation of returns. But for an inheriting heir, volatility is often the least of your problems. Here are the risks that matter more.</p>
+
+                        <div class="key-term mb-4">
+                            <p class="text-sm font-semibold text-charcoal mb-1">1. Concentration risk</p>
+                            <p class="text-sm text-muted leading-relaxed">Many inherited estates arrive heavily concentrated in a single asset: the family business, one building, one stock position. A 70% concentration in any single asset is an existential risk. Diversification is not optional &mdash; it is the foundation of wealth preservation.</p>
+                            <p class="text-sm text-muted leading-relaxed mt-2">The challenge: selling concentrated positions creates capital gains tax events. The solution: plan the diversification strategically over time, using charitable structures, options overlays, or exchange funds where available.</p>
+                        </div>
+                        <div class="key-term mb-4">
+                            <p class="text-sm font-semibold text-charcoal mb-1">2. Liquidity risk</p>
+                            <p class="text-sm text-muted leading-relaxed">An estate tax bill or unexpected family expense can force the sale of illiquid assets at exactly the wrong moment. Always maintain a liquidity reserve &mdash; typically 5&ndash;10% of the portfolio in cash or near-cash instruments accessible within 30 days.</p>
+                            <p class="text-sm text-muted leading-relaxed mt-2">For family offices with high alternative allocations, liquidity risk is structural: 20&ndash;30% of the portfolio might be locked in private equity funds with 10-year horizons. Model your liquidity carefully.</p>
+                        </div>
+                        <div class="key-term mb-4">
+                            <p class="text-sm font-semibold text-charcoal mb-1">3. Sequence of returns risk</p>
+                            <p class="text-sm text-muted leading-relaxed">If you are drawing income from your portfolio &mdash; for living expenses, philanthropy, or family distributions &mdash; the order of returns matters enormously. A 30% drawdown in year 1 of distributions can permanently impair a portfolio even if long-run average returns are fine. This is why family offices set spending rates (typically 4&ndash;5% per year) and hold liquidity buffers.</p>
+                        </div>
+                        <div class="key-term mb-4">
+                            <p class="text-sm font-semibold text-charcoal mb-1">4. Currency risk</p>
+                            <p class="text-sm text-muted leading-relaxed">A Singapore-based family with property in Bangkok, shares in New York, and cash in Manila faces five-way currency exposure. Unexpected currency moves can erode returns even when underlying assets perform well. Know your currency exposures and decide deliberately which to hedge.</p>
+                        </div>
+                        <div class="key-term mb-4">
+                            <p class="text-sm font-semibold text-charcoal mb-1">5. Governance risk</p>
+                            <p class="text-sm text-muted leading-relaxed">This is the risk nobody talks about in investment presentations: that poor family decision-making, conflict, or lack of accountability erodes wealth faster than any market downturn. A 20-year study of 3,200 families by The Williams Group found that 85% of wealth transfer failures were attributed to poor trust and communication &mdash; not financial mismanagement.</p>
+                            <p class="text-sm text-muted leading-relaxed mt-2">Governance structures &mdash; family constitutions, investment committees with clear mandates, agreed spending policies &mdash; are not bureaucracy. They are risk management.</p>
+                        </div>
+                        <div class="key-term">
+                            <p class="text-sm font-semibold text-charcoal mb-1">6. The risk of doing nothing</p>
+                            <p class="text-sm text-muted leading-relaxed">Cash left uninvested in a 3% inflation environment loses 3% of its real purchasing power per year. Over a decade, $10 million in cash becomes worth roughly $7.4 million in real terms. The greatest risk for a newly inheriting heir is often paralysis &mdash; deferring decisions until the &ldquo;right time&rdquo; that never arrives.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== MODULE 7: Impact Investing ===== -->
+            <div class="module-card bg-[#FDFAF6] border border-gold/20 rounded-xl overflow-hidden" data-topic="impact" id="impact-investing">
+                <div class="p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-gold flex items-center justify-center text-white text-xs font-bold">7</div>
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-purple-100 text-purple-700">Impact</span>
+                        <span class="text-xs text-muted ml-auto">4 min read</span>
+                    </div>
+                    <h3 class="font-serif text-xl text-charcoal mb-2">Impact &amp; Gender-Lens Investing</h3>
+                    <p class="text-muted text-sm leading-relaxed mb-4">Impact investing is not charity. The world&rsquo;s leading family offices are allocating billions to investments that target both financial returns and measurable positive outcomes &mdash; and APAC is ahead of the global curve.</p>
+                    <button class="accordion-toggle text-gold text-sm font-medium hover:text-gold-dark transition-colors cursor-pointer" data-module="7">Read Module &rarr;</button>
+                </div>
+                <div class="accordion-content" data-module-content="7">
+                    <div class="px-6 pb-6 pt-2 bg-cream/40 border-t border-gold/10">
+                        <h4 class="font-serif text-lg text-charcoal mb-4">Aligning Wealth with Values &mdash; Without Sacrificing Returns</h4>
+                        <p class="text-sm text-muted leading-relaxed mb-4">A common misconception: impact investing requires accepting below-market returns. The evidence increasingly suggests otherwise. A 2023 meta-analysis of over 2,000 impact studies by the Global Impact Investing Network (GIIN) found that the majority of impact investments met or exceeded investor return expectations.</p>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">The spectrum of impact</h5>
+                        <p class="text-sm text-muted leading-relaxed mb-2">Not all impact investing is the same. The spectrum runs from:</p>
+                        <ul class="text-sm text-muted leading-relaxed space-y-2 mb-4">
+                            <li><strong class="text-charcoal">ESG Integration:</strong> incorporating environmental, social, and governance factors into standard investment analysis to identify risks and opportunities. No explicit impact target &mdash; purely risk-management oriented.</li>
+                            <li><strong class="text-charcoal">Negative Screening:</strong> excluding sectors or companies that conflict with your values (weapons, tobacco, fossil fuels). The simplest form of values alignment.</li>
+                            <li><strong class="text-charcoal">Best-in-class ESG:</strong> investing in the top ESG performers within each sector rather than excluding entire sectors.</li>
+                            <li><strong class="text-charcoal">Thematic Investing:</strong> targeting specific themes &mdash; clean energy, financial inclusion, gender equity &mdash; with dedicated capital.</li>
+                            <li><strong class="text-charcoal">Impact-First Investing:</strong> explicitly targeting measurable positive outcomes alongside financial returns, with impact metrics as important as financial metrics.</li>
+                            <li><strong class="text-charcoal">Philanthropy:</strong> capital deployed for maximum impact with no expectation of financial return.</li>
+                        </ul>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Most family office portfolios combine several of these approaches.</p>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Gender-lens investing</h5>
+                        <p class="text-sm text-muted leading-relaxed mb-2">Gender-lens investing (GLI) considers gender as an investment factor &mdash; either investing in companies that advance gender equality, or applying gender analysis to all investment decisions. Relevant lenses include:</p>
+                        <ul class="list-disc list-inside text-sm text-muted leading-relaxed space-y-1 mb-4">
+                            <li>Companies with gender-diverse leadership (women on boards and in executive roles)</li>
+                            <li>Products and services that improve outcomes for women and girls</li>
+                            <li>Financial inclusion investments that extend capital to women-owned businesses in emerging markets</li>
+                            <li>Venture capital specifically targeting female founders (who receive only ~2% of global VC despite outperforming on a risk-adjusted basis)</li>
+                        </ul>
+                        <p class="text-sm text-muted leading-relaxed mb-4">For a next-generation female heir leading family wealth in Southeast Asia, GLI is both values-aligned and commercially interesting. APAC family offices report 36% engagement with impact investing &mdash; well above the 26% global average (UBS 2024).</p>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Practical entry points</h5>
+                        <ul class="list-disc list-inside text-sm text-muted leading-relaxed space-y-1 mb-4">
+                            <li><strong class="text-charcoal">Public markets:</strong> gender-diversity ETFs (e.g. MSCI Women&rsquo;s Leadership Index), ESG-screened equity funds</li>
+                            <li><strong class="text-charcoal">Private equity:</strong> impact PE funds focused on Southeast Asian financial inclusion, healthcare, or education</li>
+                            <li><strong class="text-charcoal">Direct investing:</strong> co-investments in companies explicitly addressing gender or climate challenges</li>
+                            <li><strong class="text-charcoal">Blended finance:</strong> de-risked structures that combine philanthropic and commercial capital for development outcomes</li>
+                        </ul>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">The measurement question</h5>
+                        <p class="text-sm text-muted leading-relaxed">The key discipline in impact investing is measurement. Establish upfront what outcomes you are targeting (e.g. tonnes of CO&#x2082; avoided, number of women accessing credit) and how you will measure them. The IRIS+ framework from GIIN provides standardised impact metrics used across the industry.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== MODULE 8: Generating Returns ===== -->
+            <div class="module-card bg-[#FDFAF6] border border-gold/20 rounded-xl overflow-hidden" data-topic="fundamentals" id="generating-returns">
+                <div class="p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-gold flex items-center justify-center text-white text-xs font-bold">8</div>
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-blue-100 text-blue-700">Fundamentals</span>
+                        <span class="text-xs text-muted ml-auto">5 min read</span>
+                    </div>
+                    <h3 class="font-serif text-xl text-charcoal mb-2">Generating Returns: How Portfolios Actually Make Money</h3>
+                    <p class="text-muted text-sm leading-relaxed mb-4">&ldquo;How do you generate alpha?&rdquo; was the question your classmate asked and most bankers can&rsquo;t properly answer. Here are the four actual mechanisms by which a well-managed portfolio generates returns above the market.</p>
+                    <button class="accordion-toggle text-gold text-sm font-medium hover:text-gold-dark transition-colors cursor-pointer" data-module="8">Read Module &rarr;</button>
+                </div>
+                <div class="accordion-content" data-module-content="8">
+                    <div class="px-6 pb-6 pt-2 bg-cream/40 border-t border-gold/10">
+                        <h4 class="font-serif text-lg text-charcoal mb-4">Beyond &ldquo;We Outperform the Market&rdquo;</h4>
+                        <p class="text-sm text-muted leading-relaxed mb-4">When Leo asked &ldquo;how do you generate alpha?&rdquo; at your class presentation, he was asking the right question. Here is a clear-eyed answer.</p>
+
+                        <div class="key-term mb-4">
+                            <p class="text-sm font-semibold text-charcoal mb-1">Return Source 1: Market Beta</p>
+                            <p class="text-sm text-muted leading-relaxed">Simply being invested in a rising market produces returns. A diversified global equity portfolio in a growth year returns 15&ndash;25% with no skill required &mdash; just beta. This is the baseline, not the achievement. Any return claim must be measured against the relevant beta exposure first.</p>
+                        </div>
+
+                        <div class="key-term mb-4">
+                            <p class="text-sm font-semibold text-charcoal mb-1">Return Source 2: Factor Premiums</p>
+                            <p class="text-sm text-muted leading-relaxed mb-2">Academic research has identified several systematic factors that produce returns above simple market beta over the long run:</p>
+                            <ul class="list-disc list-inside text-sm text-muted leading-relaxed space-y-1">
+                                <li><strong class="text-charcoal">Value:</strong> cheap stocks (low P/E, P/B) outperform expensive ones over time &mdash; the &ldquo;value premium&rdquo;</li>
+                                <li><strong class="text-charcoal">Size:</strong> small-cap stocks outperform large-caps &mdash; the &ldquo;size premium&rdquo;</li>
+                                <li><strong class="text-charcoal">Momentum:</strong> recent outperformers continue outperforming in the short term</li>
+                                <li><strong class="text-charcoal">Quality:</strong> companies with high profitability and low debt outperform</li>
+                                <li><strong class="text-charcoal">Low Volatility:</strong> paradoxically, lower-risk stocks have historically outperformed higher-risk ones on a risk-adjusted basis</li>
+                            </ul>
+                            <p class="text-sm text-muted leading-relaxed mt-2">These factor premiums are real but cyclical &mdash; they disappear for years at a time. A skilled manager captures them systematically. A mediocre manager confuses factor exposure for stock-picking skill.</p>
+                        </div>
+
+                        <div class="key-term mb-4">
+                            <p class="text-sm font-semibold text-charcoal mb-1">Return Source 3: Illiquidity Premium</p>
+                            <p class="text-sm text-muted leading-relaxed">Investors who accept that they cannot sell an asset for 7&ndash;10 years demand a higher return than investors in liquid markets. This &ldquo;illiquidity premium&rdquo; is one of the most consistent sources of excess return available to wealthy families &mdash; who, unlike institutional investors constrained by daily liquidity, can actually afford to hold illiquid assets.</p>
+                            <p class="text-sm text-muted leading-relaxed mt-2">Private equity has historically delivered 3&ndash;5% per annum above public equity on a like-for-like basis, largely explained by this illiquidity premium plus the leverage and operational improvement that PE firms apply.</p>
+                        </div>
+
+                        <div class="key-term mb-4">
+                            <p class="text-sm font-semibold text-charcoal mb-1">Return Source 4: Manager Skill (True Alpha)</p>
+                            <p class="text-sm text-muted leading-relaxed mb-2">True alpha &mdash; return generated by genuine insight, information, or execution advantage &mdash; is rare and difficult to sustain. The most consistent alpha generators are typically:</p>
+                            <ul class="list-disc list-inside text-sm text-muted leading-relaxed space-y-1">
+                                <li>Top-quartile private equity managers with proprietary deal flow</li>
+                                <li>Quantitative hedge funds with genuine data or model edges</li>
+                                <li>Specialist sector investors with deep domain expertise</li>
+                                <li>Venture capitalists with access to early-stage companies before they are widely discovered</li>
+                            </ul>
+                            <p class="text-sm text-muted leading-relaxed mt-2">For most public equity managers, what looks like alpha is usually factor exposure, luck, or survivorship bias. Over 10-year periods, fewer than 20% of active managers consistently outperform.</p>
+                        </div>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Putting it together</h5>
+                        <p class="text-sm text-muted leading-relaxed mb-2">A sophisticated family office portfolio generates returns from all four sources &mdash; deliberately:</p>
+                        <ol class="list-decimal list-inside text-sm text-muted leading-relaxed space-y-1">
+                            <li>Strategic beta exposure through low-cost index funds in efficient markets</li>
+                            <li>Factor tilts (value, quality) in public markets at modest additional cost</li>
+                            <li>Illiquidity premium through private equity, private credit, and real assets</li>
+                            <li>True alpha through careful selection of genuinely skilled managers in PE, VC, and specialised hedge funds</li>
+                        </ol>
+                        <p class="text-sm text-muted leading-relaxed mt-4">The goal is not to pick the best stock. It is to construct the right combination of return sources for your specific time horizon, risk tolerance, and liquidity needs.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="py-16 px-6 bg-charcoal">
+    <div class="max-w-4xl mx-auto text-center">
+        <div class="w-12 h-12 rounded-full border-2 border-gold flex items-center justify-center mx-auto mb-6">
+            <span class="font-serif text-gold font-bold text-sm">LS</span>
+        </div>
+        <p class="text-cream/40 text-xs leading-relaxed max-w-2xl mx-auto mb-8">Sources referenced in this hub include the UBS Global Family Office Report 2024 &amp; 2025, Yale University Investment Office Annual Reports (FY2024, FY2025), GIIN Impact Investor Survey 2023, and S&amp;P SPIVA Scorecard 2024. All figures are for educational illustration only and do not constitute investment advice.</p>
+        <div class="flex items-center justify-center gap-6 text-sm">
+            <a href="index.html" class="text-cream/50 hover:text-gold transition-colors">Home</a>
+            <a href="index.html#about" class="text-cream/50 hover:text-gold transition-colors">About</a>
+            <a href="index.html#services" class="text-cream/50 hover:text-gold transition-colors">Services</a>
+            <a href="login.html" class="text-cream/50 hover:text-gold transition-colors">Client Portal</a>
+        </div>
+        <p class="text-cream/20 text-xs mt-8">&copy; 2026 Legacy Stewards. All rights reserved.</p>
+    </div>
+</footer>
+
+<!-- Back to Top Button -->
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" class="fixed bottom-6 right-6 w-11 h-11 rounded-full bg-gold text-white flex items-center justify-center shadow-lg hover:bg-gold-dark transition-colors cursor-pointer z-50">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<script>
+// ─── Mobile Menu ───
+function toggleMobile() {
+    document.getElementById('mobile-overlay').classList.toggle('active');
+    document.getElementById('mobile-menu').classList.toggle('active');
+}
+
+// ─── Navbar scroll effect ───
+window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    if (window.scrollY > 50) {
+        nav.classList.add('nav-scrolled');
+    } else {
+        nav.classList.remove('nav-scrolled');
+    }
+});
+
+// ─── Reading Progress Bar ───
+window.addEventListener('scroll', () => {
+    const bar = document.getElementById('reading-progress');
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (scrollTop / docHeight * 100) + '%';
+});
+
+// ─── Back to Top Button ───
+window.addEventListener('scroll', () => {
+    const btn = document.getElementById('back-to-top');
+    if (window.scrollY > 300) {
+        btn.classList.add('visible');
+    } else {
+        btn.classList.remove('visible');
+    }
+});
+
+// ─── Filter Pills ───
+document.querySelectorAll('.filter-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+
+        const filter = pill.dataset.filter;
+        document.querySelectorAll('.module-card').forEach(card => {
+            if (filter === 'all' || card.dataset.topic === filter) {
+                card.classList.remove('hidden-by-filter');
+            } else {
+                card.classList.add('hidden-by-filter');
+            }
+        });
+    });
+});
+
+// ─── Accordion Toggle ───
+document.querySelectorAll('.accordion-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const moduleId = btn.dataset.module;
+        const content = document.querySelector(`[data-module-content="${moduleId}"]`);
+        const isOpen = content.classList.contains('open');
+
+        // Close all
+        document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('open'));
+        document.querySelectorAll('.accordion-toggle').forEach(b => b.textContent = 'Read Module \u2192');
+
+        // Open clicked (if was closed)
+        if (!isOpen) {
+            content.classList.add('open');
+            btn.textContent = 'Close Module \u2191';
+            // Scroll card into view
+            setTimeout(() => {
+                btn.closest('.module-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+    });
+});
+
+// ─── Auto-open from hash ───
+if (window.location.hash) {
+    const target = document.querySelector(window.location.hash);
+    if (target) {
+        const btn = target.querySelector('.accordion-toggle');
+        if (btn) {
+            setTimeout(() => {
+                btn.click();
+            }, 500);
+        }
+    }
+}
+
+// ─── GSAP Animations ───
+gsap.registerPlugin(ScrollTrigger);
+
+// Hero animation
+gsap.from('.hero-anim', {
+    y: 30, opacity: 0, duration: 0.8, stagger: 0.15, ease: 'power2.out', delay: 0.2
+});
+
+// Module cards
+gsap.utils.toArray('.module-card').forEach((card, i) => {
+    gsap.from(card, {
+        scrollTrigger: { trigger: card, start: 'top 85%', toggleActions: 'play none none none' },
+        y: 40, opacity: 0, duration: 0.6, delay: (i % 2) * 0.15, ease: 'power2.out'
+    });
+});
+</script>
+
+</body>
+</html>

@@ -12,17 +12,25 @@ A dedicated stewardship platform for next-generation women leading their family'
 
 ### Marketing Site
 - Responsive single-page design with elegant gold/cream aesthetic
-- Interactive wealth readiness assessment tool
+- Interactive wealth readiness assessment tool with dedicated finance, tax, and legal assessments
 - Advisory fee calculator with tier-based pricing
-- Team profiles, services overview, and insights section
+- Team profiles, services overview, and insights section linking to Education Hub
 - GSAP scroll animations and custom particle system
+
+### Financial Education Hub
+- 8 comprehensive modules covering investment fundamentals, portfolio construction, benchmarks, risk management, and impact investing
+- Topic-based filtering (Fundamentals, Portfolio, Benchmarks, Risk, Impact)
+- Accordion-style module expansion with styled tables, formula blocks, pull quotes, and key-term callouts
+- URL hash support for cross-page deep linking from marketing site
+- Reading progress bar and GSAP scroll animations
 
 ### Client Portal
 - Secure login with role-based access
-- Visual milestone timeline showing stewardship progress
-- Real-time updates from assigned steward
-- Document access (when Storage is enabled)
-- Progress stats and current phase tracking
+- U-shaped 3-column layout: journey phases (left), milestones (center), tabbed panel (right)
+- Tab switching between Messages, Notes, and Documents in the right panel
+- Independent scrollable columns for minimal scrolling
+- Real-time updates from assigned steward via Firestore `onSnapshot`
+- Compact mobile layout with horizontal journey pills and stacked sections
 
 ### Admin Dashboard
 - Dashboard overview with key metrics (active clients, cases in progress)
@@ -74,10 +82,14 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ```
 ├── index.html                 # Marketing site
+├── education.html             # Financial Education Hub (8 modules)
+├── assessment-finance.html    # Financial readiness assessment
+├── assessment-tax.html        # Tax readiness assessment
+├── assessment-legal.html      # Legal readiness assessment
 ├── login.html                 # Authentication page
-├── client-dashboard.html      # Client portal
+├── client-dashboard.html      # Client portal (3-column layout)
 ├── admin-dashboard.html       # Employee/admin portal
-├── css/shared.css             # Shared dashboard styles
+├── css/shared.css             # Shared dashboard + component styles
 ├── js/
 │   ├── firebase-config.js     # Firebase configuration
 │   ├── auth.js                # Authentication & role routing

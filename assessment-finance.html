@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Knowledge Assessment | Legacy Stewards</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#c9a96e',
+                        'gold-light': '#e8d5b5',
+                        'gold-dark': '#a8864f',
+                        rose: '#b76e79',
+                        cream: '#F0EBE3',
+                        sand: '#E6DED3',
+                        charcoal: '#2C2C35',
+                        muted: '#6B6B7B',
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { background: #F0EBE3; color: #2C2C35; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+        .gold-gradient {
+            background: linear-gradient(135deg, #c9a96e, #a8864f, #c9a96e);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #c9a96e, #a8864f);
+            color: #fff; font-weight: 600; border-radius: 50px;
+            padding: 14px 36px; transition: all 0.4s ease;
+            box-shadow: 0 4px 20px rgba(201, 169, 110, 0.25);
+            cursor: pointer; border: none; display: inline-block; text-decoration: none;
+        }
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201, 169, 110, 0.4); }
+
+        .btn-outline {
+            border: 1.5px solid #c9a96e; color: #c9a96e;
+            border-radius: 50px; padding: 14px 36px; transition: all 0.4s ease;
+            background: transparent; cursor: pointer; display: inline-block; text-decoration: none;
+        }
+        .btn-outline:hover { background: rgba(201, 169, 110, 0.08); }
+
+        .quiz-option {
+            cursor: pointer; transition: all 0.3s ease;
+            border: 1px solid rgba(201, 169, 110, 0.15);
+            border-radius: 12px; padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            color: #c5c5d0;
+        }
+        .quiz-option:hover {
+            border-color: rgba(201, 169, 110, 0.4);
+            background: rgba(201, 169, 110, 0.06);
+        }
+        .quiz-option.selected {
+            border-color: #c9a96e;
+            background: rgba(201, 169, 110, 0.12);
+            color: #fff;
+        }
+        .quiz-option .option-letter {
+            width: 28px; height: 28px; border-radius: 50%;
+            border: 1px solid rgba(201, 169, 110, 0.3);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 600; color: #c9a96e;
+            transition: all 0.3s ease; flex-shrink: 0;
+        }
+        .quiz-option.selected .option-letter {
+            background: #c9a96e; color: #0a0a18;
+            border-color: #c9a96e;
+        }
+
+        .progress-bar-track {
+            background: rgba(255,255,255,0.08);
+            border-radius: 100px; height: 6px; overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%; border-radius: 100px;
+            background: linear-gradient(90deg, #c9a96e, #e8d5b5);
+            transition: width 0.4s ease;
+        }
+
+        .nav-btn {
+            padding: 12px 32px; border-radius: 50px; font-weight: 600;
+            font-size: 14px; transition: all 0.3s ease; cursor: pointer; border: none;
+        }
+        .nav-btn-prev {
+            background: transparent; border: 1px solid rgba(201,169,110,0.3);
+            color: #c9a96e;
+        }
+        .nav-btn-prev:hover { background: rgba(201,169,110,0.08); }
+        .nav-btn-next {
+            background: linear-gradient(135deg, #c9a96e, #a8864f);
+            color: #fff;
+        }
+        .nav-btn-next:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(201,169,110,0.3); }
+        .nav-btn-next:disabled {
+            opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none;
+        }
+
+        .result-section-bar {
+            height: 8px; border-radius: 100px; background: rgba(255,255,255,0.08); overflow: hidden;
+        }
+        .result-section-fill {
+            height: 100%; border-radius: 100px; transition: width 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up { animation: fadeInUp 0.5s ease forwards; }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="fixed top-0 w-full z-50 bg-cream/95 backdrop-blur-md border-b border-gold/10 shadow-sm">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full border border-gold flex items-center justify-center">
+                    <span class="font-serif text-gold text-xs font-bold">LS</span>
+                </div>
+                <span class="font-serif text-charcoal font-semibold hidden sm:inline">Legacy Stewards</span>
+            </a>
+            <div class="flex items-center gap-6 text-sm">
+                <a href="index.html#assessment" class="text-muted hover:text-gold transition-colors font-medium">Back to Overview</a>
+                <a href="login.html" class="text-muted hover:text-gold transition-colors font-medium">Client Portal</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== HERO ==================== -->
+    <section class="pt-28 pb-16 px-6 bg-cream text-center">
+        <div class="max-w-3xl mx-auto">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-gold/10 rounded-full mb-6">
+                <svg width="16" height="16" fill="none" stroke="#c9a96e" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                <span class="text-gold text-sm font-medium">Deep-Dive Assessment</span>
+            </div>
+            <h1 class="font-serif text-4xl sm:text-5xl text-charcoal mb-4 leading-tight">Financial Knowledge<br><span class="gold-gradient">Assessment</span></h1>
+            <p class="text-muted text-lg leading-relaxed max-w-2xl mx-auto mb-6">60 questions across 4 domains of investment and wealth management. Discover your financial literacy profile and identify areas where coaching can accelerate your growth.</p>
+            <div class="flex flex-wrap justify-center gap-3 text-xs text-muted">
+                <span class="px-3 py-1.5 bg-white/60 rounded-full border border-gold/10">Investment Fundamentals</span>
+                <span class="px-3 py-1.5 bg-white/60 rounded-full border border-gold/10">Portfolio Construction</span>
+                <span class="px-3 py-1.5 bg-white/60 rounded-full border border-gold/10">Wealth Preservation</span>
+                <span class="px-3 py-1.5 bg-white/60 rounded-full border border-gold/10">Alternatives & Impact</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== QUIZ SECTION ==================== -->
+    <section id="quiz-section" class="bg-[#0a0a18] min-h-screen py-16 px-6">
+        <div class="max-w-2xl mx-auto">
+
+            <!-- Quiz Content (questions) -->
+            <div id="quiz-content">
+                <!-- Progress -->
+                <div class="mb-10">
+                    <div class="flex justify-between items-center mb-3">
+                        <span id="progress-label" class="text-[#8a8a9a] text-sm font-medium">Question 1 of 60</span>
+                        <span id="progress-pct" class="text-gold text-sm font-semibold">0%</span>
+                    </div>
+                    <div class="progress-bar-track">
+                        <div id="progress-fill" class="progress-bar-fill" style="width:0%"></div>
+                    </div>
+                    <p id="section-label" class="text-gold/60 text-xs mt-2 tracking-wide uppercase">Section 1: Investment Fundamentals & Markets</p>
+                </div>
+
+                <!-- Question -->
+                <div id="question-area" class="animate-fade-in-up">
+                    <h2 id="question-text" class="font-serif text-xl sm:text-2xl text-white leading-relaxed mb-8"></h2>
+                    <div id="options-container" class="space-y-3 mb-10"></div>
+                </div>
+
+                <!-- Navigation -->
+                <div class="flex justify-between items-center">
+                    <button id="btn-prev" class="nav-btn nav-btn-prev" onclick="prevQuestion()" style="visibility:hidden">
+                        <span class="flex items-center gap-2">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 12L6 8l4-4"/></svg>
+                            Previous
+                        </span>
+                    </button>
+                    <button id="btn-next" class="nav-btn nav-btn-next" onclick="nextQuestion()" disabled>
+                        <span class="flex items-center gap-2">
+                            Next
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4l4 4-4 4"/></svg>
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result Card (hidden until complete) -->
+            <div id="result-card" class="hidden">
+                <div class="text-center mb-10 animate-fade-in-up">
+                    <div class="w-16 h-16 mx-auto mb-6 rounded-full border-2 border-gold flex items-center justify-center">
+                        <svg width="28" height="28" fill="none" stroke="#c9a96e" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+                    </div>
+                    <h2 class="font-serif text-3xl sm:text-4xl text-white mb-2">Assessment Complete</h2>
+                    <p class="text-[#8a8a9a] text-lg">Here is your Financial Knowledge profile</p>
+                </div>
+
+                <!-- Overall Tier -->
+                <div class="bg-white/[0.04] border border-gold/20 rounded-2xl p-8 mb-8 text-center animate-fade-in-up">
+                    <p class="text-gold text-sm uppercase tracking-widest mb-2">Your Overall Tier</p>
+                    <h3 id="overall-tier" class="font-serif text-2xl sm:text-3xl text-white mb-3"></h3>
+                    <p id="overall-score-text" class="text-gold text-lg font-semibold mb-4"></p>
+                    <p id="overall-description" class="text-[#a0a0b0] leading-relaxed text-sm max-w-xl mx-auto"></p>
+                </div>
+
+                <!-- Section Scores -->
+                <div class="space-y-4 mb-10">
+                    <h4 class="font-serif text-lg text-white mb-4">Section Breakdown</h4>
+
+                    <div class="bg-white/[0.03] rounded-xl p-5 border border-white/[0.06] animate-fade-in-up">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-white text-sm font-medium">Investment Fundamentals & Markets</span>
+                            <span id="s1-score" class="text-gold text-sm font-semibold"></span>
+                        </div>
+                        <div class="result-section-bar"><div id="s1-bar" class="result-section-fill bg-gold" style="width:0%"></div></div>
+                        <p id="s1-tier" class="text-[#8a8a9a] text-xs mt-1.5"></p>
+                    </div>
+
+                    <div class="bg-white/[0.03] rounded-xl p-5 border border-white/[0.06] animate-fade-in-up">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-white text-sm font-medium">Portfolio Construction & Asset Allocation</span>
+                            <span id="s2-score" class="text-gold text-sm font-semibold"></span>
+                        </div>
+                        <div class="result-section-bar"><div id="s2-bar" class="result-section-fill bg-gold-light" style="width:0%"></div></div>
+                        <p id="s2-tier" class="text-[#8a8a9a] text-xs mt-1.5"></p>
+                    </div>
+
+                    <div class="bg-white/[0.03] rounded-xl p-5 border border-white/[0.06] animate-fade-in-up">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-white text-sm font-medium">Wealth Preservation & Risk Management</span>
+                            <span id="s3-score" class="text-gold text-sm font-semibold"></span>
+                        </div>
+                        <div class="result-section-bar"><div id="s3-bar" class="result-section-fill bg-rose" style="width:0%"></div></div>
+                        <p id="s3-tier" class="text-[#8a8a9a] text-xs mt-1.5"></p>
+                    </div>
+
+                    <div class="bg-white/[0.03] rounded-xl p-5 border border-white/[0.06] animate-fade-in-up">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-white text-sm font-medium">Alternatives, Impact & Family Office Finance</span>
+                            <span id="s4-score" class="text-gold text-sm font-semibold"></span>
+                        </div>
+                        <div class="result-section-bar"><div id="s4-bar" class="result-section-fill bg-gold-dark" style="width:0%"></div></div>
+                        <p id="s4-tier" class="text-[#8a8a9a] text-xs mt-1.5"></p>
+                    </div>
+                </div>
+
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="index.html#contact" class="btn-gold text-center">Book a Discovery Call</a>
+                    <a href="index.html#assessment" class="btn-outline text-center">Return to Full Assessment</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="relative z-10 bg-sand border-t border-gold/10 py-12 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full border border-gold flex items-center justify-center">
+                            <span class="font-serif text-gold text-xs font-bold">LS</span>
+                        </div>
+                        <span class="font-serif text-charcoal">Legacy Stewards</span>
+                    </div>
+                    <p class="text-muted text-sm leading-relaxed">Independent stewardship partners for next-generation women of wealth in Southeast Asia.</p>
+                </div>
+                <div>
+                    <h4 class="text-charcoal font-medium text-sm mb-4">Services</h4>
+                    <ul class="space-y-2 text-muted text-sm">
+                        <li><a href="index.html#services" class="hover:text-gold transition-colors">Stewardship Coaching</a></li>
+                        <li><a href="index.html#assessment" class="hover:text-gold transition-colors">Heir Readiness Assessment</a></li>
+                        <li><a href="index.html#advisory" class="hover:text-gold transition-colors">Legal &amp; Tax Advisory</a></li>
+                        <li><a href="index.html#services" class="hover:text-gold transition-colors">Impact Investing</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-charcoal font-medium text-sm mb-4">Regions</h4>
+                    <ul class="space-y-2 text-muted text-sm">
+                        <li><a href="index.html#advisory" class="hover:text-gold transition-colors">Indonesia</a></li>
+                        <li><a href="index.html#advisory" class="hover:text-gold transition-colors">Singapore</a></li>
+                        <li><a href="index.html#advisory" class="hover:text-gold transition-colors">Philippines</a></li>
+                        <li><a href="index.html#advisory" class="hover:text-gold transition-colors">Malaysia, Thailand, Vietnam</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-charcoal font-medium text-sm mb-4">Connect</h4>
+                    <ul class="space-y-2 text-muted text-sm">
+                        <li><a href="index.html#contact" class="hover:text-gold transition-colors">Book a Discovery Call</a></li>
+                        <li><a href="index.html#insights" class="hover:text-gold transition-colors">Insights &amp; Blog</a></li>
+                        <li><a href="index.html#team" class="hover:text-gold transition-colors">Our Team</a></li>
+                        <li><a href="login.html" class="hover:text-gold transition-colors">Client Portal</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gold/10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <p class="text-muted text-xs">&copy; 2026 Legacy Stewards. All rights reserved.</p>
+                <div class="flex gap-6 text-muted text-xs">
+                    <a href="#" class="hover:text-gold transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-gold transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== QUIZ LOGIC ==================== -->
+    <script>
+    (function() {
+        const STORAGE_KEY = 'assessment-finance-progress';
+
+        const SECTIONS = [
+            { name: 'Investment Fundamentals & Markets', start: 0, end: 14 },
+            { name: 'Portfolio Construction & Asset Allocation', start: 15, end: 29 },
+            { name: 'Wealth Preservation & Risk Management', start: 30, end: 44 },
+            { name: 'Alternatives, Impact & Family Office Finance', start: 45, end: 59 }
+        ];
+
+        const questions = [
+            // ===== SECTION 1: Investment Fundamentals & Markets (Q1-Q15) =====
+            {
+                q: 'What does "alpha" represent in investment terminology?',
+                options: [
+                    'The return of a portfolio minus the risk-free rate',
+                    'The excess return of an investment above its benchmark, attributable to the manager\'s skill',
+                    'The total return of a portfolio before fees',
+                    'A measure of portfolio volatility'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What does "beta" measure?',
+                options: [
+                    'The absolute return of an investment',
+                    'The sensitivity of an investment\'s returns to movements in its benchmark',
+                    'The standard deviation of returns over a period',
+                    'The percentage of a portfolio in equities'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is the "risk-free rate" typically represented by?',
+                options: [
+                    'The return on a diversified equity portfolio',
+                    'The yield on short-term government bonds of a highly creditworthy sovereign',
+                    'The bank deposit rate in the investor\'s home country',
+                    'The inflation rate'
+                ],
+                correct: 1
+            },
+            {
+                q: 'The "Sharpe ratio" measures:',
+                options: [
+                    'The total return of a portfolio over a benchmark',
+                    'Risk-adjusted return \u2014 excess return per unit of total risk (standard deviation)',
+                    'The ratio of equities to bonds in a portfolio',
+                    'The volatility of a portfolio relative to its benchmark'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is a "yield curve" and what does an inverted yield curve typically signal?',
+                options: [
+                    'A chart showing the return on different equity sectors',
+                    'A chart showing interest rates across different maturities; an inverted curve has historically preceded recessions',
+                    'A chart showing dividend yields for a stock over time',
+                    'A graph of a bond\'s price over its lifetime'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is "dollar-cost averaging"?',
+                options: [
+                    'Investing all available capital at once',
+                    'Investing a fixed amount at regular intervals regardless of price, reducing the impact of volatility',
+                    'Converting all investments to US dollars',
+                    'Averaging the cost basis across multiple brokers'
+                ],
+                correct: 1
+            },
+            {
+                q: '"Duration" in the context of fixed income refers to:',
+                options: [
+                    'The time until a bond matures',
+                    'A measure of a bond\'s sensitivity to interest rate changes',
+                    'The average holding period for bonds',
+                    'The period over which interest is paid'
+                ],
+                correct: 1
+            },
+            {
+                q: 'A "bull market" is generally defined as:',
+                options: [
+                    'A market where most stocks are falling',
+                    'A market where prices are rising 20% or more from a recent trough',
+                    'A market dominated by large-cap stocks',
+                    'Any period when equity markets outperform bonds'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What does "P/E ratio" tell an investor?',
+                options: [
+                    'How much profit a company makes per share',
+                    'How much investors are willing to pay for each unit of earnings \u2014 used to assess relative valuation',
+                    'The percentage of earnings paid as dividends',
+                    'The price of a share relative to its book value'
+                ],
+                correct: 1
+            },
+            {
+                q: '"Liquidity" of an asset refers to:',
+                options: [
+                    'How much cash the company holds',
+                    'How quickly and easily an asset can be sold at or near its market value without significantly affecting the price',
+                    'The ability of an asset to generate cash flow',
+                    'The proportion of assets held in cash'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is "inflation risk" for an investor?',
+                options: [
+                    'The risk that inflation causes the central bank to raise interest rates',
+                    'The risk that the real purchasing power of returns is eroded by inflation',
+                    'The risk that consumer goods prices rise faster than wages',
+                    'The risk that the currency depreciates'
+                ],
+                correct: 1
+            },
+            {
+                q: '"Rebalancing" a portfolio means:',
+                options: [
+                    'Selling all assets and starting fresh',
+                    'Periodically buying and selling assets to restore the portfolio to its target allocation',
+                    'Equalising the performance of all assets',
+                    'Moving assets from underperforming to outperforming classes'
+                ],
+                correct: 1
+            },
+            {
+                q: 'An ETF differs from a mutual fund primarily in that:',
+                options: [
+                    'ETFs invest only in equities',
+                    'ETFs trade on an exchange throughout the day like stocks, while mutual funds are priced once per day at NAV',
+                    'ETFs always have lower expense ratios',
+                    'ETFs are not regulated'
+                ],
+                correct: 1
+            },
+            {
+                q: '"Diversification" reduces what type of risk?',
+                options: [
+                    'Systematic (market) risk',
+                    'Idiosyncratic (stock-specific) risk',
+                    'Inflation risk',
+                    'Interest rate risk'
+                ],
+                correct: 1
+            },
+            {
+                q: 'The "efficient market hypothesis" (EMH) in its strong form implies:',
+                options: [
+                    'Markets always go up in the long run',
+                    'All publicly and privately available information is already reflected in asset prices',
+                    'Only highly efficient companies deliver superior returns',
+                    'Index funds always outperform actively managed funds'
+                ],
+                correct: 1
+            },
+
+            // ===== SECTION 2: Portfolio Construction & Asset Allocation (Q16-Q30) =====
+            {
+                q: 'What is "strategic asset allocation"?',
+                options: [
+                    'Tactical short-term adjustments',
+                    'A long-term target allocation across asset classes based on the investor\'s goals, risk tolerance, and time horizon',
+                    'A strategy that allocates assets based solely on expected returns',
+                    'An allocation that changes automatically with age'
+                ],
+                correct: 1
+            },
+            {
+                q: 'The "efficient frontier" in modern portfolio theory represents:',
+                options: [
+                    'The highest-returning portfolio regardless of risk',
+                    'The set of portfolios that offer the maximum expected return for each level of risk',
+                    'The minimum risk portfolio for any given return target',
+                    'A line separating high-risk and low-risk portfolios'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is a typical equity allocation for a HNW family office seeking long-term growth with moderate risk?',
+                options: [
+                    '100% equities',
+                    '40\u201360% equities alongside bonds, alternatives, and real assets',
+                    '0\u201320% equities',
+                    '80\u201390% equities'
+                ],
+                correct: 1
+            },
+            {
+                q: 'The Yale Endowment model is famous for its heavy allocation to:',
+                options: [
+                    'US large-cap equities and government bonds',
+                    'Alternative assets \u2014 private equity, hedge funds, real assets, and venture capital',
+                    'Emerging market equities and commodities',
+                    'Gold and cash equivalents'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is "correlation" in portfolio construction and why does it matter?',
+                options: [
+                    'The historical return relationship between two assets \u2014 low or negative correlation improves diversification',
+                    'How closely a portfolio tracks its benchmark',
+                    'The fee relationship between a manager and an investor',
+                    'The statistical significance of an asset\'s alpha'
+                ],
+                correct: 0
+            },
+            {
+                q: '"Private equity" investments are typically characterised by:',
+                options: [
+                    'High liquidity and low minimum investment',
+                    'Illiquidity, long investment horizons (7\u201310 years), but potential for higher returns',
+                    'Government-guaranteed returns',
+                    'Daily pricing and easy redemption'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is a "hedge fund" and what does "2 and 20" refer to?',
+                options: [
+                    'A fund with two strategies',
+                    'A pooled investment vehicle using diverse strategies; "2 and 20" refers to a 2% management fee and 20% performance fee',
+                    'A fund that hedges all currency risk',
+                    'A fund regulated by 20 international bodies'
+                ],
+                correct: 1
+            },
+            {
+                q: '"Real assets" in a portfolio context typically include:',
+                options: [
+                    'Stocks and bonds',
+                    'Physical assets such as real estate, infrastructure, commodities, and timberland',
+                    'Any tangible asset with a book value',
+                    'Currency and gold only'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is a family office portfolio\'s main advantage over standard private banking?',
+                options: [
+                    'Access to lower-risk government bonds',
+                    'Full bespoke control over investment strategy, lower fees at scale, consolidated reporting, and no conflicts of interest',
+                    'Guaranteed minimum returns',
+                    'Regulatory exemptions'
+                ],
+                correct: 1
+            },
+            {
+                q: '"Factor investing" (smart beta) strategies target:',
+                options: [
+                    'A passive exposure to the entire market',
+                    'Systematic exposure to specific risk factors \u2014 value, size, momentum, quality, low volatility',
+                    'Only the largest companies',
+                    'Equal weighting of all stocks'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What does the "Sortino ratio" improve upon vs the Sharpe ratio?',
+                options: [
+                    'It uses net returns rather than gross returns',
+                    'It penalises only downside volatility rather than total volatility',
+                    'It adjusts for inflation',
+                    'It uses the median rather than the mean return'
+                ],
+                correct: 1
+            },
+            {
+                q: 'In a portfolio context, "tail risk" refers to:',
+                options: [
+                    'The risk of returns being slightly below expectations',
+                    'The risk of extreme, low-probability losses that sit far below the normal distribution of returns',
+                    'The trailing performance of a portfolio over 12 months',
+                    'The risk from assets at the bottom of an allocation'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is "currency hedging" and when might a family investor use it?',
+                options: [
+                    'Converting all assets to a single currency',
+                    'Using derivatives (forwards, options) to offset the risk of exchange rate movements on foreign-currency assets',
+                    'Investing only in domestic currency assets',
+                    'Diversifying into many currencies'
+                ],
+                correct: 1
+            },
+            {
+                q: 'A "60/40 portfolio" refers to:',
+                options: [
+                    'A portfolio targeting 60% returns with 40% at risk',
+                    'A classic allocation of 60% equities and 40% bonds',
+                    'A portfolio managed 60% actively and 40% passively',
+                    'A split between 60% domestic and 40% international'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is the key challenge with the 60/40 model in a high-inflation environment?',
+                options: [
+                    'Equities tend to outperform',
+                    'Bonds and equities can become positively correlated, both falling simultaneously, reducing the diversification benefit',
+                    'Currency risk increases',
+                    'The rebalancing cost becomes prohibitive'
+                ],
+                correct: 1
+            },
+
+            // ===== SECTION 3: Wealth Preservation & Risk Management (Q31-Q45) =====
+            {
+                q: '"Sequence of returns risk" is most relevant to:',
+                options: [
+                    'Long-term accumulators',
+                    'Those drawing down from a portfolio \u2014 poor early returns combined with withdrawals can permanently impair the portfolio',
+                    'Investors who reinvest all dividends',
+                    'Institutional endowments'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is the primary role of "insurance" in a HNW wealth plan?',
+                options: [
+                    'Generating investment returns',
+                    'Protecting against catastrophic, low-probability risks that could derail a wealth plan',
+                    'Replacing the need for an emergency cash reserve',
+                    'Insurance is rarely relevant for very wealthy individuals'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What does "counterparty risk" mean for a wealthy investor?',
+                options: [
+                    'The risk that the market moves against you',
+                    'The risk that a financial institution, broker, or derivative counterparty fails to meet its obligations',
+                    'The risk of investing in a company run by bad management',
+                    'The risk that your fund manager underperforms'
+                ],
+                correct: 1
+            },
+            {
+                q: 'A "family office investment policy statement" (IPS) should include:',
+                options: [
+                    'A list of all current holdings',
+                    'Investment objectives, risk tolerance, time horizon, asset allocation targets, constraints, and governance guidelines',
+                    'The personal financial goals of each family member',
+                    'A detailed tax plan for the next 10 years'
+                ],
+                correct: 1
+            },
+            {
+                q: '"Drawdown" in investment performance refers to:',
+                options: [
+                    'The process of withdrawing funds',
+                    'The peak-to-trough decline in a portfolio\'s value over a given period',
+                    'The management fee deducted',
+                    'The amount of cash drawn from a credit facility'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is "reputational risk" for a HNW family in the context of investments?',
+                options: [
+                    'The risk that a financial advisor damages their own reputation',
+                    'The risk that investments in controversial companies or sectors damage the family\'s public standing',
+                    'The risk of financial fraud in the family\'s name',
+                    'The risk associated with social media commentary'
+                ],
+                correct: 1
+            },
+            {
+                q: '"Liquidity risk" for a family holding a significant position in a single private company is:',
+                options: [
+                    'That dividends may not be paid',
+                    'That the investment cannot easily be sold at fair value when cash is needed',
+                    'That the company\'s cash reserves fall below minimum',
+                    'That the company\'s shares are not listed'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is "estate concentration risk" and why is it particularly dangerous?',
+                options: [
+                    'The risk of inheriting from too many estates',
+                    'The risk of having too much wealth concentrated in a single illiquid asset, making it difficult to pay taxes, fund expenses, or diversify',
+                    'The risk that estate assets are valued incorrectly',
+                    'The risk of inheriting in too many jurisdictions'
+                ],
+                correct: 1
+            },
+            {
+                q: 'How does "key-person risk" apply to a family business?',
+                options: [
+                    'The risk that key advisors retire',
+                    'The risk that the business depends heavily on one individual \u2014 their death or incapacity could severely damage business value',
+                    'The risk that key shareholders disagree',
+                    'The risk that key employees are poached'
+                ],
+                correct: 1
+            },
+            {
+                q: '"Currency risk" for a Singaporean inheriting real estate in the Philippines means:',
+                options: [
+                    'That the property is valued in USD',
+                    'That the value of the Philippine property, when converted to SGD, fluctuates with the PHP/SGD exchange rate',
+                    'That currency controls prevent repatriation',
+                    'That the Philippine government may change currency policy'
+                ],
+                correct: 1
+            },
+            {
+                q: 'The "Monte Carlo simulation" is used in wealth planning to:',
+                options: [
+                    'Predict exact investment returns',
+                    'Model thousands of random scenarios to estimate the probability that a portfolio will achieve its goals',
+                    'Simulate the impact of tax changes',
+                    'Calculate the optimal asset allocation'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is "long-term care risk" in the context of a wealth plan?',
+                options: [
+                    'The risk of long-term underperformance',
+                    'The risk that significant wealth is depleted by the cost of long-term nursing or medical care',
+                    'The risk of a care facility mismanaging trust assets',
+                    'The risk that heirs need financial support for a long period'
+                ],
+                correct: 1
+            },
+            {
+                q: '"Inflation-linked bonds" (like TIPS) protect investors because:',
+                options: [
+                    'They pay the highest interest rate',
+                    'Their principal and/or coupon payments are adjusted upwards with inflation, preserving real purchasing power',
+                    'They are backed by commodity assets',
+                    'They mature earlier in high-inflation environments'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is "manager risk" in alternatives investing?',
+                options: [
+                    'The risk that a fund manager makes poor investment decisions, leading to underperformance or loss',
+                    'The risk that a portfolio manager leaves the firm',
+                    'The risk that fees erode all returns',
+                    'The risk of regulatory changes'
+                ],
+                correct: 0
+            },
+            {
+                q: '"Sustainable withdrawal rate" for an endowment-style family portfolio is traditionally estimated at:',
+                options: [
+                    '10\u201312% per year',
+                    '4\u20135% per year, balancing distributions with long-term capital preservation',
+                    '1\u20132% per year',
+                    'As much as possible in the first 10 years'
+                ],
+                correct: 1
+            },
+
+            // ===== SECTION 4: Alternatives, Impact & Family Office Finance (Q46-Q60) =====
+            {
+                q: '"Impact investing" differs from ESG investing primarily in that:',
+                options: [
+                    'ESG targets only environmental factors',
+                    'Impact investing intentionally targets measurable positive social or environmental outcomes alongside financial returns',
+                    'Impact investing requires accepting below-market returns',
+                    'ESG is only for institutional investors'
+                ],
+                correct: 1
+            },
+            {
+                q: 'The "gender-lens investing" approach involves:',
+                options: [
+                    'Investing exclusively in women-owned businesses',
+                    'Intentionally considering gender as a factor \u2014 investing in companies advancing women\'s economic participation, leadership, and access to capital',
+                    'A fund structure requiring gender parity on the investment committee',
+                    'Avoiding companies with a majority-male workforce'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is a "blended finance" structure?',
+                options: [
+                    'A portfolio blending public equities and PE',
+                    'A structure that uses public or philanthropic capital to reduce risk and attract private capital toward development outcomes',
+                    'A fund blending different currencies',
+                    'A family office combining wealth management and philanthropy'
+                ],
+                correct: 1
+            },
+            {
+                q: '"Carried interest" in private equity refers to:',
+                options: [
+                    'The interest rate on capital calls',
+                    'The general partner\'s share of profits (typically 20%) above a hurdle rate',
+                    'The interest accrued on uncalled commitments',
+                    'A fee to carry portfolio companies through downturns'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is a "co-investment" in private equity?',
+                options: [
+                    'Investing alongside a management team in a public buyout',
+                    'An opportunity for limited partners to invest directly in a specific deal alongside the fund manager, typically with reduced fees',
+                    'A joint investment between two family offices',
+                    'Investing in two PE funds simultaneously'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is "vintage year" in private equity?',
+                options: [
+                    'The year a fund\'s best investment was made',
+                    'The year a PE fund was launched \u2014 funds from different vintages show very different performance based on market conditions',
+                    'The year a fund pays its first distribution',
+                    'The oldest investment year in a fund\'s portfolio'
+                ],
+                correct: 1
+            },
+            {
+                q: '"Direct lending" as an alternative investment involves:',
+                options: [
+                    'A family lending money directly to another family member',
+                    'A non-bank lender providing loans directly to companies, earning interest income with higher yields than public bonds',
+                    'A bank providing unsecured lending to family offices',
+                    'Investing in bank loans through a secondary market'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What does "DPI" stand for in private equity performance metrics?',
+                options: [
+                    'Distributed to Paid-In capital \u2014 how much has actually been returned to investors relative to their investment',
+                    'Debt-to-Portfolio Income ratio',
+                    'Diversification Performance Index',
+                    'Drawdown Performance Indicator'
+                ],
+                correct: 0
+            },
+            {
+                q: 'An "endowment model" portfolio typically emphasises:',
+                options: [
+                    'Capital preservation through bonds and cash',
+                    'Long time horizon, high allocation to illiquid alternatives, and endowment spending rules',
+                    'Income generation through dividend stocks and REITs',
+                    'Tactical short-term trading'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is "concessional finance" in the impact investing context?',
+                options: [
+                    'Charitable grants that don\'t expect financial returns',
+                    'Finance provided at below-market terms to enable impact-oriented projects that would otherwise not be commercially viable',
+                    'Loans from family foundations to family businesses',
+                    'Finance that concedes control rights'
+                ],
+                correct: 1
+            },
+            {
+                q: 'A "family investment company" (FIC) is used primarily to:',
+                options: [
+                    'Avoid all taxes on family investments',
+                    'Hold and manage family investments in a corporate structure, enabling income splitting, control retention, and inheritance tax planning',
+                    'Replace the need for a family trust',
+                    'Combine portfolios of multiple family members'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is "mission-related investing" (MRI) for a family foundation?',
+                options: [
+                    'Investing the endowment in any high-return asset',
+                    'Investing the endowment in assets that align with the foundation\'s philanthropic mission',
+                    'Donating a portion of investment returns to mission-aligned charities',
+                    'A strategy of investing only in publicly listed impact companies'
+                ],
+                correct: 1
+            },
+            {
+                q: 'What is the TVPI multiple in private equity?',
+                options: [
+                    'Total Value to Paid-In \u2014 the ratio of the current value of remaining investments plus distributions, to total invested capital',
+                    'Total Venture and Private Investment ratio',
+                    'Tax Value to Performance Index',
+                    'The trailing versus projected IRR comparison'
+                ],
+                correct: 0
+            },
+            {
+                q: 'For a next-generation heir taking over a family office, the most important first step is:',
+                options: [
+                    'Immediately switching all investments',
+                    'Reviewing and updating the Investment Policy Statement to reflect the new generation\'s risk tolerance, values, and goals',
+                    'Hiring a new external investment manager',
+                    'Liquidating all illiquid positions'
+                ],
+                correct: 1
+            },
+            {
+                q: '"Patient capital" is a concept most associated with:',
+                options: [
+                    'Holding cash during market downturns',
+                    'Long-term investment in illiquid or development-stage assets, accepting a longer time horizon in exchange for potentially higher returns or impact',
+                    'Government bond investments with 30-year maturities',
+                    'Investments made in the final years before retirement'
+                ],
+                correct: 1
+            }
+        ];
+
+        const LETTERS = ['A', 'B', 'C', 'D'];
+        let currentIndex = 0;
+        let answers = {};
+
+        // ---------- Restore progress ----------
+        function loadProgress() {
+            try {
+                const saved = sessionStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    answers = data.answers || {};
+                    currentIndex = data.currentIndex || 0;
+                }
+            } catch(e) { /* ignore */ }
+        }
+
+        function saveProgress() {
+            try {
+                sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    answers: answers,
+                    currentIndex: currentIndex
+                }));
+            } catch(e) { /* ignore */ }
+        }
+
+        // ---------- Get section for index ----------
+        function getSectionForIndex(idx) {
+            for (let i = 0; i < SECTIONS.length; i++) {
+                if (idx >= SECTIONS[i].start && idx <= SECTIONS[i].end) return i;
+            }
+            return 0;
+        }
+
+        // ---------- Render question ----------
+        function renderQuestion() {
+            const q = questions[currentIndex];
+            const secIdx = getSectionForIndex(currentIndex);
+
+            // Progress
+            document.getElementById('progress-label').textContent = 'Question ' + (currentIndex + 1) + ' of 60';
+            const pct = Math.round((currentIndex / 60) * 100);
+            document.getElementById('progress-pct').textContent = pct + '%';
+            document.getElementById('progress-fill').style.width = pct + '%';
+            document.getElementById('section-label').textContent = 'Section ' + (secIdx + 1) + ': ' + SECTIONS[secIdx].name;
+
+            // Question text
+            document.getElementById('question-text').textContent = (currentIndex + 1) + '. ' + q.q;
+
+            // Options
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            q.options.forEach(function(opt, i) {
+                const div = document.createElement('div');
+                div.className = 'quiz-option flex items-start gap-4' + (answers[currentIndex] === i ? ' selected' : '');
+                div.innerHTML = '<span class="option-letter mt-0.5">' + LETTERS[i] + '</span><span class="text-sm leading-relaxed">' + opt + '</span>';
+                div.addEventListener('click', function() { selectOption(i); });
+                container.appendChild(div);
+            });
+
+            // Prev button
+            document.getElementById('btn-prev').style.visibility = currentIndex === 0 ? 'hidden' : 'visible';
+
+            // Next button
+            const nextBtn = document.getElementById('btn-next');
+            nextBtn.disabled = (answers[currentIndex] === undefined);
+            if (currentIndex === 59) {
+                nextBtn.querySelector('span').innerHTML = 'See Results <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4l4 4-4 4"/></svg>';
+            } else {
+                nextBtn.querySelector('span').innerHTML = 'Next <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4l4 4-4 4"/></svg>';
+            }
+
+            // Animate
+            const area = document.getElementById('question-area');
+            area.classList.remove('animate-fade-in-up');
+            void area.offsetWidth; // reflow
+            area.classList.add('animate-fade-in-up');
+        }
+
+        // ---------- Select option ----------
+        function selectOption(idx) {
+            answers[currentIndex] = idx;
+            saveProgress();
+
+            // Update UI
+            document.querySelectorAll('.quiz-option').forEach(function(el, i) {
+                el.classList.toggle('selected', i === idx);
+            });
+            document.getElementById('btn-next').disabled = false;
+        }
+
+        // ---------- Navigation ----------
+        window.prevQuestion = function() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                saveProgress();
+                renderQuestion();
+            }
+        };
+
+        window.nextQuestion = function() {
+            if (answers[currentIndex] === undefined) return;
+            if (currentIndex < 59) {
+                currentIndex++;
+                saveProgress();
+                renderQuestion();
+                window.scrollTo({ top: document.getElementById('quiz-section').offsetTop - 20, behavior: 'smooth' });
+            } else {
+                showResults();
+            }
+        };
+
+        // ---------- Calculate & show results ----------
+        function showResults() {
+            // Calculate section scores
+            var sectionScores = [0, 0, 0, 0];
+            for (var i = 0; i < 60; i++) {
+                if (answers[i] === questions[i].correct) {
+                    var sec = getSectionForIndex(i);
+                    sectionScores[sec]++;
+                }
+            }
+            var total = sectionScores[0] + sectionScores[1] + sectionScores[2] + sectionScores[3];
+
+            // Section tier labels
+            function sectionTier(score) {
+                if (score <= 5) return 'Foundational';
+                if (score <= 10) return 'Developing';
+                return 'Advanced';
+            }
+
+            // Overall tier
+            var tierName, tierDesc;
+            if (total <= 20) {
+                tierName = 'Financial Foundations';
+                tierDesc = 'Building investment literacy is central to your stewardship journey. We\'ll cover fundamentals through advanced portfolio management in your coaching curriculum.';
+            } else if (total <= 40) {
+                tierName = 'Developing Financial Literacy';
+                tierDesc = 'Solid working knowledge. Gaps in alternatives, risk management, and advanced structuring are where your coaching will focus.';
+            } else if (total <= 55) {
+                tierName = 'Advanced Financial Literacy';
+                tierDesc = 'Strong grasp of investment principles. Your advisory will focus on family office structure, direct investments, and impact strategy.';
+            } else {
+                tierName = 'Financial Expert';
+                tierDesc = 'Exceptional financial knowledge. Our partnership will focus on execution, governance, and leading your family office\'s investment committee with confidence.';
+            }
+
+            // Hide quiz, show results
+            document.getElementById('quiz-content').classList.add('hidden');
+            document.getElementById('result-card').classList.remove('hidden');
+
+            document.getElementById('overall-tier').textContent = tierName;
+            document.getElementById('overall-score-text').textContent = total + ' / 60';
+            document.getElementById('overall-description').textContent = tierDesc;
+
+            // Section bars
+            for (var s = 1; s <= 4; s++) {
+                var sc = sectionScores[s - 1];
+                document.getElementById('s' + s + '-score').textContent = sc + ' / 15';
+                document.getElementById('s' + s + '-tier').textContent = sectionTier(sc);
+                setTimeout((function(secNum, secScore) {
+                    return function() {
+                        document.getElementById('s' + secNum + '-bar').style.width = Math.round((secScore / 15) * 100) + '%';
+                    };
+                })(s, sc), 200);
+            }
+
+            // Clear saved progress
+            sessionStorage.removeItem(STORAGE_KEY);
+
+            window.scrollTo({ top: document.getElementById('quiz-section').offsetTop - 20, behavior: 'smooth' });
+        }
+
+        // ---------- Init ----------
+        loadProgress();
+        renderQuestion();
+    })();
+    </script>
+
+</body>
+</html>
