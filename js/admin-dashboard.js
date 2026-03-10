@@ -205,20 +205,22 @@ const AdminDashboard = (() => {
     // ─── Add Client ───
 
     async function addClient(formData) {
-        const { firstName, lastName, email, phone, assignedEmployeeId, assignedEmployeeName, caseTitle } = formData;
+        const { firstName, lastName, email, phone, assignedEmployeeId, assignedEmployeeName, caseTitle, country } = formData;
         const displayName = `${firstName} ${lastName}`;
 
         try {
             // Create a placeholder user doc (real auth account created in Firebase Console)
             const userRef = db.collection('users').doc();
-            await userRef.set({
+            const userData = {
                 email,
                 displayName,
                 role: 'client',
                 phone: phone || '',
                 assignedEmployeeId: assignedEmployeeId || currentProfile.uid,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            });
+            };
+            if (country) userData.country = country;
+            await userRef.set(userData);
 
             // Create case
             const caseRef = await db.collection('cases').add({
@@ -765,7 +767,14 @@ const AdminDashboard = (() => {
 
         container.innerHTML = members.map(m => `
             <tr>
-                <td class="td-name">${escapeHtml(m.displayName)}</td>
+                <td class="td-name">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-gold/20 border border-gold/30 flex items-center justify-center text-gold font-serif text-xs font-bold overflow-hidden flex-shrink-0">
+                            ${m.photoURL ? `<img src="${escapeHtml(m.photoURL)}" class="w-full h-full object-cover" alt="${escapeHtml(m.displayName)}">` : getInitials(m.displayName)}
+                        </div>
+                        ${escapeHtml(m.displayName)}
+                    </div>
+                </td>
                 <td>${escapeHtml(m.email)}</td>
                 <td>
                     <select onchange="AdminDashboard.updateTeamRole('${m.id}', this.value)" class="form-select-sm">

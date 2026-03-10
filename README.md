@@ -12,9 +12,10 @@ A dedicated stewardship platform for next-generation women leading their family'
 
 ### Marketing Site
 - Responsive single-page design with elegant gold/cream aesthetic
-- Interactive wealth readiness assessment tool with dedicated finance, tax, and legal assessments
-- Advisory fee calculator with tier-based pricing
-- Team profiles, services overview, and insights section linking to Education Hub
+- Interactive wealth readiness assessment tool with deep-dive domain assessments (legal, tax, finance)
+- Team member cards with photos, bios, role tags, and LinkedIn links
+- Six SEA country advisory tabs with consolidated CTA
+- Services in canonical order matching page scroll sequence
 - GSAP scroll animations and custom particle system
 
 ### Financial Education Hub
@@ -28,6 +29,8 @@ A dedicated stewardship platform for next-generation women leading their family'
 - Secure login with role-based access
 - U-shaped 3-column layout: journey phases (left), milestones (center), tabbed panel (right)
 - Tab switching between Messages, Notes, and Documents in the right panel
+- Portfolio overview with Chart.js asset allocation and performance charts
+- Jurisdiction-matched specialist panel (legal & tax advisors per country)
 - Independent scrollable columns for minimal scrolling
 - Real-time updates from assigned steward via Firestore `onSnapshot`
 - Compact mobile layout with horizontal journey pills and stacked sections
@@ -45,6 +48,7 @@ A dedicated stewardship platform for next-generation women leading their family'
 - **Frontend**: HTML, Tailwind CSS (CDN), Vanilla JavaScript
 - **Backend**: Firebase Authentication, Cloud Firestore, Firebase Storage
 - **Fonts**: Playfair Display + Inter (Google Fonts)
+- **Charts**: Chart.js 4.4.0 (CDN)
 - **Animations**: GSAP ScrollTrigger
 - **Hosting**: GitHub Pages
 
@@ -90,11 +94,13 @@ Open [http://localhost:3000](http://localhost:3000)
 ├── client-dashboard.html      # Client portal (3-column layout)
 ├── admin-dashboard.html       # Employee/admin portal
 ├── css/shared.css             # Shared dashboard + component styles
+├── img/team/                  # Team member portrait photos
 ├── js/
 │   ├── firebase-config.js     # Firebase configuration
 │   ├── auth.js                # Authentication & role routing
 │   ├── client-dashboard.js    # Client dashboard logic
 │   └── admin-dashboard.js     # Admin dashboard logic
+├── seed-data.html             # Firestore data seeder (6 clients, 2 stewards)
 └── CLAUDE.md                  # Detailed project documentation
 ```
 

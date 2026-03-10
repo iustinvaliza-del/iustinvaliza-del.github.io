@@ -124,7 +124,7 @@
                     </div>
                 </div>
 
-                <!-- ===== CENTER COLUMN: Milestones ===== -->
+                <!-- ===== CENTER COLUMN: Milestones / Portfolio ===== -->
                 <div class="overflow-y-auto dashboard-column pr-2">
                     <!-- Mobile: Journey + Status (hidden on desktop) -->
                     <div class="md:hidden mb-4">
@@ -138,17 +138,210 @@
                         </div>
                     </div>
 
-                    <h2 class="font-serif text-base text-charcoal mb-3">Milestones</h2>
-                    <div id="timeline-container" class="timeline">
-                        <div class="timeline-item">
-                            <div class="timeline-dot timeline-dot-upcoming"></div>
-                            <div class="skeleton h-16 w-full"></div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-dot timeline-dot-upcoming"></div>
-                            <div class="skeleton h-16 w-full"></div>
+                    <!-- View Switcher -->
+                    <div class="flex items-center gap-1 mb-3 bg-charcoal/5 rounded-lg p-0.5 w-fit">
+                        <button class="center-view-tab active px-3 py-1.5 rounded-md text-xs font-medium transition-all" data-view="milestones" onclick="ClientDashboard.switchCenterView('milestones')">Milestones</button>
+                        <button class="center-view-tab px-3 py-1.5 rounded-md text-xs font-medium transition-all" data-view="portfolio" onclick="ClientDashboard.switchCenterView('portfolio')">Portfolio</button>
+                    </div>
+
+                    <!-- ── Milestones View ── -->
+                    <div id="center-view-milestones">
+                        <div id="timeline-container" class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-dot timeline-dot-upcoming"></div>
+                                <div class="skeleton h-16 w-full"></div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot timeline-dot-upcoming"></div>
+                                <div class="skeleton h-16 w-full"></div>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- ── Portfolio View ── -->
+                    <div id="center-view-portfolio" class="hidden">
+
+                        <section id="portfolio-section">
+
+                            <!-- Section header -->
+                            <div class="flex items-center justify-between mb-2">
+                                <h2 class="font-serif text-xl text-charcoal">Portfolio Overview</h2>
+                                <span class="text-[10px] text-amber-600 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full font-medium">Illustrative</span>
+                            </div>
+
+                            <!-- Disclaimer banner -->
+                            <div class="mb-5 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                                <p class="text-xs text-amber-700 leading-relaxed">
+                                    <strong>Illustrative only.</strong> This portfolio reflects example allocations relevant to your stewardship journey &mdash; not your actual holdings. Your steward will work with you to build your real portfolio plan.
+                                </p>
+                            </div>
+
+                            <!-- Component 1: Portfolio Summary Bar -->
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6" id="portfolio-summary">
+                                <div class="col-span-2 md:col-span-1 bg-charcoal rounded-xl p-5">
+                                    <p class="text-[10px] text-white/50 uppercase tracking-wide font-medium">Portfolio Value</p>
+                                    <p class="font-serif text-2xl text-gold mt-1" id="port-total-value"></p>
+                                    <p class="text-[10px] text-white/40 mt-1" id="port-currency-label"></p>
+                                </div>
+                                <div class="bg-white/60 border border-gold/20 rounded-xl p-4">
+                                    <p class="text-[10px] text-charcoal/50 uppercase tracking-wide font-medium">12-Month Return</p>
+                                    <p class="font-serif text-xl text-gold mt-1" id="port-total-return"></p>
+                                    <p class="text-[10px] text-charcoal/50 mt-1" id="port-vs-benchmark"></p>
+                                </div>
+                                <div class="bg-white/60 border border-gold/20 rounded-xl p-4">
+                                    <p class="text-[10px] text-charcoal/50 uppercase tracking-wide font-medium">Unrealised Gain</p>
+                                    <p class="font-serif text-xl text-emerald-600 mt-1" id="port-unrealised"></p>
+                                    <p class="text-[10px] text-charcoal/50 mt-1">mark-to-market</p>
+                                </div>
+                                <div class="bg-white/60 border border-gold/20 rounded-xl p-4">
+                                    <p class="text-[10px] text-charcoal/50 uppercase tracking-wide font-medium">Income Received</p>
+                                    <p class="font-serif text-xl text-charcoal mt-1" id="port-income"></p>
+                                    <p class="text-[10px] text-charcoal/50 mt-1">dividends + interest</p>
+                                </div>
+                            </div>
+
+                            <!-- Component 2: Allocation Donut + Currency Breakdown -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                <div class="bg-white/60 border border-gold/20 rounded-xl p-5">
+                                    <h3 class="font-serif text-base text-charcoal mb-4">Asset Allocation</h3>
+                                    <div class="flex items-center gap-4">
+                                        <div class="relative w-36 h-36 flex-shrink-0">
+                                            <canvas id="allocation-chart"></canvas>
+                                            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                                <span class="font-serif text-lg text-charcoal">7</span>
+                                                <span class="text-[10px] text-charcoal/50">classes</span>
+                                            </div>
+                                        </div>
+                                        <div id="allocation-legend" class="flex flex-col gap-1.5 flex-1"></div>
+                                    </div>
+                                </div>
+                                <div class="bg-white/60 border border-gold/20 rounded-xl p-5">
+                                    <h3 class="font-serif text-base text-charcoal mb-4">Currency Exposure</h3>
+                                    <div id="currency-bars" class="flex flex-col gap-3"></div>
+                                    <p class="text-[10px] text-charcoal/40 mt-4">
+                                        Currency exposure reflects base currency denomination of underlying assets before hedging.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Component 3: Performance Line Chart -->
+                            <div class="bg-white/60 border border-gold/20 rounded-xl p-5 mb-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="font-serif text-base text-charcoal">Portfolio vs Benchmark</h3>
+                                    <div class="flex items-center gap-4 text-[10px]">
+                                        <div class="flex items-center gap-1.5">
+                                            <div class="w-5 h-0.5 bg-gold rounded"></div>
+                                            <span class="text-charcoal/60">Portfolio</span>
+                                        </div>
+                                        <div class="flex items-center gap-1.5">
+                                            <div class="w-5 h-0.5 rounded" style="border-top: 2px dashed rgba(44,44,53,0.3)"></div>
+                                            <span class="text-charcoal/60" id="benchmark-label"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="h-48">
+                                    <canvas id="performance-chart"></canvas>
+                                </div>
+                                <p class="text-[10px] text-charcoal/40 mt-3">
+                                    Cumulative returns shown. Illustrative only &mdash; does not reflect actual investment performance.
+                                </p>
+                            </div>
+
+                            <!-- Component 4: Holdings Table -->
+                            <div class="bg-white/60 border border-gold/20 rounded-xl p-5 mb-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="font-serif text-base text-charcoal">Holdings</h3>
+                                    <select id="holdings-filter"
+                                        class="text-[11px] border border-charcoal/20 rounded-lg px-2.5 py-1 bg-white text-charcoal focus:outline-none focus:border-gold">
+                                        <option value="all">All Asset Classes</option>
+                                    </select>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-sm">
+                                        <thead>
+                                            <tr class="border-b border-charcoal/10">
+                                                <th class="text-left text-[10px] font-semibold text-charcoal/50 uppercase tracking-wide pb-2 pr-3">Name</th>
+                                                <th class="text-left text-[10px] font-semibold text-charcoal/50 uppercase tracking-wide pb-2 pr-3 hidden md:table-cell">Class</th>
+                                                <th class="text-right text-[10px] font-semibold text-charcoal/50 uppercase tracking-wide pb-2 pr-3">Weight</th>
+                                                <th class="text-right text-[10px] font-semibold text-charcoal/50 uppercase tracking-wide pb-2 pr-3 hidden sm:table-cell">Value</th>
+                                                <th class="text-right text-[10px] font-semibold text-charcoal/50 uppercase tracking-wide pb-2">Return</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="holdings-body"></tbody>
+                                    </table>
+                                </div>
+                                <p class="text-[10px] text-charcoal/40 mt-4">
+                                    14 illustrative positions across 7 asset classes. Weights are approximate. Values in USD equivalent.
+                                </p>
+                            </div>
+
+                            <!-- Component 5: P&L Summary Card -->
+                            <div class="bg-charcoal rounded-xl p-5 mb-4">
+                                <h3 class="font-serif text-base text-white mb-4">Performance Summary</h3>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <p class="text-[10px] text-white/40 uppercase tracking-wide">Unrealised Gain</p>
+                                        <p class="font-serif text-xl text-gold mt-1" id="pnl-unrealised"></p>
+                                        <p class="text-[10px] text-white/30 mt-0.5">current open positions</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] text-white/40 uppercase tracking-wide">Realised Gain</p>
+                                        <p class="font-serif text-xl text-gold mt-1" id="pnl-realised"></p>
+                                        <p class="text-[10px] text-white/30 mt-0.5">closed positions</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] text-white/40 uppercase tracking-wide">Income Received</p>
+                                        <p class="font-serif text-xl text-gold mt-1" id="pnl-income2"></p>
+                                        <p class="text-[10px] text-white/30 mt-0.5">dividends + interest</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] text-white/40 uppercase tracking-wide">12-Month Return</p>
+                                        <p class="font-serif text-xl text-white mt-1" id="pnl-12m"></p>
+                                        <p class="text-[10px] text-white/30 mt-0.5" id="pnl-vs-bench"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] text-white/40 uppercase tracking-wide">Since Inception</p>
+                                        <p class="font-serif text-xl text-white mt-1" id="pnl-inception"></p>
+                                        <p class="text-[10px] text-white/30 mt-0.5">from Jan 2023</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] text-white/40 uppercase tracking-wide">Annualised Return</p>
+                                        <p class="font-serif text-xl text-white mt-1" id="pnl-annualised"></p>
+                                        <p class="text-[10px] text-white/30 mt-0.5">net of fees (illustrative)</p>
+                                    </div>
+                                </div>
+                                <div class="mt-5 pt-4 border-t border-white/10">
+                                    <p class="text-[10px] text-white/30 leading-relaxed">
+                                        This is an illustrative portfolio for educational and advisory purposes only.
+                                        All figures are hypothetical and do not represent actual investment results.
+                                        Past performance of illustrative benchmarks is not indicative of future results.
+                                        Your steward will develop your actual portfolio plan with you.
+                                    </p>
+                                </div>
+                            </div>
+
+                        </section>
+                    </div>
+
+                    <!-- ========== SPECIALIST PANEL ========== -->
+                    <section class="mt-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h2 class="font-serif text-xl text-charcoal">Your Specialist Team</h2>
+                            <span class="text-[10px] px-2.5 py-1 rounded-full bg-charcoal/5 text-charcoal/50">
+                                Matched to your jurisdiction
+                            </span>
+                        </div>
+                        <p class="text-sm text-charcoal/50 mb-5">
+                            Independent legal and tax specialists pre-matched to your country.
+                            Book directly &mdash; no referral needed.
+                        </p>
+                        <div id="specialist-panel" class="min-h-[120px]">
+                            <div class="text-center py-10 text-charcoal/30 text-sm animate-pulse">
+                                Loading your specialists&hellip;
+                            </div>
+                        </div>
+                    </section>
+
                 </div>
 
                 <!-- ===== RIGHT COLUMN: Tabbed Panel ===== -->
@@ -201,6 +394,9 @@
         </div>
 
     </main>
+
+    <!-- Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>

@@ -326,6 +326,18 @@
                     <label class="form-label">Case Title</label>
                     <input type="text" id="client-case-title" class="form-input" placeholder="Inheritance Stewardship" value="Inheritance Stewardship">
                 </div>
+                <div>
+                    <label class="form-label">Country / Jurisdiction</label>
+                    <select id="client-country" class="form-input">
+                        <option value="">Select country...</option>
+                        <option value="indonesia">Indonesia</option>
+                        <option value="singapore">Singapore</option>
+                        <option value="philippines">Philippines</option>
+                        <option value="malaysia">Malaysia</option>
+                        <option value="thailand">Thailand</option>
+                        <option value="vietnam">Vietnam</option>
+                    </select>
+                </div>
                 <button type="button" class="btn-gold btn-sm w-full" onclick="
                     AdminDashboard.addClient({
                         firstName: document.getElementById('client-first-name').value.trim(),
@@ -333,6 +345,7 @@
                         email: document.getElementById('client-email').value.trim(),
                         phone: document.getElementById('client-phone').value.trim(),
                         caseTitle: document.getElementById('client-case-title').value.trim(),
+                        country: document.getElementById('client-country').value,
                     })
                 ">Create Client & Case</button>
             </form>

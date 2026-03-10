@@ -114,6 +114,9 @@ const ClientDashboard = (() => {
 
             // New: unread count for glance bar
             loadUnreadCount(currentCase.id, profile.uid);
+
+            // Specialist panel
+            renderSpecialistPanel();
         } catch (err) {
             console.error('Failed to load case:', err);
             showError('Unable to load your case data. Please try again later.');
@@ -166,6 +169,11 @@ const ClientDashboard = (() => {
                 }
             } catch (err) {
                 console.error('Failed to fetch steward data:', err);
+                // Fallback: show initials from case data
+                const stewardAvatar = document.getElementById('steward-avatar');
+                if (stewardAvatar && !stewardAvatar.innerHTML.includes('img')) {
+                    stewardAvatar.textContent = getInitials(caseData.assignedEmployeeName || 'S');
+                }
             }
         }
 
@@ -229,6 +237,293 @@ const ClientDashboard = (() => {
         const updatedEl = document.getElementById('status-updated');
         if (updatedEl && updatedAt) {
             updatedEl.textContent = `Updated ${formatDate(updatedAt)}`;
+        }
+    }
+
+    // ─── Portfolio Mock Data ───
+
+    const MOCK_PORTFOLIO = {
+        totalValue: 2450000,
+        currency: 'USD',
+        inceptionDate: '2023-01-01',
+        lastUpdated: '2025-03-01',
+        benchmarkName: 'MSCI AC World',
+        allocation: [
+            { class: 'Public Equities',  pct: 32, color: '#c9a96e' },
+            { class: 'Private Equity',   pct: 20, color: '#2C2C35' },
+            { class: 'Fixed Income',     pct: 15, color: '#8B7355' },
+            { class: 'Real Estate',      pct: 12, color: '#D4B896' },
+            { class: 'Hedge Funds',      pct: 10, color: '#6B5B45' },
+            { class: 'Cash & Equiv.',    pct:  6, color: '#A89070' },
+            { class: 'Impact / ESG',     pct:  5, color: '#9CAF88' },
+        ],
+        performance: {
+            labels: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
+            portfolio:  [0.0, 1.2, 2.1, 3.8, 3.1, 4.6, 5.2, 7.1, 6.8, 8.4, 9.1, 10.3],
+            benchmark:  [0.0, 0.8, 1.5, 3.0, 2.2, 3.5, 4.1, 5.8, 5.2, 7.0, 7.6,  8.9],
+        },
+        pnl: {
+            unrealisedGain:  186500,
+            realisedGain:     42300,
+            incomeReceived:   38750,
+            totalReturn:     10.3,
+            vsInception:     11.8,
+            annualised:       8.7,
+        },
+        currencies: [
+            { currency: 'USD', pct: 48 },
+            { currency: 'SGD', pct: 22 },
+            { currency: 'EUR', pct: 14 },
+            { currency: 'HKD', pct:  9 },
+            { currency: 'THB', pct:  7 },
+        ],
+        holdings: [
+            { name: 'MSCI World Index Fund',         class: 'Public Equities', region: 'Global',       weight: 14.0, value: 343000,  returnPct:  12.4, returnUSD:  37900 },
+            { name: 'Asia Pacific Equity Fund',      class: 'Public Equities', region: 'Asia Pacific', weight: 10.0, value: 245000,  returnPct:   7.8, returnUSD:  17700 },
+            { name: 'Emerging Markets Growth Fund',  class: 'Public Equities', region: 'EM',           weight:  8.0, value: 196000,  returnPct:   5.2, returnUSD:   9700 },
+            { name: 'SEA Buyout Fund III',           class: 'Private Equity',  region: 'SEA',          weight: 12.0, value: 294000,  returnPct:  18.6, returnUSD:  45900 },
+            { name: 'Global PE Co-Investment',       class: 'Private Equity',  region: 'Global',       weight:  8.0, value: 196000,  returnPct:  14.2, returnUSD:  23500 },
+            { name: 'Investment Grade Bond Fund',    class: 'Fixed Income',    region: 'Global',       weight:  9.0, value: 220500,  returnPct:   4.1, returnUSD:   8700 },
+            { name: 'Short Duration SGD Bonds',      class: 'Fixed Income',    region: 'Singapore',    weight:  6.0, value: 147000,  returnPct:   3.8, returnUSD:   5400 },
+            { name: 'Singapore Commercial REIT',     class: 'Real Estate',     region: 'Singapore',    weight:  7.0, value: 171500,  returnPct:   6.3, returnUSD:  10200 },
+            { name: 'SEA Real Estate Fund',          class: 'Real Estate',     region: 'SEA',          weight:  5.0, value: 122500,  returnPct:   4.7, returnUSD:   5500 },
+            { name: 'Global Macro Hedge Fund',       class: 'Hedge Funds',     region: 'Global',       weight:  6.0, value: 147000,  returnPct:   9.2, returnUSD:  12400 },
+            { name: 'Long/Short Asia Equity Fund',   class: 'Hedge Funds',     region: 'Asia',         weight:  4.0, value:  98000,  returnPct:   7.1, returnUSD:   6500 },
+            { name: 'Cash & Money Market',           class: 'Cash & Equiv.',   region: 'Multi',        weight:  6.0, value: 147000,  returnPct:   4.8, returnUSD:   6700 },
+            { name: 'Women in Finance VC Fund',      class: 'Impact / ESG',    region: 'Global',       weight:  3.0, value:  73500,  returnPct:  11.4, returnUSD:   7600 },
+            { name: 'SEA Climate Tech Fund',         class: 'Impact / ESG',    region: 'SEA',          weight:  2.0, value:  49000,  returnPct:   8.9, returnUSD:   3900 },
+        ],
+    };
+
+    // ─── Portfolio: Seed & Load ───
+
+    let portfolioLoaded = false;
+
+    async function ensurePortfolioSeeded(caseId) {
+        const portRef = db.collection('cases').doc(caseId).collection('portfolio').doc('overview');
+        try {
+            const snap = await portRef.get();
+            if (!snap.exists) {
+                await portRef.set({ ...MOCK_PORTFOLIO, seededAt: firebase.firestore.FieldValue.serverTimestamp() });
+                const newSnap = await portRef.get();
+                return newSnap.data();
+            }
+            return snap.data();
+        } catch (err) {
+            console.warn('Portfolio Firestore access failed, using local mock data:', err);
+            return MOCK_PORTFOLIO;
+        }
+    }
+
+    // ─── Portfolio: Render Functions ───
+
+    function formatCurrency(val, currency) {
+        currency = currency || 'USD';
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency', currency: currency, maximumFractionDigits: 0
+        }).format(val);
+    }
+
+    function renderPortfolioSummary(p) {
+        const el = (id) => document.getElementById(id);
+        el('port-total-value').textContent = formatCurrency(p.totalValue, p.currency);
+        el('port-currency-label').textContent = 'Illustrative \u00B7 as of ' + p.lastUpdated;
+        el('port-total-return').textContent = '+' + p.pnl.totalReturn + '%';
+        const benchReturn = p.performance.benchmark[p.performance.benchmark.length - 1];
+        el('port-vs-benchmark').textContent = '+' + (p.pnl.totalReturn - benchReturn).toFixed(1) + '% vs ' + p.benchmarkName;
+        el('port-unrealised').textContent = '+' + formatCurrency(p.pnl.unrealisedGain, p.currency);
+        el('port-income').textContent = formatCurrency(p.pnl.incomeReceived, p.currency);
+    }
+
+    function renderAllocationChart(allocation) {
+        const ctx = document.getElementById('allocation-chart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: allocation.map(a => a.class),
+                datasets: [{
+                    data: allocation.map(a => a.pct),
+                    backgroundColor: allocation.map(a => a.color),
+                    borderWidth: 2,
+                    borderColor: '#F0EBE3',
+                    hoverOffset: 6,
+                }]
+            },
+            options: {
+                cutout: '68%',
+                plugins: { legend: { display: false }, tooltip: {
+                    callbacks: { label: function(ctx) { return ' ' + ctx.label + ': ' + ctx.parsed + '%'; } }
+                }},
+                animation: { animateRotate: true, duration: 800 }
+            }
+        });
+
+        const legend = document.getElementById('allocation-legend');
+        legend.innerHTML = '';
+        allocation.forEach(a => {
+            legend.innerHTML += '<div class="flex items-center justify-between gap-2">' +
+                '<div class="flex items-center gap-1.5">' +
+                '<div class="w-2 h-2 rounded-full flex-shrink-0" style="background:' + a.color + '"></div>' +
+                '<span class="text-[10px] text-charcoal/70">' + a.class + '</span>' +
+                '</div>' +
+                '<span class="text-[10px] font-semibold text-charcoal">' + a.pct + '%</span>' +
+                '</div>';
+        });
+    }
+
+    function renderCurrencyBars(currencies) {
+        const container = document.getElementById('currency-bars');
+        container.innerHTML = '';
+        currencies.forEach(c => {
+            container.innerHTML += '<div>' +
+                '<div class="flex justify-between text-[10px] mb-1">' +
+                '<span class="font-medium text-charcoal">' + c.currency + '</span>' +
+                '<span class="text-charcoal/60">' + c.pct + '%</span>' +
+                '</div>' +
+                '<div class="h-1.5 bg-cream rounded-full overflow-hidden">' +
+                '<div class="h-1.5 bg-gold rounded-full transition-all duration-700" style="width:' + c.pct + '%"></div>' +
+                '</div></div>';
+        });
+    }
+
+    function renderPerformanceChart(perf, benchmarkName) {
+        document.getElementById('benchmark-label').textContent = benchmarkName;
+        const ctx = document.getElementById('performance-chart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: perf.labels,
+                datasets: [
+                    {
+                        label: 'Portfolio',
+                        data: perf.portfolio,
+                        borderColor: '#c9a96e',
+                        backgroundColor: 'rgba(201,169,110,0.08)',
+                        borderWidth: 2.5,
+                        pointRadius: 3,
+                        pointBackgroundColor: '#c9a96e',
+                        fill: true,
+                        tension: 0.4,
+                    },
+                    {
+                        label: benchmarkName,
+                        data: perf.benchmark,
+                        borderColor: 'rgba(44,44,53,0.3)',
+                        borderWidth: 2,
+                        borderDash: [5, 4],
+                        pointRadius: 0,
+                        fill: false,
+                        tension: 0.4,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#2C2C35',
+                        titleColor: '#c9a96e',
+                        bodyColor: '#F0EBE3',
+                        padding: 10,
+                        callbacks: {
+                            label: function(ctx) { return ' ' + ctx.dataset.label + ': +' + ctx.parsed.y.toFixed(1) + '%'; }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: 'rgba(44,44,53,0.4)', font: { size: 10 } }
+                    },
+                    y: {
+                        grid: { color: 'rgba(44,44,53,0.06)' },
+                        ticks: {
+                            color: 'rgba(44,44,53,0.4)',
+                            font: { size: 10 },
+                            callback: function(v) { return '+' + v + '%'; }
+                        }
+                    }
+                },
+                animation: { duration: 900, easing: 'easeInOutQuart' }
+            }
+        });
+    }
+
+    function renderHoldings(holdings) {
+        const filter = document.getElementById('holdings-filter');
+        const classes = [];
+        holdings.forEach(h => { if (classes.indexOf(h.class) === -1) classes.push(h.class); });
+        // Clear existing options beyond "All"
+        filter.innerHTML = '<option value="all">All Asset Classes</option>';
+        classes.forEach(c => {
+            filter.innerHTML += '<option value="' + c + '">' + c + '</option>';
+        });
+
+        function renderRows(data) {
+            const tbody = document.getElementById('holdings-body');
+            tbody.innerHTML = '';
+            data.forEach(h => {
+                const isPos = h.returnPct >= 0;
+                tbody.innerHTML +=
+                    '<tr class="border-b border-charcoal/5 hover:bg-cream/40 transition-colors">' +
+                    '<td class="py-2 pr-3"><p class="font-medium text-charcoal text-xs">' + escapeHtml(h.name) + '</p><p class="text-[10px] text-charcoal/40">' + h.region + '</p></td>' +
+                    '<td class="py-2 pr-3 hidden md:table-cell"><span class="text-[10px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold font-medium">' + h.class + '</span></td>' +
+                    '<td class="py-2 pr-3 text-right"><span class="text-xs text-charcoal font-medium">' + h.weight.toFixed(1) + '%</span></td>' +
+                    '<td class="py-2 pr-3 text-right hidden sm:table-cell"><span class="text-xs text-charcoal">' + formatCurrency(h.value) + '</span></td>' +
+                    '<td class="py-2 text-right">' +
+                    '<span class="text-xs font-semibold ' + (isPos ? 'text-emerald-600' : 'text-red-500') + '">' + (isPos ? '+' : '') + h.returnPct + '%</span>' +
+                    '<p class="text-[10px] ' + (isPos ? 'text-emerald-500' : 'text-red-400') + '">' + (isPos ? '+' : '') + formatCurrency(h.returnUSD) + '</p>' +
+                    '</td></tr>';
+            });
+        }
+
+        renderRows(holdings);
+        filter.addEventListener('change', function(e) {
+            var val = e.target.value;
+            renderRows(val === 'all' ? holdings : holdings.filter(function(h) { return h.class === val; }));
+        });
+    }
+
+    function renderPnL(pnl, benchmarkName, portfolioReturn) {
+        const benchReturn = 8.9;
+        const outperformance = (portfolioReturn - benchReturn).toFixed(1);
+        const el = (id) => document.getElementById(id);
+        el('pnl-unrealised').textContent = '+' + formatCurrency(pnl.unrealisedGain);
+        el('pnl-realised').textContent   = '+' + formatCurrency(pnl.realisedGain);
+        el('pnl-income2').textContent    = formatCurrency(pnl.incomeReceived);
+        el('pnl-12m').textContent        = '+' + pnl.totalReturn + '%';
+        el('pnl-vs-bench').textContent   = '+' + outperformance + '% vs ' + benchmarkName;
+        el('pnl-inception').textContent  = '+' + pnl.vsInception + '%';
+        el('pnl-annualised').textContent = '+' + pnl.annualised + '% p.a.';
+    }
+
+    async function loadPortfolio(caseId) {
+        if (portfolioLoaded) return;
+        portfolioLoaded = true;
+        const data = await ensurePortfolioSeeded(caseId);
+        renderPortfolioSummary(data);
+        renderAllocationChart(data.allocation);
+        renderCurrencyBars(data.currencies);
+        renderPerformanceChart(data.performance, data.benchmarkName);
+        renderHoldings(data.holdings);
+        renderPnL(data.pnl, data.benchmarkName, data.pnl.totalReturn);
+    }
+
+    // ─── Center View Switching (Milestones / Portfolio) ───
+
+    function switchCenterView(viewName) {
+        document.querySelectorAll('.center-view-tab').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.view === viewName);
+        });
+        document.getElementById('center-view-milestones').classList.toggle('hidden', viewName !== 'milestones');
+        document.getElementById('center-view-portfolio').classList.toggle('hidden', viewName !== 'portfolio');
+
+        // Lazy-load portfolio on first switch
+        if (viewName === 'portfolio' && currentCase) {
+            loadPortfolio(currentCase.id);
         }
     }
 
@@ -669,7 +964,199 @@ const ClientDashboard = (() => {
         return div.innerHTML;
     }
 
-    return { init, switchTab };
+    // ─── Specialist Panel ───
+
+    const SPECIALISTS = {
+        indonesia: {
+            country: 'Indonesia',
+            flag: '\u{1F1EE}\u{1F1E9}',
+            legal: {
+                name: 'Budi Santoso',
+                title: 'Senior Inheritance & Estate Lawyer',
+                firm: 'Santoso & Partners, Jakarta',
+                focus: 'Civil Code inheritance, Islamic succession law (Faraid), forced heirship disputes, notarial services.',
+                initials: 'BS',
+                calLink: '#',
+            },
+            tax: {
+                name: 'Dewi Kurniawan',
+                title: 'Tax Advisor \u2014 Property & Estate',
+                firm: 'PwC Indonesia',
+                focus: 'BPHTB property transfer tax, unpaid estate liabilities, foreign ownership structures.',
+                initials: 'DK',
+                calLink: '#',
+            },
+        },
+        singapore: {
+            country: 'Singapore',
+            flag: '\u{1F1F8}\u{1F1EC}',
+            legal: {
+                name: 'Rachel Lim',
+                title: 'Estate Planning & Trust Specialist',
+                firm: 'Allen & Gledhill LLP',
+                focus: 'Intestate Succession Act, Wills Act, trust structuring, Women\'s Charter, digital asset estates.',
+                initials: 'RL',
+                calLink: '#',
+            },
+            tax: {
+                name: 'James Teo',
+                title: 'Private Client Tax Advisor',
+                firm: 'Deloitte Singapore',
+                focus: 'Income tax on estate assets, SRS planning, cross-border structuring for Singapore-domiciled families.',
+                initials: 'JT',
+                calLink: '#',
+            },
+        },
+        philippines: {
+            country: 'Philippines',
+            flag: '\u{1F1F5}\u{1F1ED}',
+            legal: {
+                name: 'Maria Santos',
+                title: 'Civil Law & Succession Specialist',
+                firm: 'SyCip Salazar Hernandez & Gatmaitan',
+                focus: 'Compulsory heirship (legitime), wills, intestate succession, estate administration.',
+                initials: 'MS',
+                calLink: '#',
+            },
+            tax: {
+                name: 'Carlo Reyes',
+                title: 'Estate Tax Specialist',
+                firm: 'SGV & Co. (EY Philippines)',
+                focus: 'Estate tax filing (6% flat rate), deductions, one-year filing deadlines, BIR compliance.',
+                initials: 'CR',
+                calLink: '#',
+            },
+        },
+        malaysia: {
+            country: 'Malaysia',
+            flag: '\u{1F1F2}\u{1F1FE}',
+            legal: {
+                name: 'Nurul Huda Ibrahim',
+                title: 'Dual-System Estate Lawyer',
+                firm: 'Zaid Ibrahim & Co.',
+                focus: 'Distribution Act 1958, Faraid Islamic succession, hibah, amanah trust structures.',
+                initials: 'NI',
+                calLink: '#',
+            },
+            tax: {
+                name: 'David Wong',
+                title: 'Property & Capital Gains Advisor',
+                firm: 'KPMG Malaysia',
+                focus: 'Real Property Gains Tax (RPGT) on inherited property, private residence exemptions, stamp duty.',
+                initials: 'DW',
+                calLink: '#',
+            },
+        },
+        thailand: {
+            country: 'Thailand',
+            flag: '\u{1F1F9}\u{1F1ED}',
+            legal: {
+                name: 'Siriporn Chaiyasit',
+                title: 'Civil & Commercial Code Specialist',
+                firm: 'Baker McKenzie Thailand',
+                focus: 'Statutory heirs hierarchy, Thai wills, foreign ownership restrictions, Land Department procedures.',
+                initials: 'SC',
+                calLink: '#',
+            },
+            tax: {
+                name: 'Thanakorn Pattanaporn',
+                title: 'Inheritance & Property Tax Advisor',
+                firm: 'Deloitte Thailand',
+                focus: 'Inheritance tax (>100M THB threshold), property transfer fees, Land Department registration.',
+                initials: 'TP',
+                calLink: '#',
+            },
+        },
+        vietnam: {
+            country: 'Vietnam',
+            flag: '\u{1F1FB}\u{1F1F3}',
+            legal: {
+                name: 'Linh Pham',
+                title: 'Civil Law & Succession Specialist',
+                firm: 'VILAF (Vietnam International Law Firm)',
+                focus: 'Heirs-at-law hierarchy, wills and forced heirs, foreign ownership restrictions on land.',
+                initials: 'LP',
+                calLink: '#',
+            },
+            tax: {
+                name: 'Minh Tran',
+                title: 'Personal Income & Estate Tax Advisor',
+                firm: 'PwC Vietnam',
+                focus: '10% inheritance tax on assets over 10M VND, family exemptions, cross-border asset planning.',
+                initials: 'MT',
+                calLink: '#',
+            },
+        },
+    };
+
+    function renderSpecialistCard(specialist, type) {
+        return `
+            <div class="bg-white/60 border border-gold/20 rounded-xl p-5 flex flex-col">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-14 h-14 rounded-full bg-gold/10 border-2 border-gold/40 flex items-center
+                                justify-center font-serif text-lg font-bold text-gold flex-shrink-0">
+                        ${specialist.initials}
+                    </div>
+                    <div>
+                        <span class="text-xs px-2 py-0.5 rounded-full bg-gold/10 text-gold font-medium">
+                            ${type} Specialist
+                        </span>
+                        <h4 class="font-serif text-base text-charcoal mt-1 leading-tight">${escapeHtml(specialist.name)}</h4>
+                        <p class="text-xs text-charcoal/50">${escapeHtml(specialist.title)}</p>
+                        <p class="text-xs text-charcoal/40">${escapeHtml(specialist.firm)}</p>
+                    </div>
+                </div>
+                <p class="text-xs text-charcoal/60 leading-relaxed flex-1">${escapeHtml(specialist.focus)}</p>
+                <a href="${specialist.calLink}"
+                   class="mt-5 w-full text-center block px-4 py-2.5 bg-charcoal text-white text-xs font-semibold
+                          rounded-lg hover:bg-gold transition-colors">
+                    Book a 30-Min Consultation \u2192
+                </a>
+            </div>
+        `;
+    }
+
+    function renderSpecialistPanel() {
+        const panel = document.getElementById('specialist-panel');
+        if (!panel) return;
+
+        const countryKey = (currentProfile.country || '').toLowerCase();
+        const data = SPECIALISTS[countryKey];
+
+        if (!data) {
+            panel.innerHTML = `
+                <div class="text-center py-8 text-charcoal/40 text-sm">
+                    No specialist assigned yet. Your steward will connect you with the right advisor
+                    once your country profile is confirmed.
+                </div>
+            `;
+            return;
+        }
+
+        panel.innerHTML = `
+            <div class="flex items-center gap-3 mb-6">
+                <span class="text-3xl">${data.flag}</span>
+                <div>
+                    <h3 class="font-serif text-xl text-charcoal">Your ${escapeHtml(data.country)} Specialist Team</h3>
+                    <p class="text-xs text-charcoal/50 mt-0.5">
+                        Pre-matched to your jurisdiction \u2014 book directly below.
+                    </p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                ${renderSpecialistCard(data.legal, 'Legal')}
+                ${renderSpecialistCard(data.tax, 'Tax')}
+            </div>
+            <p class="text-xs text-charcoal/35 mt-5 text-center">
+                Based in a different country or need a different specialist?
+                <span class="text-gold hover:underline cursor-pointer" onclick="ClientDashboard.switchTab('messages')">
+                    Message your steward \u2192
+                </span>
+            </p>
+        `;
+    }
+
+    return { init, switchTab, switchCenterView };
 })();
 
 // ─── Page Init ───

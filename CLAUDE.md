@@ -22,24 +22,26 @@ Legacy Stewards is a stewardship consulting platform for next-generation women o
 ## File Structure
 
 ```
-├── index.html                 # Marketing site (single page, ~1200 lines)
+├── index.html                 # Marketing site (team cards, services, advisory, assessment)
 ├── education.html             # Financial Education Hub (8 modules, filters, accordions)
 ├── assessment-finance.html    # Financial readiness assessment
 ├── assessment-tax.html        # Tax readiness assessment
 ├── assessment-legal.html      # Legal readiness assessment
 ├── login.html                 # Unified login page
-├── client-dashboard.html      # Client portal (U-shaped 3-column layout)
+├── client-dashboard.html      # Client portal (U-shaped 3-column, portfolio, specialists)
 ├── admin-dashboard.html       # Employee/admin portal
 ├── css/
 │   └── shared.css             # Shared dashboard + tab/column styles
+├── img/
+│   └── team/                  # Team member portrait photos (stewards + landing page)
 ├── js/
 │   ├── firebase-config.js     # Firebase initialization + global refs
 │   ├── auth.js                # Auth module (login, logout, guards, role routing)
-│   ├── client-dashboard.js    # Client dashboard logic (3-column, tabs, real-time)
-│   └── admin-dashboard.js     # Admin dashboard logic (CRUD, views, modals)
+│   ├── client-dashboard.js    # Client dashboard logic (3-column, tabs, portfolio, specialists)
+│   └── admin-dashboard.js     # Admin dashboard logic (CRUD, views, modals, team photos)
 ├── .claude/
 │   └── launch.json            # Dev server config for Claude preview
-├── seed-data.html             # One-time Firestore data seeder (not committed)
+├── seed-data.html             # Firestore data seeder (6 clients across phases 1-6, 2 stewards)
 └── package.json               # Dev dependency (serve)
 ```
 
@@ -47,12 +49,12 @@ Legacy Stewards is a stewardship consulting platform for next-generation women o
 
 ### Collections
 
-- **`users/{uid}`** — `email`, `displayName`, `role` ("client"|"employee"|"admin"), `phone`, `assignedEmployeeId`, `createdAt`
-- **`cases/{caseId}`** — `clientId`, `clientName`, `clientEmail`, `assignedEmployeeId`, `assignedEmployeeName`, `status`, `title`, `summary`, `createdAt`, `updatedAt`
+- **`users/{uid}`** — `email`, `displayName`, `role` ("client"|"employee"|"admin"), `phone`, `assignedEmployeeId`, `country`, `photoURL`, `createdAt`
+- **`cases/{caseId}`** — `clientId`, `clientName`, `clientEmail`, `assignedEmployeeId`, `assignedEmployeeName`, `status`, `phase` (1-6), `title`, `summary`, `createdAt`, `updatedAt`
 - **`cases/{caseId}/milestones/{id}`** — `title`, `description`, `status` ("completed"|"in-progress"|"upcoming"), `order`, `completedAt`, `updatedAt`, `updatedBy`
 - **`cases/{caseId}/notes/{id}`** — `content`, `authorId`, `authorName`, `createdAt`, `visibleToClient` (boolean)
 - **`cases/{caseId}/documents/{id}`** — `name`, `fileName`, `storagePath`, `downloadUrl`, `uploadedBy`, `uploadedByName`, `uploadedAt`, `fileSize`, `mimeType`, `visibleToClient`
-- **`teamMembers/{uid}`** — `displayName`, `email`, `role`, `activeCaseCount`, `joinedAt`
+- **`teamMembers/{uid}`** — `displayName`, `email`, `role`, `photoURL`, `activeCaseCount`, `joinedAt`
 
 ### Required Firestore Indexes
 
@@ -92,8 +94,12 @@ Two composite indexes are needed (auto-created via Firebase Console links):
 - **Default milestones** — New cases auto-populate with 7 template milestones (see `DEFAULT_MILESTONES` in admin-dashboard.js)
 - **Visibility toggle** — Notes and documents have a `visibleToClient` boolean; client queries filter on this
 - **U-shaped dashboard** — Client dashboard uses a 3-column grid (`grid-cols-[200px_1fr_320px]`) with independent scrollable columns and tab switching (Messages/Notes/Docs) via `ClientDashboard.switchTab()`
+- **Portfolio view** — Client dashboard center column has switchable views (milestones/portfolio) via `ClientDashboard.switchCenterView()`; uses Chart.js for asset allocation doughnut and performance line chart
+- **Specialist panel** — Client dashboard auto-surfaces jurisdiction-matched legal & tax specialists based on `users/{uid}.country` field; data in `SPECIALISTS` constant covers 6 SEA countries
+- **Steward photos** — Admin dashboard team table and seed data include `photoURL` fields; client dashboard uses initials fallback when Firestore permission-denied
 - **Education accordions** — `education.html` uses CSS `max-height` transitions for expand/collapse, only one module open at a time, with URL hash auto-opening for cross-page linking
 - **Topic filtering** — Education modules have `data-topic` attributes; filter pills toggle visibility
+- **Landing page team cards** — `index.html` renders 4 team member profile cards via JS (`TEAM_MEMBERS` array + `renderTeamCards()`), with photos from `img/team/`
 
 ## Development
 

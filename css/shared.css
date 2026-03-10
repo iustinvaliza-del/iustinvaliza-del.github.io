@@ -294,6 +294,21 @@ body { background: #F0EBE3; color: #2C2C35; font-family: 'Inter', sans-serif; ov
 .dashboard-column::-webkit-scrollbar-track { background: transparent; }
 .dashboard-column::-webkit-scrollbar-thumb { background: rgba(201, 169, 110, 0.25); border-radius: 2px; }
 
+/* ─── Center View Toggle (Milestones / Portfolio) ─── */
+.center-view-tab {
+    color: #6B6B7B;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+.center-view-tab:hover { color: #2C2C35; }
+.center-view-tab.active {
+    color: #2C2C35;
+    background: #FDFAF6;
+    font-weight: 600;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
 /* ─── Login Page ─── */
 .login-container {
     min-height: 100vh; display: flex; align-items: center; justify-content: center;
