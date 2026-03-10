@@ -18,6 +18,7 @@ Legacy Stewards is a stewardship consulting platform for next-generation women o
 - **Firebase SDK**: Compat v10.12 via CDN (no build tools/bundler)
 - **Hosting**: GitHub Pages
 - **Dev Server**: `serve` via Node.js (`node ./node_modules/serve/build/main.js -l 3000 .`)
+- **Firebase CLI**: `firebase-tools` v15.9 (deploy Firestore rules with `firebase deploy --only firestore:rules`)
 
 ## File Structure
 
@@ -41,6 +42,8 @@ Legacy Stewards is a stewardship consulting platform for next-generation women o
 │   └── admin-dashboard.js     # Admin dashboard logic (CRUD, views, modals, team photos)
 ├── .claude/
 │   └── launch.json            # Dev server config for Claude preview
+├── firestore.rules            # Firestore security rules (deployed via Firebase CLI)
+├── firebase.json              # Firebase CLI config (rules path)
 ├── seed-data.html             # Firestore data seeder (6 clients across phases 1-6, 2 stewards)
 └── package.json               # Dev dependency (serve)
 ```
@@ -52,6 +55,7 @@ Legacy Stewards is a stewardship consulting platform for next-generation women o
 - **`users/{uid}`** — `email`, `displayName`, `role` ("client"|"employee"|"admin"), `phone`, `assignedEmployeeId`, `country`, `photoURL`, `createdAt`
 - **`cases/{caseId}`** — `clientId`, `clientName`, `clientEmail`, `assignedEmployeeId`, `assignedEmployeeName`, `status`, `phase` (1-6), `title`, `summary`, `createdAt`, `updatedAt`
 - **`cases/{caseId}/milestones/{id}`** — `title`, `description`, `status` ("completed"|"in-progress"|"upcoming"), `order`, `completedAt`, `updatedAt`, `updatedBy`
+- **`cases/{caseId}/messages/{id}`** — `text`, `senderId`, `senderName`, `senderRole` ("client"|"steward"), `timestamp`, `read` (boolean)
 - **`cases/{caseId}/notes/{id}`** — `content`, `authorId`, `authorName`, `createdAt`, `visibleToClient` (boolean)
 - **`cases/{caseId}/documents/{id}`** — `name`, `fileName`, `storagePath`, `downloadUrl`, `uploadedBy`, `uploadedByName`, `uploadedAt`, `fileSize`, `mimeType`, `visibleToClient`
 - **`teamMembers/{uid}`** — `displayName`, `email`, `role`, `photoURL`, `activeCaseCount`, `joinedAt`
@@ -90,7 +94,8 @@ Two composite indexes are needed (auto-created via Firebase Console links):
 
 - **No build tools** — everything is CDN-based, no npm scripts needed for the app itself
 - **IIFE modules** — `auth.js`, `client-dashboard.js`, `admin-dashboard.js` all use the revealing module pattern
-- **Real-time updates** — Client dashboard uses `onSnapshot` for milestones and notes
+- **Real-time updates** — Client dashboard uses `onSnapshot` for milestones, notes, and messages
+- **Real-time messaging** — Both client and admin dashboards support live chat via `cases/{caseId}/messages` subcollection; client sends as `senderRole: 'client'`, steward as `'steward'`; auto-read marking and unread badge
 - **Default milestones** — New cases auto-populate with 7 template milestones (see `DEFAULT_MILESTONES` in admin-dashboard.js)
 - **Visibility toggle** — Notes and documents have a `visibleToClient` boolean; client queries filter on this
 - **U-shaped dashboard** — Client dashboard uses a 3-column grid (`grid-cols-[200px_1fr_320px]`) with independent scrollable columns and tab switching (Messages/Notes/Docs) via `ClientDashboard.switchTab()`
@@ -128,3 +133,4 @@ Then open `http://localhost:3000`
 - Firebase Storage requires the Blaze plan (pay-as-you-go). Document upload won't work on the free Spark plan.
 - The `storage` global in `firebase-config.js` gracefully handles missing Storage SDK (returns `null`).
 - `seed-data.html` is a one-time seeder page — not committed to git. Run it at `localhost:3000/seed-data.html` if you need to re-seed.
+- **Firestore rules** are managed via `firestore.rules` and deployed with `firebase deploy --only firestore:rules --project legacy-stewards`. Rules require authentication for all reads/writes. If rules expire or permissions break, redeploy.

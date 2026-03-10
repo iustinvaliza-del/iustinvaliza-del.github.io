@@ -28,6 +28,7 @@ A dedicated stewardship platform for next-generation women leading their family'
 ### Client Portal
 - Secure login with role-based access
 - U-shaped 3-column layout: journey phases (left), milestones (center), tabbed panel (right)
+- Real-time messaging with assigned steward (gold/charcoal chat bubbles, auto-read, unread counts)
 - Tab switching between Messages, Notes, and Documents in the right panel
 - Portfolio overview with Chart.js asset allocation and performance charts
 - Jurisdiction-matched specialist panel (legal & tax advisors per country)
@@ -47,6 +48,7 @@ A dedicated stewardship platform for next-generation women leading their family'
 
 - **Frontend**: HTML, Tailwind CSS (CDN), Vanilla JavaScript
 - **Backend**: Firebase Authentication, Cloud Firestore, Firebase Storage
+- **Deployment**: Firebase CLI for Firestore rules (`firebase deploy --only firestore:rules`)
 - **Fonts**: Playfair Display + Inter (Google Fonts)
 - **Charts**: Chart.js 4.4.0 (CDN)
 - **Animations**: GSAP ScrollTrigger
@@ -100,6 +102,8 @@ Open [http://localhost:3000](http://localhost:3000)
 │   ├── auth.js                # Authentication & role routing
 │   ├── client-dashboard.js    # Client dashboard logic
 │   └── admin-dashboard.js     # Admin dashboard logic
+├── firestore.rules            # Firestore security rules (deployed via Firebase CLI)
+├── firebase.json              # Firebase CLI configuration
 ├── seed-data.html             # Firestore data seeder (6 clients, 2 stewards)
 └── CLAUDE.md                  # Detailed project documentation
 ```
