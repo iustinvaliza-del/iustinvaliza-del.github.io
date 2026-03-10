@@ -19,7 +19,7 @@ A dedicated stewardship platform for next-generation women leading their family'
 - GSAP scroll animations and custom particle system
 
 ### Financial Education Hub
-- 8 comprehensive modules covering investment fundamentals, portfolio construction, benchmarks, risk management, and impact investing
+- 11 comprehensive modules covering investment fundamentals, portfolio construction, benchmarks, risk management, ESG frameworks, philanthropy vs impact investing, and SDG-aligned portfolios
 - Topic-based filtering (Fundamentals, Portfolio, Benchmarks, Risk, Impact)
 - Accordion-style module expansion with styled tables, formula blocks, pull quotes, and key-term callouts
 - URL hash support for cross-page deep linking from marketing site
@@ -37,9 +37,10 @@ A dedicated stewardship platform for next-generation women leading their family'
 - Compact mobile layout with horizontal journey pills and stacked sections
 
 ### Admin Dashboard
-- Dashboard overview with key metrics (active clients, cases in progress)
+- Enriched dashboard overview with illustrative financial metrics (AUM, portfolio return, revenue pipeline)
+- Case status breakdown and Cases by Phase distribution chart (Chart.js)
 - Client management with search, filter, and status tracking
-- Case detail view with editable milestone timeline
+- Case detail view with journey phase indicator/selector and enhanced milestone timeline with progress bar and status badges
 - Notes system with client visibility toggle (internal vs. shared notes)
 - Document management with upload capability
 - Team management (admin-only)
@@ -88,7 +89,7 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ```
 ├── index.html                 # Marketing site
-├── education.html             # Financial Education Hub (8 modules)
+├── education.html             # Financial Education Hub (11 modules)
 ├── assessment-finance.html    # Financial readiness assessment
 ├── assessment-tax.html        # Tax readiness assessment
 ├── assessment-legal.html      # Legal readiness assessment

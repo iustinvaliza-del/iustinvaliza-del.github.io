@@ -7,6 +7,17 @@ const AdminDashboard = (() => {
     let currentCaseId = null;
     let currentCaseData = null;
     let unsubAdminMessages = null;
+    let phaseChartInstance = null;
+
+    const PHASES = [
+        'Discovery & Assessment',
+        'Heir Readiness Evaluation',
+        'Legal Framework Review',
+        'Tax Strategy',
+        'Family Navigation',
+        'Investment & Impact',
+        'Transition Complete'
+    ];
 
     // Default milestones for new cases
     const DEFAULT_MILESTONES = [
@@ -84,13 +95,28 @@ const AdminDashboard = (() => {
             const active = cases.filter(c => c.status === 'active').length;
             const completed = cases.filter(c => c.status === 'completed').length;
             const onHold = cases.filter(c => c.status === 'on-hold').length;
+            const totalClients = cases.length;
 
-            document.getElementById('stat-active-clients').textContent = active;
-            document.getElementById('stat-in-progress').textContent = active;
-            document.getElementById('stat-completed').textContent = completed;
-            document.getElementById('stat-on-hold').textContent = onHold;
+            // Mock financial metrics based on client count
+            const avgAumPerClient = 12.5; // USD millions
+            const totalAum = totalClients * avgAumPerClient;
+            const avgReturn = 8.7; // percent
+            const revenuePerClient = 0.15; // USD millions
+            const revenue = totalClients * revenuePerClient;
 
-            // Recent activity — show most recently updated cases
+            const el = id => document.getElementById(id);
+            el('stat-total-aum').textContent = `$${totalAum.toFixed(1)}M`;
+            el('stat-avg-return').textContent = `${avgReturn}%`;
+            el('stat-revenue').textContent = `$${revenue.toFixed(1)}M`;
+            el('stat-active-clients').textContent = active;
+            el('stat-in-progress').textContent = active;
+            el('stat-completed').textContent = completed;
+            el('stat-on-hold').textContent = onHold;
+
+            // Compute phase distribution from milestones
+            await renderPhaseChart(cases);
+
+            // Recent activity
             const recent = cases
                 .sort((a, b) => {
                     const ta = a.updatedAt?.toDate?.() || new Date(0);
@@ -99,7 +125,7 @@ const AdminDashboard = (() => {
                 })
                 .slice(0, 5);
 
-            const activityEl = document.getElementById('recent-activity');
+            const activityEl = el('recent-activity');
             if (activityEl) {
                 if (recent.length === 0) {
                     activityEl.innerHTML = '<p class="text-muted text-sm py-4 text-center">No recent activity.</p>';
@@ -121,6 +147,69 @@ const AdminDashboard = (() => {
         } catch (err) {
             console.error('Failed to load overview:', err);
         }
+    }
+
+    async function renderPhaseChart(cases) {
+        const phaseCounts = new Array(PHASES.length).fill(0);
+        let hasPhaseData = false;
+        for (const c of cases) {
+            if (c.currentPhase != null) {
+                hasPhaseData = true;
+                const phaseIdx = c.currentPhase;
+                if (phaseIdx >= 0 && phaseIdx < PHASES.length) {
+                    phaseCounts[phaseIdx]++;
+                }
+            }
+        }
+        // If no cases have phase data yet, show illustrative distribution
+        if (!hasPhaseData && cases.length > 0) {
+            const n = cases.length;
+            phaseCounts[0] = Math.round(n * 0.08);  // Discovery
+            phaseCounts[1] = Math.round(n * 0.17);  // Heir Readiness
+            phaseCounts[2] = Math.round(n * 0.17);  // Legal Framework
+            phaseCounts[3] = Math.round(n * 0.17);  // Tax Strategy
+            phaseCounts[4] = Math.round(n * 0.17);  // Family Navigation
+            phaseCounts[5] = Math.round(n * 0.16);  // Investment & Impact
+            phaseCounts[6] = Math.round(n * 0.08);  // Transition Complete
+            // Adjust rounding so total matches
+            const diff = n - phaseCounts.reduce((a, b) => a + b, 0);
+            phaseCounts[3] += diff;
+        }
+
+        const canvas = document.getElementById('phase-chart');
+        if (!canvas) return;
+
+        if (phaseChartInstance) phaseChartInstance.destroy();
+
+        phaseChartInstance = new Chart(canvas, {
+            type: 'bar',
+            data: {
+                labels: PHASES.map(p => p.length > 18 ? p.substring(0, 16) + '...' : p),
+                datasets: [{
+                    data: phaseCounts,
+                    backgroundColor: 'rgba(201, 169, 110, 0.6)',
+                    borderColor: '#c9a96e',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1, font: { size: 11 }, color: '#6B6B7B' },
+                        grid: { color: 'rgba(201,169,110,0.1)' }
+                    },
+                    x: {
+                        ticks: { font: { size: 9 }, color: '#6B6B7B', maxRotation: 45 },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
     }
 
     // ─── Clients View ───
@@ -298,6 +387,46 @@ const AdminDashboard = (() => {
         // Status dropdown
         const statusSelect = document.getElementById('case-status-select');
         if (statusSelect) statusSelect.value = caseData.status;
+
+        // Phase indicator
+        renderPhaseIndicator(caseData);
+    }
+
+    function renderPhaseIndicator(caseData) {
+        const container = document.getElementById('case-phase-indicator');
+        if (!container) return;
+
+        const currentPhase = caseData.currentPhase != null ? caseData.currentPhase : 0;
+        const pct = Math.round((currentPhase / (PHASES.length - 1)) * 100);
+
+        container.innerHTML = `
+            <div class="flex items-center gap-3 mb-3">
+                <label class="text-xs text-muted font-medium whitespace-nowrap">Journey Phase:</label>
+                <select onchange="AdminDashboard.updateCasePhase(parseInt(this.value))" class="form-select-sm flex-1 max-w-xs">
+                    ${PHASES.map((p, i) => `<option value="${i}" ${i === currentPhase ? 'selected' : ''}>${p}</option>`).join('')}
+                </select>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="flex-1 h-2 bg-sand rounded-full overflow-hidden">
+                    <div class="h-full bg-gold rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                </div>
+                <span class="text-xs text-muted font-medium whitespace-nowrap">${currentPhase + 1} of ${PHASES.length}</span>
+            </div>
+        `;
+    }
+
+    async function updateCasePhase(phaseIdx) {
+        if (!currentCaseId) return;
+        try {
+            await db.collection('cases').doc(currentCaseId).update({
+                currentPhase: phaseIdx,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+            currentCaseData.currentPhase = phaseIdx;
+            renderPhaseIndicator(currentCaseData);
+        } catch (err) {
+            console.error('Failed to update case phase:', err);
+        }
     }
 
     async function updateCaseStatus(newStatus) {
@@ -339,7 +468,23 @@ const AdminDashboard = (() => {
             return;
         }
 
-        container.innerHTML = `<div class="timeline">${milestones.map(m => {
+        const total = milestones.length;
+        const completedCount = milestones.filter(m => m.status === 'completed').length;
+        const pct = Math.round((completedCount / total) * 100);
+
+        const progressBar = `
+            <div class="mb-4 p-3 bg-sand/30 rounded-lg">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-medium text-charcoal">${completedCount} of ${total} milestones completed</span>
+                    <span class="text-xs font-semibold text-gold">${pct}%</span>
+                </div>
+                <div class="h-2 bg-sand rounded-full overflow-hidden">
+                    <div class="h-full bg-gold rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                </div>
+            </div>
+        `;
+
+        container.innerHTML = progressBar + `<div class="timeline">${milestones.map(m => {
             const dotClass = m.status === 'completed' ? 'timeline-dot-completed' :
                             m.status === 'in-progress' ? 'timeline-dot-in-progress' :
                             'timeline-dot-upcoming';
@@ -350,14 +495,31 @@ const AdminDashboard = (() => {
                 ? '<div class="w-2 h-2 rounded-full bg-white"></div>'
                 : '';
 
+            const statusBadge = m.status === 'completed'
+                ? '<span class="text-[10px] px-2 py-0.5 rounded-full bg-green-100 text-green-700 font-medium">Completed</span>'
+                : m.status === 'in-progress'
+                ? '<span class="text-[10px] px-2 py-0.5 rounded-full bg-gold/15 text-gold-dark font-medium">In Progress</span>'
+                : '<span class="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 font-medium">Upcoming</span>';
+
+            const dateInfo = m.status === 'completed' && m.completedAt
+                ? `<span class="text-[10px] text-muted">${formatDate(m.completedAt)}</span>`
+                : '';
+
+            const cardBorder = m.status === 'in-progress' ? 'border-l-2 border-l-gold' : '';
+            const titleOpacity = m.status === 'upcoming' ? 'opacity-60' : '';
+
             return `
                 <div class="timeline-item" data-milestone-id="${m.id}">
                     <div class="timeline-dot ${dotClass}">${checkmark}</div>
-                    <div class="card p-4">
+                    <div class="card p-4 ${cardBorder}">
                         <div class="flex items-start justify-between gap-3">
                             <div class="flex-1 min-w-0">
-                                <h4 class="font-serif text-base text-charcoal mb-1">${escapeHtml(m.title)}</h4>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h4 class="font-serif text-base text-charcoal ${titleOpacity}">${escapeHtml(m.title)}</h4>
+                                    ${statusBadge}
+                                </div>
                                 ${m.description ? `<p class="text-sm text-muted leading-relaxed">${escapeHtml(m.description)}</p>` : ''}
+                                ${dateInfo}
                             </div>
                             <div class="flex items-center gap-2 flex-shrink-0">
                                 <select onchange="AdminDashboard.updateMilestoneStatus('${m.id}', this.value)" class="form-select-sm">
@@ -382,6 +544,12 @@ const AdminDashboard = (() => {
                 </div>
             `;
         }).join('')}</div>`;
+    }
+
+    function formatDate(ts) {
+        if (!ts) return '';
+        const d = ts.toDate ? ts.toDate() : new Date(ts);
+        return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
     }
 
     async function updateMilestoneStatus(milestoneId, newStatus) {
@@ -1004,6 +1172,7 @@ const AdminDashboard = (() => {
         toggleDocVisibility,
         deleteDocument,
         updateCaseStatus,
+        updateCasePhase,
         loadTeam,
         updateTeamRole,
         addTeamMember,

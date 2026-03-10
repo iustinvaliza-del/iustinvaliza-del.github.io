@@ -5,7 +5,7 @@
 Legacy Stewards is a stewardship consulting platform for next-generation women of wealth in Southeast Asia. The site consists of:
 
 1. **Marketing Site** (`index.html`) — Public-facing single-page app with company info, services, team, assessment tool, and insights linking to education
-2. **Education Hub** (`education.html`) — 8-module financial literacy resource covering fundamentals, portfolio construction, benchmarks, risk, and impact investing
+2. **Education Hub** (`education.html`) — 11-module financial literacy resource covering fundamentals, portfolio construction, benchmarks, risk, ESG frameworks, philanthropy vs impact investing, and SDG-aligned portfolios
 3. **Assessment Pages** (`assessment-finance.html`, `assessment-tax.html`, `assessment-legal.html`) — Standalone multi-step assessment tools for financial, tax, and legal readiness
 4. **Client Dashboard** (`client-dashboard.html`) — Authenticated portal with U-shaped 3-column layout (journey | milestones | messages/notes/docs)
 5. **Admin Dashboard** (`admin-dashboard.html`) — Authenticated portal where employees/admins manage clients, milestones, notes, and documents
@@ -24,7 +24,7 @@ Legacy Stewards is a stewardship consulting platform for next-generation women o
 
 ```
 ├── index.html                 # Marketing site (team cards, services, advisory, assessment)
-├── education.html             # Financial Education Hub (8 modules, filters, accordions)
+├── education.html             # Financial Education Hub (11 modules, filters, accordions)
 ├── assessment-finance.html    # Financial readiness assessment
 ├── assessment-tax.html        # Tax readiness assessment
 ├── assessment-legal.html      # Legal readiness assessment
@@ -53,7 +53,7 @@ Legacy Stewards is a stewardship consulting platform for next-generation women o
 ### Collections
 
 - **`users/{uid}`** — `email`, `displayName`, `role` ("client"|"employee"|"admin"), `phone`, `assignedEmployeeId`, `country`, `photoURL`, `createdAt`
-- **`cases/{caseId}`** — `clientId`, `clientName`, `clientEmail`, `assignedEmployeeId`, `assignedEmployeeName`, `status`, `phase` (1-6), `title`, `summary`, `createdAt`, `updatedAt`
+- **`cases/{caseId}`** — `clientId`, `clientName`, `clientEmail`, `assignedEmployeeId`, `assignedEmployeeName`, `status`, `currentPhase` (0-6, maps to PHASES constant), `title`, `summary`, `createdAt`, `updatedAt`
 - **`cases/{caseId}/milestones/{id}`** — `title`, `description`, `status` ("completed"|"in-progress"|"upcoming"), `order`, `completedAt`, `updatedAt`, `updatedBy`
 - **`cases/{caseId}/messages/{id}`** — `text`, `senderId`, `senderName`, `senderRole` ("client"|"steward"), `timestamp`, `read` (boolean)
 - **`cases/{caseId}/notes/{id}`** — `content`, `authorId`, `authorName`, `createdAt`, `visibleToClient` (boolean)
@@ -102,8 +102,11 @@ Two composite indexes are needed (auto-created via Firebase Console links):
 - **Portfolio view** — Client dashboard center column has switchable views (milestones/portfolio) via `ClientDashboard.switchCenterView()`; uses Chart.js for asset allocation doughnut and performance line chart
 - **Specialist panel** — Client dashboard auto-surfaces jurisdiction-matched legal & tax specialists based on `users/{uid}.country` field; data in `SPECIALISTS` constant covers 6 SEA countries
 - **Steward photos** — Admin dashboard team table and seed data include `photoURL` fields; client dashboard uses initials fallback when Firestore permission-denied
+- **Admin dashboard metrics** — Overview shows illustrative financial metrics (AUM, return, revenue) derived from client count, plus Case Status breakdown and Cases by Phase bar chart (Chart.js); when no `currentPhase` data exists, chart shows illustrative distribution
+- **Journey phase tracking** — Case detail includes a phase indicator with dropdown selector (7 phases from Discovery to Transition Complete) and progress bar; updates `currentPhase` field on the case document
+- **Enhanced milestones** — Case detail milestones show a progress bar (X of Y completed, percentage), color-coded status badges, completion dates, gold border on in-progress items
 - **Education accordions** — `education.html` uses CSS `max-height` transitions for expand/collapse, only one module open at a time, with URL hash auto-opening for cross-page linking
-- **Topic filtering** — Education modules have `data-topic` attributes; filter pills toggle visibility
+- **Topic filtering** — Education modules have `data-topic` attributes; filter pills toggle visibility with GSAP opacity reset to prevent ScrollTrigger hiding filtered cards
 - **Landing page team cards** — `index.html` renders 4 team member profile cards via JS (`TEAM_MEMBERS` array + `renderTeamCards()`), with photos from `img/team/`
 
 ## Development

@@ -31,6 +31,7 @@
         }
     </script>
     <link rel="stylesheet" href="css/shared.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -108,25 +109,56 @@
             <section id="view-overview" class="dashboard-view">
                 <h1 class="font-serif text-2xl text-charcoal mb-6">Dashboard</h1>
 
-                <!-- Stats Grid -->
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <!-- Row 1: Financial + Client Metrics -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                     <div class="stat-card text-center">
-                        <p id="stat-active-clients" class="font-serif text-3xl text-charcoal">--</p>
+                        <p id="stat-total-aum" class="font-serif text-2xl text-charcoal">--</p>
+                        <p class="text-xs text-muted mt-1">Total AUM</p>
+                    </div>
+                    <div class="stat-card text-center">
+                        <p id="stat-avg-return" class="font-serif text-2xl text-charcoal">--</p>
+                        <p class="text-xs text-muted mt-1">Avg Portfolio Return</p>
+                    </div>
+                    <div class="stat-card text-center">
+                        <p id="stat-revenue" class="font-serif text-2xl text-charcoal">--</p>
+                        <p class="text-xs text-muted mt-1">Revenue Pipeline</p>
+                    </div>
+                    <div class="stat-card text-center">
+                        <p id="stat-active-clients" class="font-serif text-2xl text-charcoal">--</p>
                         <p class="text-xs text-muted mt-1">Active Clients</p>
                     </div>
-                    <div class="stat-card text-center">
-                        <p id="stat-in-progress" class="font-serif text-3xl text-charcoal">--</p>
-                        <p class="text-xs text-muted mt-1">In Progress</p>
+                </div>
+
+                <!-- Row 2: Case Status + Phase Chart -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+                    <!-- Case Status Breakdown -->
+                    <div class="card p-6">
+                        <h3 class="font-serif text-lg text-charcoal mb-4">Case Status</h3>
+                        <div class="grid grid-cols-3 gap-4 text-center">
+                            <div>
+                                <p id="stat-in-progress" class="font-serif text-3xl text-gold">--</p>
+                                <p class="text-xs text-muted mt-1">In Progress</p>
+                            </div>
+                            <div>
+                                <p id="stat-completed" class="font-serif text-3xl text-green-600">--</p>
+                                <p class="text-xs text-muted mt-1">Completed</p>
+                            </div>
+                            <div>
+                                <p id="stat-on-hold" class="font-serif text-3xl text-rose">--</p>
+                                <p class="text-xs text-muted mt-1">On Hold</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-card text-center">
-                        <p id="stat-completed" class="font-serif text-3xl text-charcoal">--</p>
-                        <p class="text-xs text-muted mt-1">Completed</p>
-                    </div>
-                    <div class="stat-card text-center">
-                        <p id="stat-on-hold" class="font-serif text-3xl text-charcoal">--</p>
-                        <p class="text-xs text-muted mt-1">On Hold</p>
+                    <!-- Cases by Phase Chart -->
+                    <div class="card p-6">
+                        <h3 class="font-serif text-lg text-charcoal mb-4">Cases by Phase</h3>
+                        <div style="height: 180px;">
+                            <canvas id="phase-chart"></canvas>
+                        </div>
                     </div>
                 </div>
+
+                <p class="text-xs text-muted/60 italic mb-6">Financial figures are illustrative data for demonstration purposes.</p>
 
                 <!-- Recent Activity -->
                 <div class="card p-6">
@@ -188,7 +220,7 @@
 
                 <!-- Case Header -->
                 <div class="card p-6 mb-6">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                         <div>
                             <h1 id="case-client-name" class="font-serif text-2xl text-charcoal mb-1"></h1>
                             <p class="text-sm text-muted">
@@ -205,6 +237,8 @@
                             </select>
                         </div>
                     </div>
+                    <!-- Phase Indicator -->
+                    <div id="case-phase-indicator"></div>
                 </div>
 
                 <div id="case-detail-content" class="grid lg:grid-cols-3 gap-6">

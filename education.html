@@ -40,11 +40,18 @@
 
         /* Navigation */
         .nav-scrolled { background: rgba(240,235,227,0.95) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(201,169,110,0.12); box-shadow: 0 1px 8px rgba(0,0,0,0.04); }
+        /* Light nav text over dark hero */
+        #navbar:not(.nav-scrolled) .nav-link { color: rgba(240,235,227,0.75); }
+        #navbar:not(.nav-scrolled) .nav-link:hover { color: #c9a96e; }
+        #navbar:not(.nav-scrolled) .nav-logo { color: #F0EBE3; }
+        #navbar:not(.nav-scrolled) #menu-btn { color: #F0EBE3; }
+        #navbar:not(.nav-scrolled) .btn-outline { border-color: rgba(240,235,227,0.4); color: rgba(240,235,227,0.85); }
+        #navbar:not(.nav-scrolled) .btn-outline:hover { background: rgba(240,235,227,0.1); }
 
         /* Mobile menu */
         .mobile-overlay { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .mobile-overlay.active { opacity: 1; pointer-events: auto; }
-        .mobile-menu { transform: translateX(100%); transition: transform 0.3s ease; }
+        .mobile-menu { transform: translateX(100%); transition: transform 0.3s ease; background: #F0EBE3 !important; }
         .mobile-menu.active { transform: translateX(0); }
 
         /* Filter pills */
@@ -108,15 +115,15 @@
             <div class="w-10 h-10 rounded-full border-2 border-gold flex items-center justify-center bg-[#F7F3ED]/80">
                 <span class="font-serif text-gold font-bold text-sm">LS</span>
             </div>
-            <span class="font-serif text-lg text-charcoal tracking-wide hidden sm:block">Legacy Stewards</span>
+            <span class="nav-logo font-serif text-lg text-charcoal tracking-wide hidden sm:block">Legacy Stewards</span>
         </a>
         <div class="hidden lg:flex items-center gap-8">
-            <a href="index.html#about" class="text-sm text-muted hover:text-gold transition-colors">About</a>
-            <a href="index.html#services" class="text-sm text-muted hover:text-gold transition-colors">Services</a>
-            <a href="index.html#assessment" class="text-sm text-muted hover:text-gold transition-colors">Assessment</a>
-            <a href="index.html#advisory" class="text-sm text-muted hover:text-gold transition-colors">Advisory</a>
-            <a href="index.html#team" class="text-sm text-muted hover:text-gold transition-colors">Team</a>
-            <a href="index.html#insights" class="text-sm text-muted hover:text-gold transition-colors">Insights</a>
+            <a href="index.html#about" class="nav-link text-sm text-muted hover:text-gold transition-colors">About</a>
+            <a href="index.html#services" class="nav-link text-sm text-muted hover:text-gold transition-colors">Services</a>
+            <a href="index.html#assessment" class="nav-link text-sm text-muted hover:text-gold transition-colors">Assessment</a>
+            <a href="index.html#advisory" class="nav-link text-sm text-muted hover:text-gold transition-colors">Advisory</a>
+            <a href="index.html#team" class="nav-link text-sm text-muted hover:text-gold transition-colors">Team</a>
+            <a href="index.html#insights" class="nav-link text-sm text-muted hover:text-gold transition-colors">Insights</a>
             <a href="education.html" class="text-sm text-gold font-medium">Education</a>
             <a href="login.html" class="btn-outline text-sm px-5 py-2">Client Portal</a>
         </div>
@@ -124,25 +131,26 @@
             <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h20M4 14h20M4 21h20"/></svg>
         </button>
     </div>
-    <!-- Mobile Overlay -->
-    <div id="mobile-overlay" class="mobile-overlay fixed inset-0 bg-charcoal/40 z-40 lg:hidden" onclick="toggleMobile()"></div>
-    <!-- Mobile Menu -->
-    <div id="mobile-menu" class="mobile-menu fixed top-0 right-0 h-full w-72 z-50 p-8 lg:hidden shadow-2xl" style="background: #F0EBE3;">
-        <button onclick="toggleMobile()" class="absolute top-6 right-6 text-charcoal">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
-        </button>
-        <div class="flex flex-col gap-6 mt-16">
-            <a href="index.html#about" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">About</a>
-            <a href="index.html#services" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Services</a>
-            <a href="index.html#assessment" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Assessment</a>
-            <a href="index.html#advisory" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Advisory</a>
-            <a href="index.html#team" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Team</a>
-            <a href="index.html#insights" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Insights</a>
-            <a href="education.html" onclick="toggleMobile()" class="text-gold font-medium">Education</a>
-            <a href="login.html" onclick="toggleMobile()" class="btn-outline text-sm text-center py-2.5">Client Portal</a>
-        </div>
     </div>
 </nav>
+<!-- Mobile Overlay (outside nav to avoid backdrop-filter containing block) -->
+<div id="mobile-overlay" class="mobile-overlay fixed inset-0 bg-charcoal/40 z-[55] lg:hidden" onclick="toggleMobile()"></div>
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="mobile-menu fixed top-0 right-0 h-full w-72 z-[60] p-8 lg:hidden shadow-2xl" style="background: #F0EBE3;">
+    <button onclick="toggleMobile()" class="absolute top-6 right-6 text-charcoal">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="flex flex-col gap-6 mt-16">
+        <a href="index.html#about" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">About</a>
+        <a href="index.html#services" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Services</a>
+        <a href="index.html#assessment" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Assessment</a>
+        <a href="index.html#advisory" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Advisory</a>
+        <a href="index.html#team" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Team</a>
+        <a href="index.html#insights" onclick="toggleMobile()" class="text-charcoal hover:text-gold transition-colors">Insights</a>
+        <a href="education.html" onclick="toggleMobile()" class="text-gold font-medium">Education</a>
+        <a href="login.html" onclick="toggleMobile()" class="btn-outline text-sm text-center py-2.5">Client Portal</a>
+    </div>
+</div>
 
 <!-- ==================== HERO ==================== -->
 <section class="relative pt-32 pb-20 md:pt-40 md:pb-28 px-6 bg-charcoal overflow-hidden">
@@ -154,9 +162,9 @@
         <div class="w-12 h-0.5 bg-gold mx-auto mb-8 hero-anim"></div>
         <h1 class="font-serif text-4xl md:text-6xl font-bold text-cream mb-6 hero-anim">Financial Education Hub</h1>
         <p class="text-gold-light text-lg md:text-xl font-light mb-3 hero-anim">Built for the next generation of legacy leaders.</p>
-        <p class="text-cream/60 text-base md:text-lg hero-anim">Understand the language of wealth &mdash; so you can lead with confidence.</p>
+        <p class="text-cream/60 text-base md:text-lg hero-anim">Understand the language of wealth, so you can lead with confidence.</p>
         <div class="flex items-center justify-center gap-4 mt-8 text-sm text-cream/50 hero-anim">
-            <span>8 modules</span>
+            <span>11 modules</span>
             <span class="w-1 h-1 rounded-full bg-gold"></span>
             <span>Plain-language explainers</span>
             <span class="w-1 h-1 rounded-full bg-gold"></span>
@@ -193,19 +201,19 @@
                         <span class="text-xs text-muted ml-auto">4 min read</span>
                     </div>
                     <h3 class="font-serif text-xl text-charcoal mb-2">Alpha &amp; Beta: What They Really Mean</h3>
-                    <p class="text-muted text-sm leading-relaxed mb-4">Every private banker will talk about generating alpha. Here&rsquo;s what it actually means &mdash; and why confusing it with beta is one of the most expensive mistakes a new investor makes.</p>
+                    <p class="text-muted text-sm leading-relaxed mb-4">Every private banker will talk about generating alpha. Here&rsquo;s what it actually means, and why confusing it with beta is one of the most expensive mistakes a new investor makes.</p>
                     <button class="accordion-toggle text-gold text-sm font-medium hover:text-gold-dark transition-colors cursor-pointer" data-module="1">Read Module &rarr;</button>
                 </div>
                 <div class="accordion-content" data-module-content="1">
                     <div class="px-6 pb-6 pt-2 bg-cream/40 border-t border-gold/10">
                         <h4 class="font-serif text-lg text-charcoal mb-4">The Two Numbers Behind Every Investment Pitch</h4>
-                        <p class="text-sm text-muted leading-relaxed mb-4">When your wealth manager presents returns, they will often mention alpha and beta. These two Greek letters describe fundamentally different things &mdash; and conflating them is how fees get hidden in plain sight.</p>
+                        <p class="text-sm text-muted leading-relaxed mb-4">When your wealth manager presents returns, they will often mention alpha and beta. These two Greek letters describe fundamentally different things, and conflating them is how fees get hidden in plain sight.</p>
 
                         <div class="key-term">
                             <p class="text-sm font-semibold text-charcoal mb-1">Beta: the return the market gives you for free</p>
-                            <p class="text-sm text-muted leading-relaxed">Beta measures how much an investment moves relative to its benchmark. A portfolio with a beta of 1.0 moves in lockstep with its index. A beta of 1.2 means it rises 12% when the index rises 10% &mdash; and falls 12% when the index falls 10%. A beta of 0.7 means it absorbs only 70% of market swings.</p>
+                            <p class="text-sm text-muted leading-relaxed">Beta measures how much an investment moves relative to its benchmark. A portfolio with a beta of 1.0 moves in lockstep with its index. A beta of 1.2 means it rises 12% when the index rises 10%, and falls 12% when the index falls 10%. A beta of 0.7 means it absorbs only 70% of market swings.</p>
                         </div>
-                        <p class="text-sm text-muted leading-relaxed mb-4">Beta is not skill. It is market exposure. Any investor can get beta cheaply &mdash; a simple index fund tracking the S&amp;P 500 or MSCI World costs as little as 0.03&ndash;0.07% per year in fees.</p>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Beta is not skill. It is market exposure. Any investor can get beta cheaply; a simple index fund tracking the S&amp;P 500 or MSCI World costs as little as 0.03&ndash;0.07% per year in fees.</p>
 
                         <div class="key-term">
                             <p class="text-sm font-semibold text-charcoal mb-1">Alpha: the return that only skill can produce</p>
@@ -217,7 +225,7 @@
                         </div>
 
                         <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Why this matters for inherited wealth</h5>
-                        <p class="text-sm text-muted leading-relaxed mb-4">Inherited portfolios often arrive with a legacy of active management relationships built over decades. Some generate genuine alpha &mdash; most do not. Research consistently shows that over 80% of active fund managers underperform their benchmark after fees over 10-year periods (S&amp;P SPIVA Scorecard, 2024).</p>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Inherited portfolios often arrive with a legacy of active management relationships built over decades. Some generate genuine alpha; most do not. Research consistently shows that over 80% of active fund managers underperform their benchmark after fees over 10-year periods (S&amp;P SPIVA Scorecard, 2024).</p>
                         <p class="text-sm text-muted leading-relaxed mb-4">Your job as a new steward is not to assume that yesterday&rsquo;s managers are tomorrow&rsquo;s alpha generators. It is to require evidence.</p>
 
                         <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">What to ask your banker</h5>
@@ -229,7 +237,7 @@
 
                         <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">The formula (simplified)</h5>
                         <div class="formula-block">Portfolio Return = (Beta &times; Market Return) + Alpha + Fees</div>
-                        <p class="text-sm text-muted leading-relaxed">The goal of a well-structured family office is to maximise alpha while being intentional &mdash; not accidental &mdash; about how much beta exposure you carry.</p>
+                        <p class="text-sm text-muted leading-relaxed">The goal of a well-structured family office is to maximise alpha while being intentional, not accidental, about how much beta exposure you carry.</p>
                     </div>
                 </div>
             </div>
@@ -255,7 +263,7 @@
                         <div class="formula-block">Sharpe Ratio = (Portfolio Return &minus; Risk-Free Rate) &divide; Standard Deviation of Returns</div>
                         <ul class="list-disc list-inside text-sm text-muted leading-relaxed space-y-1 mb-4">
                             <li><strong class="text-charcoal">Portfolio Return</strong>: what your portfolio actually earned</li>
-                            <li><strong class="text-charcoal">Risk-Free Rate</strong>: typically the yield on short-term government bonds &mdash; the &ldquo;free&rdquo; return you could have earned with no risk</li>
+                            <li><strong class="text-charcoal">Risk-Free Rate</strong>: typically the yield on short-term government bonds, the &ldquo;free&rdquo; return you could have earned with no risk</li>
                             <li><strong class="text-charcoal">Standard Deviation</strong>: how wildly the portfolio&rsquo;s returns fluctuated month to month</li>
                         </ul>
 
@@ -263,11 +271,11 @@
                         <table class="module-table">
                             <thead><tr><th>Sharpe Ratio</th><th>Interpretation</th></tr></thead>
                             <tbody>
-                                <tr><td>Below 0</td><td>Return did not beat the risk-free rate &mdash; you took risk for nothing</td></tr>
+                                <tr><td>Below 0</td><td>Return did not beat the risk-free rate. You took risk for nothing</td></tr>
                                 <tr><td>0 &ndash; 0.5</td><td>Adequate, but not impressive</td></tr>
-                                <tr><td>0.5 &ndash; 1.0</td><td>Good &mdash; reasonable return per unit of risk</td></tr>
-                                <tr><td>Above 1.0</td><td>Excellent &mdash; strong risk-adjusted performance</td></tr>
-                                <tr><td>Above 2.0</td><td>Exceptional &mdash; rare outside top-quartile managers</td></tr>
+                                <tr><td>0.5 &ndash; 1.0</td><td>Good: reasonable return per unit of risk</td></tr>
+                                <tr><td>Above 1.0</td><td>Excellent: strong risk-adjusted performance</td></tr>
+                                <tr><td>Above 2.0</td><td>Exceptional: rare outside top-quartile managers</td></tr>
                             </tbody>
                         </table>
 
@@ -291,13 +299,13 @@
                         <span class="text-xs text-muted ml-auto">6 min read</span>
                     </div>
                     <h3 class="font-serif text-xl text-charcoal mb-2">Portfolio Construction 101</h3>
-                    <p class="text-muted text-sm leading-relaxed mb-4">How do the world&rsquo;s most sophisticated investors actually build a portfolio? It starts with an Investment Policy Statement and ends with disciplined rebalancing &mdash; everything in between is where most heirs make mistakes.</p>
+                    <p class="text-muted text-sm leading-relaxed mb-4">How do the world&rsquo;s most sophisticated investors actually build a portfolio? It starts with an Investment Policy Statement and ends with disciplined rebalancing. Everything in between is where most heirs make mistakes.</p>
                     <button class="accordion-toggle text-gold text-sm font-medium hover:text-gold-dark transition-colors cursor-pointer" data-module="3">Read Module &rarr;</button>
                 </div>
                 <div class="accordion-content" data-module-content="3">
                     <div class="px-6 pb-6 pt-2 bg-cream/40 border-t border-gold/10">
                         <h4 class="font-serif text-lg text-charcoal mb-4">From Scattered Assets to a Coherent Portfolio</h4>
-                        <p class="text-sm text-muted leading-relaxed mb-4">Many inherited portfolios are not portfolios at all &mdash; they are collections of historical decisions: a property bought in 2001, a hedge fund relationship from 2008, a stock position that was never sold. Your first task as a new steward is to understand what you actually own &mdash; and then build toward intention.</p>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Many inherited portfolios are not portfolios at all. They are collections of historical decisions: a property bought in 2001, a hedge fund relationship from 2008, a stock position that was never sold. Your first task as a new steward is to understand what you actually own, and then build toward intention.</p>
 
                         <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Step 1: The Investment Policy Statement (IPS)</h5>
                         <p class="text-sm text-muted leading-relaxed mb-2">Before buying or selling anything, a family office should have an Investment Policy Statement. This is a written document that defines:</p>
@@ -310,11 +318,11 @@
                             <li><strong class="text-charcoal">Asset allocation targets</strong>: the strategic mix across asset classes</li>
                         </ul>
                         <div class="pull-quote">
-                            <p class="text-sm">Without an IPS, you have no framework for saying no to opportunities &mdash; and every manager will pitch you an &ldquo;exceptional opportunity.&rdquo;</p>
+                            <p class="text-sm">Without an IPS, you have no framework for saying no to opportunities, and every manager will pitch you an &ldquo;exceptional opportunity.&rdquo;</p>
                         </div>
 
                         <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Step 2: Strategic Asset Allocation</h5>
-                        <p class="text-sm text-muted leading-relaxed mb-4">Strategic allocation is the long-term target mix across broad asset classes. It is the single most important determinant of your portfolio&rsquo;s long-term returns &mdash; more important than any individual stock pick or manager selection.</p>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Strategic allocation is the long-term target mix across broad asset classes. It is the single most important determinant of your portfolio&rsquo;s long-term returns, more important than any individual stock pick or manager selection.</p>
                         <table class="module-table">
                             <thead><tr><th>Asset Class</th><th>Conservative</th><th>Balanced</th><th>Growth</th></tr></thead>
                             <tbody>
@@ -327,15 +335,15 @@
                             </tbody>
                         </table>
 
-                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Step 3: Diversification &mdash; the only free lunch</h5>
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Step 3: Diversification, the Only Free Lunch</h5>
                         <p class="text-sm text-muted leading-relaxed mb-4">Nobel laureate Harry Markowitz called diversification the only free lunch in investing. By combining assets with low or negative correlation, you can reduce overall portfolio risk without proportionally reducing return.</p>
-                        <p class="text-sm text-muted leading-relaxed mb-4">Correlation matters more than most heirs realise. During the 2022 market downturn, both equities and bonds fell simultaneously &mdash; a reminder that the traditional 60/40 model assumes low bond-equity correlation, which does not always hold.</p>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Correlation matters more than most heirs realise. During the 2022 market downturn, both equities and bonds fell simultaneously, a reminder that the traditional 60/40 model assumes low bond-equity correlation, which does not always hold.</p>
 
                         <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Step 4: Manager Selection</h5>
-                        <p class="text-sm text-muted leading-relaxed mb-4">Within each asset class, you need to decide: active or passive management? For public equity markets &mdash; especially liquid, efficient markets like large-cap US equities &mdash; passive index funds typically outperform active managers after fees. For less efficient markets (emerging markets, small caps, private equity, private credit), skilled active managers can add genuine alpha.</p>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Within each asset class, you need to decide: active or passive management? For public equity markets, especially liquid, efficient markets like large-cap US equities, passive index funds typically outperform active managers after fees. For less efficient markets (emerging markets, small caps, private equity, private credit), skilled active managers can add genuine alpha.</p>
 
                         <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Step 5: Rebalancing</h5>
-                        <p class="text-sm text-muted leading-relaxed">Markets drift. A 40% equity allocation becomes 50% after a bull run. Rebalancing &mdash; selling what has grown and buying what has lagged &mdash; enforces discipline and systematically buys low, sells high. Most family offices rebalance annually or when any asset class drifts more than 5% from its target.</p>
+                        <p class="text-sm text-muted leading-relaxed">Markets drift. A 40% equity allocation becomes 50% after a bull run. Rebalancing (selling what has grown and buying what has lagged) enforces discipline and systematically buys low, sells high. Most family offices rebalance annually or when any asset class drifts more than 5% from its target.</p>
                     </div>
                 </div>
             </div>
@@ -349,19 +357,19 @@
                         <span class="text-xs text-muted ml-auto">5 min read</span>
                     </div>
                     <h3 class="font-serif text-xl text-charcoal mb-2">The Yale Endowment Model</h3>
-                    <p class="text-muted text-sm leading-relaxed mb-4">Yale&rsquo;s endowment has returned 9.4% per annum over the last decade &mdash; outperforming a simple 70/30 stock-bond portfolio by 2.2% per year. Here&rsquo;s the philosophy behind one of the most influential investment models ever built.</p>
+                    <p class="text-muted text-sm leading-relaxed mb-4">Yale&rsquo;s endowment has returned 9.4% per annum over the last decade, outperforming a simple 70/30 stock-bond portfolio by 2.2% per year. Here&rsquo;s the philosophy behind one of the most influential investment models ever built.</p>
                     <button class="accordion-toggle text-gold text-sm font-medium hover:text-gold-dark transition-colors cursor-pointer" data-module="4">Read Module &rarr;</button>
                 </div>
                 <div class="accordion-content" data-module-content="4">
                     <div class="px-6 pb-6 pt-2 bg-cream/40 border-t border-gold/10">
                         <h4 class="font-serif text-lg text-charcoal mb-4">Pioneering the Alternatives Era</h4>
-                        <p class="text-sm text-muted leading-relaxed mb-4">The Yale Endowment &mdash; now valued at $44.1 billion &mdash; is one of the most studied investment portfolios in the world. Managed by Yale&rsquo;s Investment Office under the philosophy pioneered by the late David Swensen (CIO 1985&ndash;2021) and continued by current CIO Matt Mendelsohn, it has produced a 10-year annualised return of 9.4% (as of June 2025), exceeding the median peer endowment by 1.4% per annum and outperforming a 70/30 stock-bond portfolio by 2.2% per year.</p>
+                        <p class="text-sm text-muted leading-relaxed mb-4">The Yale Endowment, now valued at $44.1 billion, is one of the most studied investment portfolios in the world. Managed by Yale&rsquo;s Investment Office under the philosophy pioneered by the late David Swensen (CIO 1985&ndash;2021) and continued by current CIO Matt Mendelsohn, it has produced a 10-year annualised return of 9.4% (as of June 2025), exceeding the median peer endowment by 1.4% per annum and outperforming a 70/30 stock-bond portfolio by 2.2% per year.</p>
 
                         <h5 class="font-semibold text-charcoal text-sm mt-6 mb-3">The core principles of the Yale Model</h5>
 
                         <div class="key-term mb-3">
                             <p class="text-sm font-semibold text-charcoal mb-1">1. Equity orientation</p>
-                            <p class="text-sm text-muted leading-relaxed">Roughly 95% of the endowment is invested in assets expected to produce equity-like returns. Fixed income and cash &mdash; which preserve capital but do not grow it &mdash; are deliberately minimised. This reflects Yale&rsquo;s perpetual time horizon: when you invest forever, you can afford to ride out volatility in exchange for higher long-run returns.</p>
+                            <p class="text-sm text-muted leading-relaxed">Roughly 95% of the endowment is invested in assets expected to produce equity-like returns. Fixed income and cash, which preserve capital but do not grow it, are deliberately minimised. This reflects Yale&rsquo;s perpetual time horizon: when you invest forever, you can afford to ride out volatility in exchange for higher long-run returns.</p>
                         </div>
                         <div class="key-term mb-3">
                             <p class="text-sm font-semibold text-charcoal mb-1">2. Radical diversification through alternatives</p>
@@ -373,7 +381,7 @@
                         </div>
                         <div class="key-term mb-3">
                             <p class="text-sm font-semibold text-charcoal mb-1">4. Manager selection as the primary edge</p>
-                            <p class="text-sm text-muted leading-relaxed">Yale does not pick stocks &mdash; it picks managers. Identifying and accessing top-quartile private equity, venture capital, and hedge fund managers is where Yale believes its true edge lies. This is manager alpha, not market alpha.</p>
+                            <p class="text-sm text-muted leading-relaxed">Yale does not pick stocks; it picks managers. Identifying and accessing top-quartile private equity, venture capital, and hedge fund managers is where Yale believes its true edge lies. This is manager alpha, not market alpha.</p>
                         </div>
 
                         <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Yale&rsquo;s asset allocation (approximate, FY2024)</h5>
@@ -392,16 +400,16 @@
                         </table>
 
                         <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">What heirs can apply from the Yale Model</h5>
-                        <p class="text-sm text-muted leading-relaxed mb-2">The Yale Model is not directly replicable for most family wealth holders &mdash; Yale has access to top-quartile managers who will not accept smaller investors. However, its principles translate:</p>
+                        <p class="text-sm text-muted leading-relaxed mb-2">The Yale Model is not directly replicable for most family wealth holders. Yale has access to top-quartile managers who will not accept smaller investors. However, its principles translate:</p>
                         <ul class="list-disc list-inside text-sm text-muted leading-relaxed space-y-1 mb-4">
                             <li>Extend your time horizon and accept some illiquidity for the return premium it offers</li>
-                            <li>Think in decades, not quarters &mdash; do not let short-term noise force long-term mistakes</li>
+                            <li>Think in decades, not quarters. Do not let short-term noise force long-term mistakes</li>
                             <li>Diversify aggressively across asset classes, not just within equities</li>
                             <li>Invest through relationships and due diligence, not product shelves</li>
                         </ul>
 
                         <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">The 2024 caveat</h5>
-                        <p class="text-sm text-muted leading-relaxed">Yale&rsquo;s 5.7% return in FY2024 lagged the S&amp;P 500&rsquo;s ~25% gain significantly. CIO Mendelsohn acknowledged this directly: heavy private asset allocation lags in strong public market years when exits are limited. This is the cost of the Yale model in the short term &mdash; and why the model only works for investors with genuine long-term conviction. FY2025 recovered strongly at 11.1%.</p>
+                        <p class="text-sm text-muted leading-relaxed">Yale&rsquo;s 5.7% return in FY2024 lagged the S&amp;P 500&rsquo;s ~25% gain significantly. CIO Mendelsohn acknowledged this directly: heavy private asset allocation lags in strong public market years when exits are limited. This is the cost of the Yale model in the short term, and why the model only works for investors with genuine long-term conviction. FY2025 recovered strongly at 11.1%.</p>
                     </div>
                 </div>
             </div>
@@ -415,7 +423,7 @@
                         <span class="text-xs text-muted ml-auto">4 min read</span>
                     </div>
                     <h3 class="font-serif text-xl text-charcoal mb-2">The UBS Family Office Benchmark</h3>
-                    <p class="text-muted text-sm leading-relaxed mb-4">How do the world&rsquo;s largest family offices actually allocate capital? The UBS Global Family Office Report &mdash; covering 317 offices with an average net worth of $2.7 billion &mdash; is the closest thing to a peer benchmark for ultra-high-net-worth investing.</p>
+                    <p class="text-muted text-sm leading-relaxed mb-4">How do the world&rsquo;s largest family offices actually allocate capital? The UBS Global Family Office Report, covering 317 offices with an average net worth of $2.7 billion, is the closest thing to a peer benchmark for ultra-high-net-worth investing.</p>
                     <button class="accordion-toggle text-gold text-sm font-medium hover:text-gold-dark transition-colors cursor-pointer" data-module="5">Read Module &rarr;</button>
                 </div>
                 <div class="accordion-content" data-module-content="5">
@@ -449,21 +457,21 @@
                             <li>APAC family offices hold more alternatives than the global average</li>
                             <li>45% plan to increase developed market fixed income exposure</li>
                             <li>31% plan to increase hedge fund allocations over 5 years</li>
-                            <li>36% are focused on impact investing &mdash; significantly above global peers</li>
+                            <li>36% are focused on impact investing, significantly above global peers</li>
                             <li>Healthcare is the top thematic (59%) followed by clean tech (40%) and philanthropy (39%)</li>
                             <li>78% of APAC family office portfolios are actively managed, versus 64% globally</li>
                         </ul>
 
                         <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">The concentration problem</h5>
                         <p class="text-sm text-muted leading-relaxed mb-4">The UBS data also highlights a critical risk for families of your type: only 53% of family offices globally have a formal succession plan in place. And only 26% involve the next generation from the outset. The most common reason for not having a plan: &ldquo;We have time.&rdquo;</p>
-                        <p class="text-sm text-muted leading-relaxed mb-4">For a newly inheriting heir, this data underscores the urgency of engagement &mdash; not passivity.</p>
+                        <p class="text-sm text-muted leading-relaxed mb-4">For a newly inheriting heir, this data underscores the urgency of engagement, not passivity.</p>
 
                         <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">What this benchmark means for you</h5>
                         <ul class="list-disc list-inside text-sm text-muted leading-relaxed space-y-1">
                             <li>A 40%+ allocation to alternatives is appropriate if you have a long time horizon and can tolerate illiquidity</li>
-                            <li>Impact and ESG integration is not a niche preference in APAC &mdash; it is mainstream in family office circles</li>
-                            <li>Cash above 10% of the portfolio is an opportunity cost, not safety &mdash; especially in moderate-inflation environments</li>
-                            <li>Your private banker&rsquo;s standard product shelf does not look like this portfolio &mdash; most of the value is in private markets that require active sourcing</li>
+                            <li>Impact and ESG integration is not a niche preference in APAC; it is mainstream in family office circles</li>
+                            <li>Cash above 10% of the portfolio is an opportunity cost, not safety, especially in moderate-inflation environments</li>
+                            <li>Your private banker&rsquo;s standard product shelf does not look like this portfolio. Most of the value is in private markets that require active sourcing</li>
                         </ul>
                     </div>
                 </div>
@@ -484,21 +492,21 @@
                 <div class="accordion-content" data-module-content="6">
                     <div class="px-6 pb-6 pt-2 bg-cream/40 border-t border-gold/10">
                         <h4 class="font-serif text-lg text-charcoal mb-4">The Risks That Don&rsquo;t Show Up on a Bloomberg Screen</h4>
-                        <p class="text-sm text-muted leading-relaxed mb-4">Investment risk is typically measured by volatility &mdash; the standard deviation of returns. But for an inheriting heir, volatility is often the least of your problems. Here are the risks that matter more.</p>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Investment risk is typically measured by volatility, the standard deviation of returns. But for an inheriting heir, volatility is often the least of your problems. Here are the risks that matter more.</p>
 
                         <div class="key-term mb-4">
                             <p class="text-sm font-semibold text-charcoal mb-1">1. Concentration risk</p>
-                            <p class="text-sm text-muted leading-relaxed">Many inherited estates arrive heavily concentrated in a single asset: the family business, one building, one stock position. A 70% concentration in any single asset is an existential risk. Diversification is not optional &mdash; it is the foundation of wealth preservation.</p>
+                            <p class="text-sm text-muted leading-relaxed">Many inherited estates arrive heavily concentrated in a single asset: the family business, one building, one stock position. A 70% concentration in any single asset is an existential risk. Diversification is not optional; it is the foundation of wealth preservation.</p>
                             <p class="text-sm text-muted leading-relaxed mt-2">The challenge: selling concentrated positions creates capital gains tax events. The solution: plan the diversification strategically over time, using charitable structures, options overlays, or exchange funds where available.</p>
                         </div>
                         <div class="key-term mb-4">
                             <p class="text-sm font-semibold text-charcoal mb-1">2. Liquidity risk</p>
-                            <p class="text-sm text-muted leading-relaxed">An estate tax bill or unexpected family expense can force the sale of illiquid assets at exactly the wrong moment. Always maintain a liquidity reserve &mdash; typically 5&ndash;10% of the portfolio in cash or near-cash instruments accessible within 30 days.</p>
+                            <p class="text-sm text-muted leading-relaxed">An estate tax bill or unexpected family expense can force the sale of illiquid assets at exactly the wrong moment. Always maintain a liquidity reserve, typically 5&ndash;10% of the portfolio in cash or near-cash instruments accessible within 30 days.</p>
                             <p class="text-sm text-muted leading-relaxed mt-2">For family offices with high alternative allocations, liquidity risk is structural: 20&ndash;30% of the portfolio might be locked in private equity funds with 10-year horizons. Model your liquidity carefully.</p>
                         </div>
                         <div class="key-term mb-4">
                             <p class="text-sm font-semibold text-charcoal mb-1">3. Sequence of returns risk</p>
-                            <p class="text-sm text-muted leading-relaxed">If you are drawing income from your portfolio &mdash; for living expenses, philanthropy, or family distributions &mdash; the order of returns matters enormously. A 30% drawdown in year 1 of distributions can permanently impair a portfolio even if long-run average returns are fine. This is why family offices set spending rates (typically 4&ndash;5% per year) and hold liquidity buffers.</p>
+                            <p class="text-sm text-muted leading-relaxed">If you are drawing income from your portfolio (for living expenses, philanthropy, or family distributions), the order of returns matters enormously. A 30% drawdown in year 1 of distributions can permanently impair a portfolio even if long-run average returns are fine. This is why family offices set spending rates (typically 4&ndash;5% per year) and hold liquidity buffers.</p>
                         </div>
                         <div class="key-term mb-4">
                             <p class="text-sm font-semibold text-charcoal mb-1">4. Currency risk</p>
@@ -506,12 +514,12 @@
                         </div>
                         <div class="key-term mb-4">
                             <p class="text-sm font-semibold text-charcoal mb-1">5. Governance risk</p>
-                            <p class="text-sm text-muted leading-relaxed">This is the risk nobody talks about in investment presentations: that poor family decision-making, conflict, or lack of accountability erodes wealth faster than any market downturn. A 20-year study of 3,200 families by The Williams Group found that 85% of wealth transfer failures were attributed to poor trust and communication &mdash; not financial mismanagement.</p>
-                            <p class="text-sm text-muted leading-relaxed mt-2">Governance structures &mdash; family constitutions, investment committees with clear mandates, agreed spending policies &mdash; are not bureaucracy. They are risk management.</p>
+                            <p class="text-sm text-muted leading-relaxed">This is the risk nobody talks about in investment presentations: that poor family decision-making, conflict, or lack of accountability erodes wealth faster than any market downturn. A 20-year study of 3,200 families by The Williams Group found that 85% of wealth transfer failures were attributed to poor trust and communication, not financial mismanagement.</p>
+                            <p class="text-sm text-muted leading-relaxed mt-2">Governance structures (family constitutions, investment committees with clear mandates, agreed spending policies) are not bureaucracy. They are risk management.</p>
                         </div>
                         <div class="key-term">
                             <p class="text-sm font-semibold text-charcoal mb-1">6. The risk of doing nothing</p>
-                            <p class="text-sm text-muted leading-relaxed">Cash left uninvested in a 3% inflation environment loses 3% of its real purchasing power per year. Over a decade, $10 million in cash becomes worth roughly $7.4 million in real terms. The greatest risk for a newly inheriting heir is often paralysis &mdash; deferring decisions until the &ldquo;right time&rdquo; that never arrives.</p>
+                            <p class="text-sm text-muted leading-relaxed">Cash left uninvested in a 3% inflation environment loses 3% of its real purchasing power per year. Over a decade, $10 million in cash becomes worth roughly $7.4 million in real terms. The greatest risk for a newly inheriting heir is often paralysis: deferring decisions until the &ldquo;right time&rdquo; that never arrives.</p>
                         </div>
                     </div>
                 </div>
@@ -526,35 +534,35 @@
                         <span class="text-xs text-muted ml-auto">4 min read</span>
                     </div>
                     <h3 class="font-serif text-xl text-charcoal mb-2">Impact &amp; Gender-Lens Investing</h3>
-                    <p class="text-muted text-sm leading-relaxed mb-4">Impact investing is not charity. The world&rsquo;s leading family offices are allocating billions to investments that target both financial returns and measurable positive outcomes &mdash; and APAC is ahead of the global curve.</p>
+                    <p class="text-muted text-sm leading-relaxed mb-4">Impact investing is not charity. The world&rsquo;s leading family offices are allocating billions to investments that target both financial returns and measurable positive outcomes, and APAC is ahead of the global curve.</p>
                     <button class="accordion-toggle text-gold text-sm font-medium hover:text-gold-dark transition-colors cursor-pointer" data-module="7">Read Module &rarr;</button>
                 </div>
                 <div class="accordion-content" data-module-content="7">
                     <div class="px-6 pb-6 pt-2 bg-cream/40 border-t border-gold/10">
-                        <h4 class="font-serif text-lg text-charcoal mb-4">Aligning Wealth with Values &mdash; Without Sacrificing Returns</h4>
+                        <h4 class="font-serif text-lg text-charcoal mb-4">Aligning Wealth with Values, Without Sacrificing Returns</h4>
                         <p class="text-sm text-muted leading-relaxed mb-4">A common misconception: impact investing requires accepting below-market returns. The evidence increasingly suggests otherwise. A 2023 meta-analysis of over 2,000 impact studies by the Global Impact Investing Network (GIIN) found that the majority of impact investments met or exceeded investor return expectations.</p>
 
                         <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">The spectrum of impact</h5>
                         <p class="text-sm text-muted leading-relaxed mb-2">Not all impact investing is the same. The spectrum runs from:</p>
                         <ul class="text-sm text-muted leading-relaxed space-y-2 mb-4">
-                            <li><strong class="text-charcoal">ESG Integration:</strong> incorporating environmental, social, and governance factors into standard investment analysis to identify risks and opportunities. No explicit impact target &mdash; purely risk-management oriented.</li>
+                            <li><strong class="text-charcoal">ESG Integration:</strong> incorporating environmental, social, and governance factors into standard investment analysis to identify risks and opportunities. No explicit impact target; purely risk-management oriented.</li>
                             <li><strong class="text-charcoal">Negative Screening:</strong> excluding sectors or companies that conflict with your values (weapons, tobacco, fossil fuels). The simplest form of values alignment.</li>
                             <li><strong class="text-charcoal">Best-in-class ESG:</strong> investing in the top ESG performers within each sector rather than excluding entire sectors.</li>
-                            <li><strong class="text-charcoal">Thematic Investing:</strong> targeting specific themes &mdash; clean energy, financial inclusion, gender equity &mdash; with dedicated capital.</li>
+                            <li><strong class="text-charcoal">Thematic Investing:</strong> targeting specific themes (clean energy, financial inclusion, gender equity) with dedicated capital.</li>
                             <li><strong class="text-charcoal">Impact-First Investing:</strong> explicitly targeting measurable positive outcomes alongside financial returns, with impact metrics as important as financial metrics.</li>
                             <li><strong class="text-charcoal">Philanthropy:</strong> capital deployed for maximum impact with no expectation of financial return.</li>
                         </ul>
                         <p class="text-sm text-muted leading-relaxed mb-4">Most family office portfolios combine several of these approaches.</p>
 
                         <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Gender-lens investing</h5>
-                        <p class="text-sm text-muted leading-relaxed mb-2">Gender-lens investing (GLI) considers gender as an investment factor &mdash; either investing in companies that advance gender equality, or applying gender analysis to all investment decisions. Relevant lenses include:</p>
+                        <p class="text-sm text-muted leading-relaxed mb-2">Gender-lens investing (GLI) considers gender as an investment factor, either investing in companies that advance gender equality, or applying gender analysis to all investment decisions. Relevant lenses include:</p>
                         <ul class="list-disc list-inside text-sm text-muted leading-relaxed space-y-1 mb-4">
                             <li>Companies with gender-diverse leadership (women on boards and in executive roles)</li>
                             <li>Products and services that improve outcomes for women and girls</li>
                             <li>Financial inclusion investments that extend capital to women-owned businesses in emerging markets</li>
                             <li>Venture capital specifically targeting female founders (who receive only ~2% of global VC despite outperforming on a risk-adjusted basis)</li>
                         </ul>
-                        <p class="text-sm text-muted leading-relaxed mb-4">For a next-generation female heir leading family wealth in Southeast Asia, GLI is both values-aligned and commercially interesting. APAC family offices report 36% engagement with impact investing &mdash; well above the 26% global average (UBS 2024).</p>
+                        <p class="text-sm text-muted leading-relaxed mb-4">For a next-generation female heir leading family wealth in Southeast Asia, GLI is both values-aligned and commercially interesting. APAC family offices report 36% engagement with impact investing, well above the 26% global average (UBS 2024).</p>
 
                         <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Practical entry points</h5>
                         <ul class="list-disc list-inside text-sm text-muted leading-relaxed space-y-1 mb-4">
@@ -589,31 +597,31 @@
 
                         <div class="key-term mb-4">
                             <p class="text-sm font-semibold text-charcoal mb-1">Return Source 1: Market Beta</p>
-                            <p class="text-sm text-muted leading-relaxed">Simply being invested in a rising market produces returns. A diversified global equity portfolio in a growth year returns 15&ndash;25% with no skill required &mdash; just beta. This is the baseline, not the achievement. Any return claim must be measured against the relevant beta exposure first.</p>
+                            <p class="text-sm text-muted leading-relaxed">Simply being invested in a rising market produces returns. A diversified global equity portfolio in a growth year returns 15&ndash;25% with no skill required. That is just beta. This is the baseline, not the achievement. Any return claim must be measured against the relevant beta exposure first.</p>
                         </div>
 
                         <div class="key-term mb-4">
                             <p class="text-sm font-semibold text-charcoal mb-1">Return Source 2: Factor Premiums</p>
                             <p class="text-sm text-muted leading-relaxed mb-2">Academic research has identified several systematic factors that produce returns above simple market beta over the long run:</p>
                             <ul class="list-disc list-inside text-sm text-muted leading-relaxed space-y-1">
-                                <li><strong class="text-charcoal">Value:</strong> cheap stocks (low P/E, P/B) outperform expensive ones over time &mdash; the &ldquo;value premium&rdquo;</li>
-                                <li><strong class="text-charcoal">Size:</strong> small-cap stocks outperform large-caps &mdash; the &ldquo;size premium&rdquo;</li>
+                                <li><strong class="text-charcoal">Value:</strong> cheap stocks (low P/E, P/B) outperform expensive ones over time, the &ldquo;value premium&rdquo;</li>
+                                <li><strong class="text-charcoal">Size:</strong> small-cap stocks outperform large-caps, the &ldquo;size premium&rdquo;</li>
                                 <li><strong class="text-charcoal">Momentum:</strong> recent outperformers continue outperforming in the short term</li>
                                 <li><strong class="text-charcoal">Quality:</strong> companies with high profitability and low debt outperform</li>
                                 <li><strong class="text-charcoal">Low Volatility:</strong> paradoxically, lower-risk stocks have historically outperformed higher-risk ones on a risk-adjusted basis</li>
                             </ul>
-                            <p class="text-sm text-muted leading-relaxed mt-2">These factor premiums are real but cyclical &mdash; they disappear for years at a time. A skilled manager captures them systematically. A mediocre manager confuses factor exposure for stock-picking skill.</p>
+                            <p class="text-sm text-muted leading-relaxed mt-2">These factor premiums are real but cyclical; they disappear for years at a time. A skilled manager captures them systematically. A mediocre manager confuses factor exposure for stock-picking skill.</p>
                         </div>
 
                         <div class="key-term mb-4">
                             <p class="text-sm font-semibold text-charcoal mb-1">Return Source 3: Illiquidity Premium</p>
-                            <p class="text-sm text-muted leading-relaxed">Investors who accept that they cannot sell an asset for 7&ndash;10 years demand a higher return than investors in liquid markets. This &ldquo;illiquidity premium&rdquo; is one of the most consistent sources of excess return available to wealthy families &mdash; who, unlike institutional investors constrained by daily liquidity, can actually afford to hold illiquid assets.</p>
+                            <p class="text-sm text-muted leading-relaxed">Investors who accept that they cannot sell an asset for 7&ndash;10 years demand a higher return than investors in liquid markets. This &ldquo;illiquidity premium&rdquo; is one of the most consistent sources of excess return available to wealthy families, who, unlike institutional investors constrained by daily liquidity, can actually afford to hold illiquid assets.</p>
                             <p class="text-sm text-muted leading-relaxed mt-2">Private equity has historically delivered 3&ndash;5% per annum above public equity on a like-for-like basis, largely explained by this illiquidity premium plus the leverage and operational improvement that PE firms apply.</p>
                         </div>
 
                         <div class="key-term mb-4">
                             <p class="text-sm font-semibold text-charcoal mb-1">Return Source 4: Manager Skill (True Alpha)</p>
-                            <p class="text-sm text-muted leading-relaxed mb-2">True alpha &mdash; return generated by genuine insight, information, or execution advantage &mdash; is rare and difficult to sustain. The most consistent alpha generators are typically:</p>
+                            <p class="text-sm text-muted leading-relaxed mb-2">True alpha, return generated by genuine insight, information, or execution advantage, is rare and difficult to sustain. The most consistent alpha generators are typically:</p>
                             <ul class="list-disc list-inside text-sm text-muted leading-relaxed space-y-1">
                                 <li>Top-quartile private equity managers with proprietary deal flow</li>
                                 <li>Quantitative hedge funds with genuine data or model edges</li>
@@ -624,7 +632,7 @@
                         </div>
 
                         <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Putting it together</h5>
-                        <p class="text-sm text-muted leading-relaxed mb-2">A sophisticated family office portfolio generates returns from all four sources &mdash; deliberately:</p>
+                        <p class="text-sm text-muted leading-relaxed mb-2">A sophisticated family office portfolio generates returns from all four sources, deliberately:</p>
                         <ol class="list-decimal list-inside text-sm text-muted leading-relaxed space-y-1">
                             <li>Strategic beta exposure through low-cost index funds in efficient markets</li>
                             <li>Factor tilts (value, quality) in public markets at modest additional cost</li>
@@ -632,6 +640,258 @@
                             <li>True alpha through careful selection of genuinely skilled managers in PE, VC, and specialised hedge funds</li>
                         </ol>
                         <p class="text-sm text-muted leading-relaxed mt-4">The goal is not to pick the best stock. It is to construct the right combination of return sources for your specific time horizon, risk tolerance, and liquidity needs.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== MODULE 9: ESG Frameworks ===== -->
+            <div class="module-card bg-[#FDFAF6] border border-gold/20 rounded-xl overflow-hidden" data-topic="impact" id="esg-frameworks">
+                <div class="p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-gold flex items-center justify-center text-white text-xs font-bold">9</div>
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-purple-100 text-purple-700">Impact</span>
+                        <span class="text-xs text-muted ml-auto">5 min read</span>
+                    </div>
+                    <h3 class="font-serif text-xl text-charcoal mb-2">ESG Frameworks: From Buzzword to Investment Discipline</h3>
+                    <p class="text-muted text-sm leading-relaxed mb-4">Environmental, Social, and Governance criteria have moved from niche screening tools to mainstream investment considerations. Understanding how the major rating providers differ, and where the gaps are, is essential for any family allocating capital responsibly.</p>
+                    <button class="accordion-toggle text-gold text-sm font-medium hover:text-gold-dark transition-colors cursor-pointer" data-module="9">Read Module &rarr;</button>
+                </div>
+                <div class="accordion-content" data-module-content="9">
+                    <div class="px-6 pb-6 pt-2 bg-cream/40 border-t border-gold/10">
+                        <h4 class="font-serif text-lg text-charcoal mb-4">What ESG Scores Actually Measure</h4>
+                        <p class="text-sm text-muted leading-relaxed mb-4">ESG ratings attempt to quantify how well a company manages environmental risks, treats its stakeholders, and governs itself. The challenge is that no two rating providers agree on how to measure these factors. A company rated &ldquo;AAA&rdquo; by one provider may score a middling &ldquo;BB&rdquo; from another.</p>
+
+                        <div class="key-term mb-4">
+                            <p class="text-sm font-semibold text-charcoal mb-1">Greenwashing</p>
+                            <p class="text-sm text-muted leading-relaxed">The practice of making misleading claims about the environmental or social benefits of a product, fund, or corporate practice. In investment management, greenwashing often appears as funds labelled &ldquo;sustainable&rdquo; that hold fossil fuel companies or banks financing deforestation. The EU&rsquo;s SFDR regulation and Singapore&rsquo;s MAS Guidelines on Environmental Risk Management are both responses to this widespread problem.</p>
+                        </div>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-3">Major ESG Rating Providers Compared</h5>
+                        <div class="overflow-x-auto mb-4">
+                            <table class="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr class="bg-gold/10">
+                                        <th class="text-left py-2.5 px-3 text-charcoal font-semibold border-b border-gold/20">Provider</th>
+                                        <th class="text-left py-2.5 px-3 text-charcoal font-semibold border-b border-gold/20">Methodology Focus</th>
+                                        <th class="text-left py-2.5 px-3 text-charcoal font-semibold border-b border-gold/20">Scale</th>
+                                        <th class="text-left py-2.5 px-3 text-charcoal font-semibold border-b border-gold/20">SE Asia Coverage</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-gold/10">
+                                        <td class="py-2.5 px-3 text-charcoal font-medium">MSCI ESG</td>
+                                        <td class="py-2.5 px-3 text-muted">Financial materiality of ESG risks</td>
+                                        <td class="py-2.5 px-3 text-muted">AAA to CCC</td>
+                                        <td class="py-2.5 px-3 text-muted">Strong (8,500+ companies globally)</td>
+                                    </tr>
+                                    <tr class="border-b border-gold/10">
+                                        <td class="py-2.5 px-3 text-charcoal font-medium">Sustainalytics</td>
+                                        <td class="py-2.5 px-3 text-muted">Unmanaged ESG risk exposure</td>
+                                        <td class="py-2.5 px-3 text-muted">0&ndash;100 (lower is better)</td>
+                                        <td class="py-2.5 px-3 text-muted">Good (12,000+ companies)</td>
+                                    </tr>
+                                    <tr class="border-b border-gold/10">
+                                        <td class="py-2.5 px-3 text-charcoal font-medium">S&amp;P Global ESG</td>
+                                        <td class="py-2.5 px-3 text-muted">Corporate sustainability assessment</td>
+                                        <td class="py-2.5 px-3 text-muted">0&ndash;100 (higher is better)</td>
+                                        <td class="py-2.5 px-3 text-muted">Moderate (relies on CSA responses)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2.5 px-3 text-charcoal font-medium">CDP</td>
+                                        <td class="py-2.5 px-3 text-muted">Climate disclosure and action</td>
+                                        <td class="py-2.5 px-3 text-muted">A to D&ndash;</td>
+                                        <td class="py-2.5 px-3 text-muted">Growing (climate-focused only)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p class="text-sm text-muted leading-relaxed mb-4">The correlation between MSCI and Sustainalytics ratings for the same company is roughly 0.5, meaning they agree only about half the time. This &ldquo;ESG divergence problem&rdquo; is well-documented in academic research and has practical consequences for portfolio construction.</p>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">The Southeast Asian Context</h5>
+                        <p class="text-sm text-muted leading-relaxed mb-4">ESG disclosure standards vary significantly across the region. Singapore (SGX) and Thailand (SET) lead with mandatory sustainability reporting. Indonesia, the Philippines, and Vietnam are catching up, but coverage gaps mean that relying solely on third-party ESG scores for ASEAN equities can be misleading. Families investing in the region should supplement scores with on-the-ground due diligence.</p>
+
+                        <div class="pull-quote mb-4">
+                            <p class="text-sm italic text-charcoal">&ldquo;ESG data is a starting point, not a destination. The families who use it well treat ratings as one input among many, not as a stamp of approval.&rdquo;</p>
+                        </div>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Practical Takeaways</h5>
+                        <ul class="list-disc list-inside text-sm text-muted leading-relaxed space-y-1">
+                            <li>Use multiple ESG providers rather than relying on a single score</li>
+                            <li>Distinguish between ESG risk (what could hurt the company financially) and ESG impact (what good or harm the company does in the world)</li>
+                            <li>Ask your fund managers exactly what ESG integration means in their process; vague answers are a red flag</li>
+                            <li>For SE Asian allocations, prioritize direct engagement and local research over global ratings</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== MODULE 10: Philanthropy vs Impact Investing ===== -->
+            <div class="module-card bg-[#FDFAF6] border border-gold/20 rounded-xl overflow-hidden" data-topic="impact" id="philanthropy-vs-impact">
+                <div class="p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-gold flex items-center justify-center text-white text-xs font-bold">10</div>
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-purple-100 text-purple-700">Impact</span>
+                        <span class="text-xs text-muted ml-auto">4 min read</span>
+                    </div>
+                    <h3 class="font-serif text-xl text-charcoal mb-2">Philanthropy vs Impact Investing: Knowing the Difference</h3>
+                    <p class="text-muted text-sm leading-relaxed mb-4">Both philanthropy and impact investing aim to create positive change. But confusing the two leads to misallocated capital and disappointed expectations. Knowing where each tool works best is the mark of a sophisticated family steward.</p>
+                    <button class="accordion-toggle text-gold text-sm font-medium hover:text-gold-dark transition-colors cursor-pointer" data-module="10">Read Module &rarr;</button>
+                </div>
+                <div class="accordion-content" data-module-content="10">
+                    <div class="px-6 pb-6 pt-2 bg-cream/40 border-t border-gold/10">
+                        <h4 class="font-serif text-lg text-charcoal mb-4">Two Tools, One Mission</h4>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Philanthropy deploys capital with no expectation of financial return. Impact investing deploys capital with the expectation of both financial return and measurable social or environmental outcomes. Between them lies a spectrum of approaches, each with a different risk/return/impact profile.</p>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-3">Side-by-Side Comparison</h5>
+                        <div class="overflow-x-auto mb-4">
+                            <table class="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr class="bg-gold/10">
+                                        <th class="text-left py-2.5 px-3 text-charcoal font-semibold border-b border-gold/20">Dimension</th>
+                                        <th class="text-left py-2.5 px-3 text-charcoal font-semibold border-b border-gold/20">Philanthropy</th>
+                                        <th class="text-left py-2.5 px-3 text-charcoal font-semibold border-b border-gold/20">Impact Investing</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-gold/10">
+                                        <td class="py-2.5 px-3 text-charcoal font-medium">Financial Return</td>
+                                        <td class="py-2.5 px-3 text-muted">None expected</td>
+                                        <td class="py-2.5 px-3 text-muted">Below-market to market-rate</td>
+                                    </tr>
+                                    <tr class="border-b border-gold/10">
+                                        <td class="py-2.5 px-3 text-charcoal font-medium">Capital Structure</td>
+                                        <td class="py-2.5 px-3 text-muted">Grants, donations</td>
+                                        <td class="py-2.5 px-3 text-muted">Equity, debt, guarantees</td>
+                                    </tr>
+                                    <tr class="border-b border-gold/10">
+                                        <td class="py-2.5 px-3 text-charcoal font-medium">Impact Measurement</td>
+                                        <td class="py-2.5 px-3 text-muted">Output tracking (meals served, students educated)</td>
+                                        <td class="py-2.5 px-3 text-muted">Outcome metrics tied to investment thesis</td>
+                                    </tr>
+                                    <tr class="border-b border-gold/10">
+                                        <td class="py-2.5 px-3 text-charcoal font-medium">Tax Treatment</td>
+                                        <td class="py-2.5 px-3 text-muted">Deductible (varies by jurisdiction)</td>
+                                        <td class="py-2.5 px-3 text-muted">Standard investment taxation</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2.5 px-3 text-charcoal font-medium">Best Used For</td>
+                                        <td class="py-2.5 px-3 text-muted">Market failures with no revenue model</td>
+                                        <td class="py-2.5 px-3 text-muted">Scalable solutions with viable business models</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="key-term mb-4">
+                            <p class="text-sm font-semibold text-charcoal mb-1">Blended Finance</p>
+                            <p class="text-sm text-muted leading-relaxed">A structuring approach that uses philanthropic or concessional capital to de-risk investments for commercial investors. For example, a family foundation might provide a &ldquo;first-loss&rdquo; tranche in a clean energy fund, absorbing initial losses so that institutional investors are willing to participate at market rates.</p>
+                        </div>
+
+                        <div class="formula-block mb-4">
+                            <p class="text-xs font-semibold text-charcoal mb-1">Blended Finance Logic</p>
+                            <p class="text-sm font-mono text-charcoal">Philanthropic $ (first-loss) + Commercial $ (senior tranche) = Larger total impact than either alone</p>
+                        </div>
+
+                        <div class="pull-quote mb-4">
+                            <p class="text-sm italic text-charcoal">&ldquo;Catalytic capital is the bridge between what philanthropy can fund and what markets will finance. Families who deploy both strategically multiply their influence.&rdquo;</p>
+                        </div>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">The Spectrum in Practice</h5>
+                        <p class="text-sm text-muted leading-relaxed mb-4">Most family stewards will use a combination of tools. A typical allocation might look like: 5&ndash;10% of total wealth in pure philanthropy (through a family foundation or donor-advised fund), 5&ndash;15% in impact investments across private credit, venture, and real assets, and the remainder in a traditional portfolio that applies ESG integration throughout.</p>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Common Mistakes</h5>
+                        <ul class="list-disc list-inside text-sm text-muted leading-relaxed space-y-1">
+                            <li>Expecting market-rate returns from investments targeting deep social impact (the &ldquo;double bottom line fantasy&rdquo;)</li>
+                            <li>Treating philanthropy as failed investing rather than as a distinct, valuable capital deployment tool</li>
+                            <li>Confusing &ldquo;doing no harm&rdquo; (ESG screening) with &ldquo;doing good&rdquo; (impact investing)</li>
+                            <li>Neglecting to measure impact outcomes, which leads to impact-washing and wasted capital</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== MODULE 11: SDG-Aligned Portfolios ===== -->
+            <div class="module-card bg-[#FDFAF6] border border-gold/20 rounded-xl overflow-hidden" data-topic="impact" id="sdg-portfolios">
+                <div class="p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-gold flex items-center justify-center text-white text-xs font-bold">11</div>
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-purple-100 text-purple-700">Impact</span>
+                        <span class="text-xs text-muted ml-auto">5 min read</span>
+                    </div>
+                    <h3 class="font-serif text-xl text-charcoal mb-2">SDG-Aligned Portfolios: Investing with the Global Goals</h3>
+                    <p class="text-muted text-sm leading-relaxed mb-4">The United Nations Sustainable Development Goals provide a shared language for what &ldquo;impact&rdquo; means. For family stewards, they offer a practical framework to map portfolio allocations to real-world outcomes across 17 interconnected goals.</p>
+                    <button class="accordion-toggle text-gold text-sm font-medium hover:text-gold-dark transition-colors cursor-pointer" data-module="11">Read Module &rarr;</button>
+                </div>
+                <div class="accordion-content" data-module-content="11">
+                    <div class="px-6 pb-6 pt-2 bg-cream/40 border-t border-gold/10">
+                        <h4 class="font-serif text-lg text-charcoal mb-4">From Global Goals to Portfolio Decisions</h4>
+                        <p class="text-sm text-muted leading-relaxed mb-4">The 17 SDGs were adopted by all UN member states in 2015. While designed for governments, the private sector, including family offices, has increasingly used them as an impact taxonomy. The annual SDG financing gap in developing countries is estimated at USD 4.2 trillion. Private capital is not optional; it is essential.</p>
+
+                        <div class="key-term mb-4">
+                            <p class="text-sm font-semibold text-charcoal mb-1">Green Bonds</p>
+                            <p class="text-sm text-muted leading-relaxed">Fixed-income instruments where proceeds are ring-fenced for environmental projects: renewable energy, clean transport, sustainable water management, or green buildings. The global green bond market exceeded USD 500 billion in annual issuance in 2023, with ASEAN green bond issuance growing at 30%+ annually. They offer familiar bond economics (coupon, maturity, credit risk) with the added benefit of traceable environmental impact.</p>
+                        </div>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-3">SDG-to-Investment Mapping</h5>
+                        <div class="overflow-x-auto mb-4">
+                            <table class="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr class="bg-gold/10">
+                                        <th class="text-left py-2.5 px-3 text-charcoal font-semibold border-b border-gold/20">SDG</th>
+                                        <th class="text-left py-2.5 px-3 text-charcoal font-semibold border-b border-gold/20">Investment Vehicles</th>
+                                        <th class="text-left py-2.5 px-3 text-charcoal font-semibold border-b border-gold/20">SE Asia Opportunity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-gold/10">
+                                        <td class="py-2.5 px-3 text-charcoal font-medium">SDG 4: Quality Education</td>
+                                        <td class="py-2.5 px-3 text-muted">EdTech venture funds, student lending</td>
+                                        <td class="py-2.5 px-3 text-muted">Rising middle class driving demand for private and digital education</td>
+                                    </tr>
+                                    <tr class="border-b border-gold/10">
+                                        <td class="py-2.5 px-3 text-charcoal font-medium">SDG 5: Gender Equality</td>
+                                        <td class="py-2.5 px-3 text-muted">Gender-lens funds, women-led VC</td>
+                                        <td class="py-2.5 px-3 text-muted">Women-owned SMEs are 50%+ of ASEAN businesses but receive &lt;10% of venture funding</td>
+                                    </tr>
+                                    <tr class="border-b border-gold/10">
+                                        <td class="py-2.5 px-3 text-charcoal font-medium">SDG 7: Affordable &amp; Clean Energy</td>
+                                        <td class="py-2.5 px-3 text-muted">Green bonds, solar/wind infrastructure funds</td>
+                                        <td class="py-2.5 px-3 text-muted">ASEAN needs USD 210B in energy investment by 2030 to meet Paris targets</td>
+                                    </tr>
+                                    <tr class="border-b border-gold/10">
+                                        <td class="py-2.5 px-3 text-charcoal font-medium">SDG 11: Sustainable Cities</td>
+                                        <td class="py-2.5 px-3 text-muted">Green REITs, urban mobility ventures</td>
+                                        <td class="py-2.5 px-3 text-muted">Rapid urbanisation across Manila, Jakarta, Ho Chi Minh City</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2.5 px-3 text-charcoal font-medium">SDG 13: Climate Action</td>
+                                        <td class="py-2.5 px-3 text-muted">Carbon credit funds, transition bonds, climate VC</td>
+                                        <td class="py-2.5 px-3 text-muted">SE Asia is one of the most climate-vulnerable regions globally</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Building an SDG-Aligned Allocation</h5>
+                        <p class="text-sm text-muted leading-relaxed mb-4">The practical approach is not to cover all 17 goals. Instead, identify 3&ndash;5 SDGs that align with your family&rsquo;s values, geographic focus, and investment expertise. Then map investable themes to each goal and source vehicles accordingly.</p>
+
+                        <div class="formula-block mb-4">
+                            <p class="text-xs font-semibold text-charcoal mb-1">SDG Portfolio Construction</p>
+                            <p class="text-sm font-mono text-charcoal">Select 3&ndash;5 SDGs &rarr; Map themes &rarr; Source vehicles &rarr; Set impact KPIs &rarr; Measure &amp; report annually</p>
+                        </div>
+
+                        <div class="pull-quote mb-4">
+                            <p class="text-sm italic text-charcoal">&ldquo;The SDGs are not a checklist. They are a lens. The best family portfolios pick a few goals, go deep, and measure what matters.&rdquo;</p>
+                        </div>
+
+                        <h5 class="font-semibold text-charcoal text-sm mt-6 mb-2">Avoiding SDG-Washing</h5>
+                        <ul class="list-disc list-inside text-sm text-muted leading-relaxed space-y-1">
+                            <li>Demand that fund managers explain their theory of change, not just which SDG icon they put on marketing materials</li>
+                            <li>Verify that impact metrics are outcome-based (lives improved, CO2 reduced) rather than output-based (dollars deployed)</li>
+                            <li>Distinguish between &ldquo;SDG-aligned&rdquo; (the investment contributes to a goal) and &ldquo;SDG-measured&rdquo; (the investment tracks and reports against specific indicators)</li>
+                            <li>Require annual impact reports alongside financial statements for every impact allocation</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -711,6 +971,8 @@ document.querySelectorAll('.filter-pill').forEach(pill => {
         document.querySelectorAll('.module-card').forEach(card => {
             if (filter === 'all' || card.dataset.topic === filter) {
                 card.classList.remove('hidden-by-filter');
+                // Ensure cards are visible even if GSAP scroll animation hasn't triggered yet
+                gsap.set(card, { opacity: 1, y: 0 });
             } else {
                 card.classList.add('hidden-by-filter');
             }
