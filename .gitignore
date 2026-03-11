@@ -2,3 +2,5 @@ node_modules/
 .DS_Store
 *.log
 seed-data.html
+.claude/settings.local.json
+Entrepreneurship Website info.docx

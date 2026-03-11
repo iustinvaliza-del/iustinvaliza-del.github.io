@@ -13,7 +13,7 @@ A dedicated stewardship platform for next-generation women leading their family'
 ### Marketing Site
 - Responsive single-page design with elegant gold/cream aesthetic
 - Interactive wealth readiness assessment tool with deep-dive domain assessments (legal, tax, finance)
-- Team member cards with photos, bios, role tags, and LinkedIn links
+- Team member cards with AI-generated portraits, bios, role tags, and LinkedIn links
 - Six SEA country advisory tabs with consolidated CTA
 - Services in canonical order matching page scroll sequence
 - GSAP scroll animations and custom particle system
@@ -105,7 +105,7 @@ Open [http://localhost:3000](http://localhost:3000)
 │   └── admin-dashboard.js     # Admin dashboard logic
 ├── firestore.rules            # Firestore security rules (deployed via Firebase CLI)
 ├── firebase.json              # Firebase CLI configuration
-├── seed-data.html             # Firestore data seeder (6 clients, 2 stewards)
+├── seed-data.html             # Firestore data seeder/updater (not committed)
 └── CLAUDE.md                  # Detailed project documentation
 ```
 

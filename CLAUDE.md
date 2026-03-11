@@ -44,7 +44,7 @@ Legacy Stewards is a stewardship consulting platform for next-generation women o
 │   └── launch.json            # Dev server config for Claude preview
 ├── firestore.rules            # Firestore security rules (deployed via Firebase CLI)
 ├── firebase.json              # Firebase CLI config (rules path)
-├── seed-data.html             # Firestore data seeder (6 clients across phases 1-6, 2 stewards)
+├── seed-data.html             # Firestore data seeder/updater (rename team, set photoURLs)
 └── package.json               # Dev dependency (serve)
 ```
 
@@ -101,13 +101,13 @@ Two composite indexes are needed (auto-created via Firebase Console links):
 - **U-shaped dashboard** — Client dashboard uses a 3-column grid (`grid-cols-[200px_1fr_320px]`) with independent scrollable columns and tab switching (Messages/Notes/Docs) via `ClientDashboard.switchTab()`
 - **Portfolio view** — Client dashboard center column has switchable views (milestones/portfolio) via `ClientDashboard.switchCenterView()`; uses Chart.js for asset allocation doughnut and performance line chart
 - **Specialist panel** — Client dashboard auto-surfaces jurisdiction-matched legal & tax specialists based on `users/{uid}.country` field; data in `SPECIALISTS` constant covers 6 SEA countries
-- **Steward photos** — Admin dashboard team table and seed data include `photoURL` fields; client dashboard uses initials fallback when Firestore permission-denied
+- **Steward photos** — Team photos are AI-generated portraits matching each member's ethnicity, stored in `img/team/` and served via GitHub Pages URLs (`https://iustinvaliza-del.github.io/img/team/`). Firestore `photoURL` fields on `teamMembers` and `users` collections point to these URLs. Client dashboard uses initials fallback when no photoURL is set.
 - **Admin dashboard metrics** — Overview shows illustrative financial metrics (AUM, return, revenue) derived from client count, plus Case Status breakdown and Cases by Phase bar chart (Chart.js); when no `currentPhase` data exists, chart shows illustrative distribution
 - **Journey phase tracking** — Case detail includes a phase indicator with dropdown selector (7 phases from Discovery to Transition Complete) and progress bar; updates `currentPhase` field on the case document
 - **Enhanced milestones** — Case detail milestones show a progress bar (X of Y completed, percentage), color-coded status badges, completion dates, gold border on in-progress items
 - **Education accordions** — `education.html` uses CSS `max-height` transitions for expand/collapse, only one module open at a time, with URL hash auto-opening for cross-page linking
 - **Topic filtering** — Education modules have `data-topic` attributes; filter pills toggle visibility with GSAP opacity reset to prevent ScrollTrigger hiding filtered cards
-- **Landing page team cards** — `index.html` renders 4 team member profile cards via JS (`TEAM_MEMBERS` array + `renderTeamCards()`), with photos from `img/team/`
+- **Landing page team cards** — `index.html` renders 4 team member profile cards via JS (`TEAM_MEMBERS` array + `renderTeamCards()`), with photos from `img/team/`: Sarah Chen, Maya Tan, Priya Sharma, Linh Nguyen
 
 ## Development
 
@@ -125,11 +125,12 @@ Then open `http://localhost:3000`
 
 ## Test Accounts
 
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | admin@legacystewards.com | Test123456! |
-| Employee | employee@legacystewards.com | Test123456! |
-| Client | client@legacystewards.com | Test123456! |
+| Role | Email | Password | Display Name |
+|------|-------|----------|--------------|
+| Admin | admin@legacystewards.com | Test123456! | Sarah Chen |
+| Employee | employee@legacystewards.com | Test123456! | Maya Tan |
+| Employee | employee2@legacystewards.com | Test123456! | Priya Sharma |
+| Client | client@legacystewards.com | Test123456! | (test client) |
 
 ## Notes
 
