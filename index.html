@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iustin Valiza — Projects</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:    #c9a96e;
+      --gold-lt: #e0c896;
+      --charcoal:#2C2C35;
+      --cream:   #F0EBE3;
+      --muted:   #6B6B7B;
+      --rose:    #b76e79;
+    }
+
+    body {
+      background: var(--charcoal);
+      color: var(--cream);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      padding: 60px 40px 40px;
+      text-align: center;
+      border-bottom: 1px solid rgba(201,169,110,0.2);
+    }
+    header .eyebrow {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 12px;
+    }
+    header p {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── GOLD DIVIDER ── */
+    .divider {
+      width: 48px;
+      height: 2px;
+      background: var(--gold);
+      margin: 20px auto 0;
+    }
+
+    /* ── GRID ── */
+    main {
+      flex: 1;
+      padding: 60px 40px;
+      max-width: 960px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 28px;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    /* ── PROJECT CARD ── */
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,169,110,0.18);
+      border-radius: 12px;
+      padding: 28px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: border-color 0.2s, transform 0.2s, background 0.2s;
+    }
+    .card:hover {
+      border-color: var(--gold);
+      background: rgba(201,169,110,0.07);
+      transform: translateY(-3px);
+    }
+
+    .card-tag {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(201,169,110,0.15);
+      color: var(--gold);
+      width: fit-content;
+    }
+    .card-tag.active  { background: rgba(201,169,110,0.22); }
+    .card-tag.wip     { background: rgba(183,110,121,0.18); color: var(--rose); }
+
+    .card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--cream);
+      line-height: 1.3;
+    }
+
+    .card p {
+      font-size: 13.5px;
+      color: var(--muted);
+      line-height: 1.65;
+      flex: 1;
+    }
+
+    .card-arrow {
+      font-size: 18px;
+      color: var(--gold);
+      align-self: flex-end;
+      transition: transform 0.2s;
+    }
+    .card:hover .card-arrow { transform: translateX(4px); }
+
+    /* ── PLACEHOLDER CARD ── */
+    .card.placeholder {
+      border-style: dashed;
+      border-color: rgba(201,169,110,0.12);
+      cursor: default;
+      pointer-events: none;
+      opacity: 0.55;
+    }
+    .card.placeholder:hover {
+      transform: none;
+      border-color: rgba(201,169,110,0.12);
+      background: rgba(255,255,255,0.04);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 32px 40px;
+      border-top: 1px solid rgba(201,169,110,0.12);
+      font-size: 12px;
+      color: rgba(107,107,123,0.7);
+      letter-spacing: 0.5px;
+    }
+    footer span { color: var(--gold); }
+
+    @media (max-width: 600px) {
+      header { padding: 44px 24px 32px; }
+      main   { padding: 40px 24px; }
+      .projects-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <p class="eyebrow">Portfolio</p>
+    <h1>Iustin Valiza</h1>
+    <p>Entrepreneurship &amp; technology projects — built to solve real problems.</p>
+    <div class="divider"></div>
+  </header>
+
+  <main>
+    <p class="section-label">Live Projects</p>
+    <div class="projects-grid">
+
+      <a class="card" href="/FUND-II-Project/">
+        <span class="card-tag active">Live</span>
+        <h2>Legacy Stewards</h2>
+        <p>Stewardship consulting platform for next-generation women of wealth in Southeast Asia — assessment, education, and guided advisory.</p>
+        <span class="card-arrow">→</span>
+      </a>
+
+      <div class="card placeholder">
+        <span class="card-tag wip">Coming Soon</span>
+        <h2>Next Project</h2>
+        <p>More projects will appear here as they launch.</p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2026 <span>Iustin Valiza</span>. All rights reserved.
+  </footer>
+
+</body>
+</html>
